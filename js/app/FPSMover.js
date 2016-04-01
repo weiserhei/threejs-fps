@@ -21,7 +21,7 @@ define([
 		var radius = 0.4;
 		var height = 1.8;
 		var eyeheight = 1.6;
-		var visualizePlayer = true;
+		var visualizePlayer = false;
 		var physicFactory = physics;
 
 		this.getControls = function() {
@@ -33,9 +33,9 @@ define([
 			this.body.position.set( 0, height / 2 + 0.5, 2 );
 		}
 
-		this.movementSpeed = 4;
+		this.movementSpeed = 4; //4
 		this.jumpImpulse = 100;
-		this.sprintSpeedMultiplier = 2;
+		this.sprintSpeedMultiplier = 4;
 
 		//basically its a THREE.Object3D with the camera as children
 		var controlsObj = controls.getObject();
@@ -111,7 +111,7 @@ define([
 		*/
 
 		this.mesh = createCharacterTestCapsule( radius, height );
-		this.mesh.material.visible = visualizePlayer;
+		this.mesh.visible = visualizePlayer;
 
 		scene.add( this.mesh );
 
@@ -123,7 +123,7 @@ define([
 		this.mesh.add( controlsObj );
 		controlsObj.position.set( 0, eyeheight-height / 2, 0 );
 
-		var mass = 100;
+		var mass = 50;
 
 		var body = new Goblin.RigidBody(
 				new Goblin.CylinderShape( radius, height / 2 ),

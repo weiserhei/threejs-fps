@@ -9,6 +9,8 @@ require.config({
         'ColladaLoader': {deps: ['threeCore'], exports: "THREE"},
         'OBJLoader': {deps: ['threeCore'], exports: "THREE"},
         'MTLLoader': {deps: ['threeCore'], exports: "THREE"},
+        'ThreeCSG': {deps: ['threeCore'], exports: "ThreeBSP" },
+        'csg': {deps: ['threeCore'] },
         // --- end THREE sub-components
         'detector': { exports: 'Detector' },
         'Stats': {exports: "Stats"},
@@ -33,6 +35,8 @@ require.config({
         'ColladaLoader': "../libs/three/loaders/ColladaLoader2",
         'OBJLoader': "../libs/three/loaders/OBJLoader",
         'MTLLoader': "../libs/three/loaders/MTLLoader",
+        'csg': "../libs/csg.js",
+        'ThreeCSG': "../libs/ThreeCSG",
         // --- end THREE sub-components
         'PhysicFactory': "physicFactory"
     }

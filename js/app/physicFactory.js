@@ -24,10 +24,67 @@ define([
 
 	PhysicFactory.prototype.getEngine = function() {
 		return broadphase;
-	}
+	};
 
 	PhysicFactory.prototype.addBody = function( rigidBody, mesh) {
 		this.body_to_mesh_map[ rigidBody.id ] = mesh;
+	};
+
+
+	PhysicFactory.prototype.makeStaticBox = function( dimension, position, rotation, mergeGeometry, materialIndex, shape, transform ) {
+		
+		var goblinDimension = dimension.clone().divideScalar( 2 );
+	
+		var rotation = rotation || new THREE.Vector3( 0, 0, 0 );
+
+		var materialIndex = materialIndex || 0;
+		// box physics
+		var shape = shape || new Goblin.BoxShape( goblinDimension.x, goblinDimension.y, goblinDimension.z );
+
+		var position = new THREE.Vector3( position.x, position.y + goblinDimension.y, position.z );
+
+		var dynamic_body = new Goblin.RigidBody( shape, 0.0 );
+
+		dynamic_body.position.copy( position );
+
+		// var rotation = mesh.quaternion;
+		// dynamic_body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, rotation.w );
+		dynamic_body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, 1 );
+
+		this.world.addRigidBody( dynamic_body );
+		// this.addBody( dynamicBody, )
+		
+		// if ( mergeGeometry ) {
+			// box.updateMatrix();
+			// mergeGeometry.merge(box.geometry, box.matrix);
+		// } else {
+			// return box;
+		// }	
+		// if ( mergeGeometry === undefined ) {
+		// mrdoob codestyle™ disapproves typeof undefined
+		if ( typeof mergeGeometry === "undefined" ) {
+			return box;
+			
+		} else {
+			
+			dimension.multiplyScalar( 2 );
+			// console.log(dimension);
+			var box = new THREE.Mesh(
+				new THREE.BoxGeometry( dimension.x, dimension.y, dimension.z )
+			);
+			box.position.set( position.x, position.y + dimension.y / 2, position.z );
+			box.rotation.copy( rotation );
+			box.updateMatrix();
+			for ( var i = 0; i < box.geometry.faces.length; i++ ) {
+				box.geometry.faces[ i ].materialIndex = 0;
+			}
+
+			mergeGeometry.merge( box.geometry, box.matrix, materialIndex );
+
+		}
+		// body.mesh = box; // Assign the Three.js mesh in `box`, this is used to update the model position later
+		// boxes.push( body ); // Keep track of this box
+
 	};
 
 	PhysicFactory.prototype.getProxyMesh = function ( object, geometryType ) {
@@ -127,7 +184,7 @@ define([
 		// dynamic_body.angularDamping = 0.5;
 
 		// if ( mass !== 0.0 ) {
-			this.body_to_mesh_map[ dynamic_body.id ] = mesh;
+		this.addBody( dynamic_body, mesh );
 		// }
 
 		return dynamic_body;
@@ -173,8 +230,13 @@ define([
 
 	    // update mesh positions / rotations
 	    for ( var i = 0; i < this.world.rigid_bodies.length; i++ ) {
-	        var body = this.world.rigid_bodies[i],
-	            mesh = this.body_to_mesh_map[ body.id ];
+	    	
+	        var body = this.world.rigid_bodies[i];
+	    	if ( this.body_to_mesh_map[ body.id ] === undefined ) 
+	    	{ 
+	    		continue; 
+	    	}
+	        var mesh = this.body_to_mesh_map[ body.id ];
 
 	        // update position
 	        mesh.position.x = body.position.x;

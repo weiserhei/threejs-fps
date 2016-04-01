@@ -3,6 +3,6 @@
  *
  * Please add all addins here (and the main.js)
  */
-define(["threeCore","OrbitControls","ColladaLoader","OBJLoader","MTLLoader"], function (threeCore) {
+define(["threeCore","OrbitControls","ColladaLoader","OBJLoader","MTLLoader","ThreeCSG"], function (threeCore) {
     return threeCore;
 });
