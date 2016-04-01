@@ -14,8 +14,8 @@ define([
     "tweenHelper",
     "skycube",
     "lights",
-    "PhysicFactory"
-], function ( 
+    "physics"
+	], function ( 
              THREE, 
              TWEEN, 
              scene, 
@@ -27,24 +27,22 @@ define([
              tweenHelper, 
              skycube,
              lights,
-             PhysicFactory
+             physics
              ) {
 	
 	'use strict';
 
-	var physicFactory = new PhysicFactory();
+	var fps;
 
 	// Start program
     var initialize = function () {
 
-		// INITIAL CAMERA POSITION AND TARGET
-		camera.position.set( 0, 2, -8 );
-		controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
+		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
-		// set Reset Values
-		controls.target0 = controls.target.clone();
-		controls.position0 = camera.position.clone();
-		controls.zoom0 = camera.zoom;
+		// // set Reset Values
+		// controls.target0 = controls.target.clone();
+		// controls.position0 = camera.position.clone();
+		// controls.zoom0 = camera.zoom;
 	
 		// GRID FOR ORIENTATION
 		var gridXZ = new THREE.GridHelper( 1, 0.1 );
@@ -52,6 +50,12 @@ define([
 		scene.add(gridXZ);
 		gridXZ.position.y = 0;
 		gridXZ.visible = true;
+
+		var roomGeometry = new THREE.BoxGeometry( 30, 10, 30 );
+		var roomMaterial = new THREE.MeshNormalMaterial( { side: THREE.BackSide, transparent: true, opacity: 0.5 } );
+		var room = new THREE.Mesh( roomGeometry, roomMaterial );
+		room.position.set( 0, roomGeometry.parameters.height / 3, 0 );
+		scene.add( room );
 
 		// var static_box = new Goblin.RigidBody( box_shape, Infinity ); // Mass of Infinity means the box cannot move
 		// static_box.position.set( 0, 0, 0 ); // Set the static box's position 5 units down
@@ -69,32 +73,32 @@ define([
 		dynamic_mesh.position.set( 0, 0.5, 0 );
 		static_mesh.rotation.set( 0, 0, 45 * Math.PI / 180 );
 		scene.add( dynamic_mesh );
-		physicFactory.meshToBody( dynamic_mesh, 5 );
+		physics.meshToBody( dynamic_mesh, 5 );
 
 		static_mesh.position.set( 0, static_mesh.geometry.parameters.height / 2, 0 );
 		// static_mesh.position.set( 0, static_mesh.geometry.boundingSphere.radius, 0 );
 		// scene.add( static_mesh );
-		// physicFactory.meshToBody( static_mesh, 0 );
+		// physics.meshToBody( static_mesh, 0 );
 
 		var left = dynamic_mesh.clone();
 		left.position.set( 2, dynamic_mesh.geometry.parameters.height / 2, 0 );
 		scene.add( left );
-		physicFactory.meshToBody( left, 5 );
+		physics.meshToBody( left, 5 );
 
 		var left = dynamic_mesh.clone();
 		left.position.set( 2, dynamic_mesh.geometry.parameters.height * 2, 0 );
 		scene.add( left );
-		physicFactory.meshToBody( left, 5 );
+		physics.meshToBody( left, 5 );
 
 		var right = dynamic_mesh.clone();
 		right.position.set( -2, dynamic_mesh.geometry.parameters.height / 2, 0 );
 		scene.add( right );
-		physicFactory.meshToBody( right, 5 );
+		physics.meshToBody( right, 5 );
 
 		var sphere = new THREE.Mesh( new THREE.SphereBufferGeometry( 0.5, 16, 16 ), new THREE.MeshNormalMaterial() );
 		sphere.position.set( -2, dynamic_mesh.geometry.parameters.height * 2, 0 );
 		scene.add( sphere );
-		physicFactory.meshToBody( sphere, 5 );
+		physics.meshToBody( sphere, 5 );
 
 
 		function onError() {
@@ -143,11 +147,11 @@ define([
 
 				scene.add( object );
 				
-				if ( physicFactory !== undefined ) {
-					var mesh = physicFactory.getProxyMesh( object, "Cylinder" );
+				if ( physics !== undefined ) {
+					var mesh = physics.getProxyMesh( object, "Cylinder" );
 					mesh.position.set( 0, mesh.geometry.parameters.height / 2 + 3, 0 );
 					// mesh.rotation.z = Math.PI / 1.5;
-					physicFactory.meshToBody( mesh, 2 );
+					physics.meshToBody( mesh, 2 );
 					scene.add( mesh );
 				}
 
@@ -159,11 +163,11 @@ define([
 
 		});
 
-		var plane = physicFactory.createPlane ( 1, 5, 5, 0, new THREE.MeshNormalMaterial() )
+		var plane = physics.createPlane ( 1, 10, 10, 0, new THREE.MeshNormalMaterial() )
 		scene.add( plane );
 
 		// DEBUG GUI
-        var dg = debugGUI;
+        dg = debugGUI;
         dg.open();
 		dg.add( plane, "visible" ).name("Show Floor");
 
@@ -176,6 +180,14 @@ define([
 		}
 		*/
 
+		function thirdPerson( value ) {
+			if( value ) {
+				camera.position.set( 0, 1.5, 6 );
+			} else {
+				camera.position.set( 0, 0, 0 );
+			}
+		}
+
 		var options = {
 			reset: function() { 
 				tweenHelper.resetCamera( 600 );
@@ -185,14 +197,17 @@ define([
 				var newBarrel = spawnObject.clone();
 
 				newBarrel.position.set( 0, newBarrel.geometry.parameters.height / 2 + 3, 0 );
-				physicFactory.meshToBody( newBarrel, 2 );
+				physics.meshToBody( newBarrel, 2 );
 				scene.add( newBarrel );
 
 
-			}
+			},
+			thirdPerson: false
 		};
-		dg.add( options, "reset" ).name("Reset Camera");
+		// dg.add( options, "reset" ).name("Reset Camera");
 		dg.add( options, "respawn" ).name("Spawn new barrel");
+		dg.add( options, "thirdPerson" ).name("Third Person Camera").onChange( thirdPerson );
+		dg.add( controls, "resetPlayer" ).name("Reset Player");
 
 		// DEBUG GUI
 
@@ -205,10 +220,11 @@ define([
 
     	var delta = clock.getDelta();
 
-    	physicFactory.update( delta );
+    	physics.update( delta );
+    	controls.update();
 
 		TWEEN.update();
-		controls.update();
+		// controls.update();
 		stats.update();
 
 		skycube.update( camera, renderer );
@@ -218,8 +234,10 @@ define([
 
     };
 
+
     return {
         initialize: initialize,
         animate: animate
     }
 });
+    var dg;

@@ -6,15 +6,29 @@
  */
 define([
        "three",
-       "../libs/goblin.min"
+       "../libs/goblin"
        ], function (THREE){
 
-	var world = new Goblin.World( new Goblin.BasicBroadphase(), new Goblin.NarrowPhase(), new Goblin.IterativeSolver() );
-	var body_to_mesh_map = {};
+	var broadphase = new Goblin.BasicBroadphase();
+	// var broadphase = new Goblin.SAPBroadphase();
+	Goblin.GjkEpa.margins = 0;
 
 	function PhysicFactory() {
-
+		this.world = new Goblin.World( broadphase, new Goblin.NarrowPhase(), new Goblin.IterativeSolver() );
+		this.body_to_mesh_map = {};
 	}
+
+	PhysicFactory.prototype.getWorld = function() {
+		return this.world;
+	};
+
+	PhysicFactory.prototype.getEngine = function() {
+		return broadphase;
+	}
+
+	PhysicFactory.prototype.addBody = function( rigidBody, mesh) {
+		this.body_to_mesh_map[ rigidBody.id ] = mesh;
+	};
 
 	PhysicFactory.prototype.getProxyMesh = function ( object, geometryType ) {
 
@@ -106,14 +120,14 @@ define([
 		var rotation = mesh.quaternion;
 		dynamic_body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, rotation.w );
 
-		world.addRigidBody( dynamic_body );
+		this.world.addRigidBody( dynamic_body );
 
 		// dynamic_body.friction = 0.8; // reibung
 		// dynamic_body.restitution = 0.0; //spring or bounciness
 		// dynamic_body.angularDamping = 0.5;
 
 		// if ( mass !== 0.0 ) {
-			body_to_mesh_map[ dynamic_body.id ] = mesh;
+			this.body_to_mesh_map[ dynamic_body.id ] = mesh;
 		// }
 
 		return dynamic_body;
@@ -144,9 +158,9 @@ define([
 		);
 
 		// objects.push( plane );
-		body_to_mesh_map[plane.goblin.id] = plane;
+		this.body_to_mesh_map[plane.goblin.id] = plane;
 
-		world.addRigidBody( plane.goblin );
+		this.world.addRigidBody( plane.goblin );
 
 		return plane;
 
@@ -155,12 +169,12 @@ define([
 	PhysicFactory.prototype.update = function() {
 
     	// run physics simulation
-	    world.step( 1 / 60 );
+	    this.world.step( 1 / 60 );
 
 	    // update mesh positions / rotations
-	    for ( var i = 0; i < world.rigid_bodies.length; i++ ) {
-	        var body = world.rigid_bodies[i],
-	            mesh = body_to_mesh_map[ body.id ];
+	    for ( var i = 0; i < this.world.rigid_bodies.length; i++ ) {
+	        var body = this.world.rigid_bodies[i],
+	            mesh = this.body_to_mesh_map[ body.id ];
 
 	        // update position
 	        mesh.position.x = body.position.x;

@@ -2,6 +2,9 @@
  * Create a camera
  *
  */
+
+var camera;
+
 define(["three","renderer"], function (THREE,renderer) {
 
     'use strict';
@@ -11,11 +14,11 @@ define(["three","renderer"], function (THREE,renderer) {
     var screen_height   = window.innerHeight;
     var aspect = screen_width / screen_height;
     // var view_angle  = 25;
-    var view_angle  = 40;
+    var view_angle  = 60;
     var near = 0.1;
     var far = 2200;
     
-    var camera  = new THREE.PerspectiveCamera( view_angle, aspect, near, far );
+    camera  = new THREE.PerspectiveCamera( view_angle, aspect, near, far );
     // CAMERA INITIAL POSITION
     // camera.position.set( 0, 1, 2 );
     // camera.lookAt( new THREE.Vector3( 0, 20, 0) );   
