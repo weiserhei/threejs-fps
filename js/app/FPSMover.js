@@ -10,7 +10,7 @@ define([
      	"scene",
     	"physics",
 		"PointerLockControls"
-       ], function ( THREE, scene, physics, PointerLocControls ){
+       ], function ( THREE, scene, physics, PointerLockControls ){
 
 	'use strict';
 
