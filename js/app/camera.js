@@ -14,7 +14,7 @@ define(["three","renderer"], function (THREE,renderer) {
     var screen_height   = window.innerHeight;
     var aspect = screen_width / screen_height;
     // var view_angle  = 25;
-    var view_angle  = 50;
+    var view_angle  = 60;
     var near = 0.1;
     var far = 2200;
     
