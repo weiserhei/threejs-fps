@@ -31,7 +31,7 @@ define([
              ) {
 	
 	'use strict';
-var rotation;
+
 function createRoom ( length, width, height, door ) {
 
 	function clone( samplemesh, cutmesh ) {
@@ -424,10 +424,8 @@ function createRoom ( length, width, height, door ) {
 
 	var textureLoader = new THREE.TextureLoader();
 
-	// barrel_02
 	var directoryPath = "assets/models/";
 	var name = "stairs_stone";
-	var spawnObject;
 
 	var mtlLoader = new THREE.MTLLoader();
 	var url = directoryPath + name + "/";
@@ -495,7 +493,7 @@ function createRoom ( length, width, height, door ) {
 
 
 			// STAIRS PLATEAU
-			var size = new THREE.Vector3( 1, 0.3, 1.3 );
+			var size = new THREE.Vector3( 1.3, 0.3, 1.3 );
 			var plateauGeometry = new THREE.BoxBufferGeometry(size.x, size.y, size.z);
 			var plateau = new THREE.Mesh( plateauGeometry );
 		
@@ -792,12 +790,11 @@ function createRoom ( length, width, height, door ) {
 		gridXZ.position.y = 0;
 		gridXZ.visible = true;
 
-		var roomGeometry = new THREE.BoxGeometry( 30, 10, 30 );
-		var roomMaterial = new THREE.MeshNormalMaterial( { side: THREE.BackSide, transparent: true, opacity: 0.5 } );
-		var room = new THREE.Mesh( roomGeometry, roomMaterial );
-		room.position.set( 0, roomGeometry.parameters.height / 3, 0 );
-		scene.add( room );
-
+		// var roomGeometry = new THREE.BoxGeometry( 30, 10, 30 );
+		// var roomMaterial = new THREE.MeshNormalMaterial( { side: THREE.BackSide, transparent: true, opacity: 0.5 } );
+		// var room = new THREE.Mesh( roomGeometry, roomMaterial );
+		// room.position.set( 0, roomGeometry.parameters.height / 3, 0 );
+		// scene.add( room );
 
 		var room1 = createRoom( 10, 10, 3.2, false );
 		scene.add( room1 );

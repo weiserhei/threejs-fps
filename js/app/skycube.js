@@ -38,29 +38,29 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 
 	var cubeTextureLoader = new THREE.CubeTextureLoader();
 
-	cubeTextureLoader.setPath( "assets/textures/cube/SwedishRoyalCastle/" );
-	var sunnySkyCube = cubeTextureLoader.load( [
-		"px.jpg", "nx.jpg",
-		"py.jpg", "ny.jpg",
-		"pz.jpg", "nz.jpg"
-	] );
-
-	// cubeTextureLoader.setPath( "assets/textures/cube/sunnysky/" );
+	// cubeTextureLoader.setPath( "assets/textures/cube/SwedishRoyalCastle/" );
 	// var sunnySkyCube = cubeTextureLoader.load( [
 	// 	"px.jpg", "nx.jpg",
 	// 	"py.jpg", "ny.jpg",
 	// 	"pz.jpg", "nz.jpg"
 	// ] );
 
+	cubeTextureLoader.setPath( "assets/textures/cube/sunnysky/" );
+	var sunnySkyCube = cubeTextureLoader.load( [
+		"px.jpg", "nx.jpg",
+		"py.jpg", "ny.jpg",
+		"pz.jpg", "nz.jpg"
+	] );
+
 	var textureLoader = new THREE.TextureLoader();
 
 	var envpath = "assets/textures/";
 
-	var textureName = 'cubereflection.png';
+	// var textureName = 'cubereflection.png';
 	// var textureName = '07.jpg';
 	// var textureName = '2000_1000.jpg';
 	// var textureName = 'panoramamic.jpg';
-	// var textureName = 'GPP-Space.jpg';
+	var textureName = 'sky01_hdri_3d_model_3ds_c51df0de-d928-4fb4-ae30-df1001794eaa.jpg';
 	// var textureName = 'StBp.jpg'; // cathedral
 	// var textureName = 'Red-DH-StuAtm-1.jpg';
 	// var textureName = 'ScanRoom_06_Thumbnail.jpg';
@@ -75,7 +75,7 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 	// singleMap.repeat.set( 0.5, 1 );
 
 	var sceneCube = new THREE.Scene();
-	var fov = camera.fov * 1.5;
+	var fov = camera.fov;
 	cameraCube = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 1000 );
 	sceneCube.add( cameraCube );
 
@@ -88,7 +88,7 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 		uniforms: shader.uniforms,
 		depthWrite: false,
 		side: THREE.BackSide,
-		wireframe: true,
+		// wireframe: true,
 
 	} );
 
@@ -96,7 +96,7 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 	material.uniforms[ "tCube" ].value = sunnySkyCube;
 	renderer.autoClear = false;
 
-	var material = new THREE.MeshBasicMaterial( { map: singleMap, side: THREE.BackSide, depthWrite: false } );
+	// var material = new THREE.MeshBasicMaterial( { map: singleMap, side: THREE.BackSide, depthWrite: false } );
 	// shaderMaterial does work with a sphereGeometry and CubeGeometry
 	var mesh = new THREE.Mesh( new THREE.SphereBufferGeometry( 10, 32, 32 ), material );
 	// var mesh = new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10 ), material );
@@ -118,7 +118,8 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 	return {
 		mesh: mesh,
 		update: function( camera, renderer ) {
-			cameraCube.quaternion.copy( camera.quaternion );
+
+			cameraCube.quaternion.copy( camera.getWorldQuaternion() );
 			renderer.render( sceneCube, cameraCube );
 		}
 	};
