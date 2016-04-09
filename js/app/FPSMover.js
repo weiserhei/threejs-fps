@@ -28,7 +28,7 @@ define([
 			return controls;
 		};
 
-		this.resetPlayer = function() {
+		this.reset = function() {
 			controls.resetRotation();
 			this.body.position.set( 0, height / 2 + 0.5, 2 );
 		}

@@ -12,8 +12,9 @@ define([
     'use strict';
 
 	// CONTROLS
-	// camera.position.set( 0, 2, 8 );
 	/*
+	camera.position.set( 0, 2, 8 );
+	
 	var controls = new THREE.OrbitControls( camera, container );
 	controls.rotateSpeed = 0.10;
 	controls.enableDamping = true;
