@@ -6,20 +6,16 @@ define([
        "three",
         "../libs/state-machine.min",
         "TWEEN",
-        "scene"
-       ], function ( THREE, StateMachine, TWEEN, scene ) {
+        "scene",
+        "debugGUI"
+       ], function ( THREE, StateMachine, TWEEN, scene, debugGUI ) {
 
     // 'use strict';
-
-    // mesh
-
-    // door mesh for interaction
-    // base mesh
 
     // states: open, closed, locked, unlocked
     // events: opening, closing, interact, unlock
 
-    var x = new THREE.Mesh( new THREE.BoxGeometry( 1, 2, 0.1 ) );
+    var x = new THREE.Mesh( new THREE.BoxGeometry( 1, 2, 0.1 ), new THREE.MeshPhongMaterial() );
     x.position.set( 0, 1, 0 );
     scene.add( x );
 
@@ -55,64 +51,72 @@ define([
 
       initial: 'locked',
       events: [
-        // { name: 'close', from: '*',  to: 'closed' },
-        { name: 'unlock', from: 'locked', to: 'unlocked' },
+        { name: 'reset', from: '*',  to: 'locked' },
         { name: 'open', from: ['closed','unlocked'], to: 'opened' },
         { name: 'close', from: 'opened', to: 'closed'   },
         { name: 'interact', from: 'closed', to: 'opened' },
-        { name: 'interact', from: 'locked', to: 'unlocked' },
         { name: 'interact', from: 'opened', to: 'closed' },
+        { name: 'interact', from: 'locked', to: 'unlocked' },
+        // { name: 'unlock', from: 'locked', to: 'unlocked' },
       ],
       callbacks: {
-        onclose: function(event, from, to, msg) {  },
-        onopen: function(event, from, to, msg) { console.log("open", this.current ); },
+        onclosed: function(event, from, to, msg) { 
+
+            x.material.color.setHex( 0x00FF00 );
+            closeAnimation( x, fsm.transition );
+
+        },
+        onopened: function() {
+
+            console.log("onbeforeopen");
+            // play sound
+            x.material.color.setHex( 0x00FFFF );
+            // play animation
+            openAnimation( x, fsm.transition );
+
+            // return StateMachine.ASYNC;
+
+        },
         onbeforeinteract: function(event, from, to) { 
-            // console.log("onbeforeinteract");
-            console.log( this.current ); 
+
+            console.log( "onbeforeinteract", this.current ); 
             
             if ( this.is( "locked" ) ) {
                 // alert("pause");
-                // some UI action, keypad, whatever
+                // some UI action, minigame, unlock this shit
 
             }
             
         },
-        onunlocked: function(event, from, to, msg) {
-            console.log("unlocked", this.current, msg );
+        onlocked: function() {
+            x.material.color.setHex( 0xFF0000 );
+        },
+        onunlocked: function() {
             this.open();
-            openAnimation( x, fsm.transition );
-
-            return StateMachine.ASYNC;
-            // this.onleaveclosed();
         },
-        onleaveopened: function() {
-            // assume when we leave 'opened'-state, we enter 'closed'
-            // which is bad
-            // console.log("onleaveopened");
-            // play sound
-
-            // play animation
-            closeAnimation( x, fsm.transition );
-
-            return StateMachine.ASYNC;
-
+        onbeforereset: function() {
+            if ( ! this.is ( "closed" ) ) {
+                this.close();
+            }
         },
-        onleaveclosed: function() {
-            // assume when we leave 'closed'-state, we enter 'opened'
-
-            // console.log("onleaveclosed");
-            // play sound
-
-            // play animation
-            openAnimation( x, fsm.transition );
-
-            return StateMachine.ASYNC;
-
-        }
       }
 
     });
 
+    // DEBUG GUI
+    var dg = debugGUI;
+
+    var name = "Safe";
+    if ( dg.__folders[ name ] ) {
+        var folder = dg.__folders[ name ];
+    } else {
+        var folder = dg.addFolder( name );
+    }
+    
+    folder.open();
+    folder.add( fsm, "current" ).name("Current State").listen();
+    folder.add( fsm, "interact" ).name("interact");
+    folder.add( fsm, "reset" ).name("Reset");
 
     fsmKeypad = StateMachine.create({
 
