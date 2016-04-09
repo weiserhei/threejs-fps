@@ -15,7 +15,8 @@ define([
     "skycube",
     "lights",
     "physics",
-    "Room"
+    "Room",
+    "safe"
 	], function ( 
              THREE, 
              TWEEN, 
@@ -29,7 +30,7 @@ define([
              skycube,
              lights,
              physics,
-             Room
+             Room             
              ) {
 	
 	'use strict';
@@ -59,6 +60,8 @@ define([
 
 		var room1 = new Room( 10, 10, 3.2, false );
 		scene.add( room1 );
+
+		function objects() {
 
 		// var static_box = new Goblin.RigidBody( box_shape, Infinity ); // Mass of Infinity means the box cannot move
 		// static_box.position.set( 0, 0, 0 ); // Set the static box's position 5 units down
@@ -165,6 +168,9 @@ define([
 		    }, onProgress, onError );
 
 		});
+
+		}
+		// objects();
 
 		var plane = physics.createPlane ( 1, 10, 10, 0, new THREE.MeshNormalMaterial() )
 		scene.add( plane );

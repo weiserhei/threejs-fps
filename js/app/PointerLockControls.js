@@ -262,6 +262,7 @@ define([
 
 			var div = document.createElement('div');
 			div.id ="blocker";
+			div.style = "background: transparent";
 			document.body.insertBefore( div, container );
 
 			var div2 = document.createElement('div');
@@ -269,8 +270,10 @@ define([
 			div2.id ="instructions";
 			div.appendChild( div2 );
 
-			var blocker = document.getElementById( 'blocker' );
-			var instructions = document.getElementById( 'instructions' );
+			// var blocker = document.getElementById( 'blocker' );
+			// var instructions = document.getElementById( 'instructions' );
+			var blocker = div;
+			var instructions = div2;
 			
 			// http://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
