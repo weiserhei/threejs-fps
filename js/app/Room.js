@@ -392,7 +392,7 @@ define([ "three", "physics" ], function ( THREE, physics ) {
 
         var ceiling = this.createCeiling( width, wallThickness, length, height );
         ceiling.material = new THREE.MeshNormalMaterial();
-        this.addStairs( room );
+        // this.addStairs( room );
 
         // ceiling.material = this.materialsArray.grainyWhiteMaterial[1];
         doorWallMesh.material = wallMaterial;
