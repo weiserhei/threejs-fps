@@ -334,8 +334,6 @@ define([
             door.start();
         };
         fsm.onclosed = function( event, from, to ) {
-            console.log("to", to );
-            if ( this.from === "asd") {}
             door.stop();
             close_door.start();
         };
