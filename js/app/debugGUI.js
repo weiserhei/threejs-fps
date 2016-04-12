@@ -26,6 +26,17 @@ define([
     };
 
     var gui = new dat.GUI();
+
+    dat.GUI.prototype.getFolder = function( name ) {
+        if ( gui.__folders[ name ] ) {
+            var folder = gui.__folders[ name ];
+        } else {
+            var folder = gui.addFolder( name );
+        }
+
+        return folder;
+    };
+    
     var folder = gui.addFolder("Debug Menu");
     // folder.open();
 
