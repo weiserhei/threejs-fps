@@ -14,6 +14,7 @@ define([
 
     'use strict';
 
+    // SOUNDS
 	var sound1 = new THREE.PositionalAudio( listener );
 	sound1.load( 'assets/sounds/safe_door.ogg' );
 	sound1.setRefDistance( 8 );
@@ -68,7 +69,7 @@ define([
        
     };
 
-
+    // MODEL
     var safeloader = new THREE.JSONLoader( manager ); 
     
     var onLoad = function() {
@@ -196,14 +197,37 @@ define([
 
         // open grip
         var source = safegriff.rotation;
-        var target = new THREE.Vector3( Math.PI * 2, 0, 0 );
+        var target = new THREE.Vector3( Math.PI * 1.5, 0, 0 );
         var time = 2000;
         var easing = TWEEN.Easing.Quadratic.InOut;
         var spin_griff = tweenVector( source, target, time, easing );
 
+		// rotation (using slerp)  
+  //       var euler = new THREE.Euler( Math.PI * 2, 0, 0, 'XYZ');
+		// var qend = new THREE.Quaternion().setFromEuler(euler); //dst quaternion
+		// console.log( qend );
+		// var source = safegriff;
+		// var qstart = new THREE.Quaternion().copy(source.quaternion); // src quaternion
+		// var qtemp = new THREE.Quaternion();
+
+		// var o = {t: 0};
+		// var spin_griff = new TWEEN.Tween(o).to({t: 1}, time )
+		// 	  .easing ( easing )
+		//       .onUpdate(function () {
+		//         THREE.Quaternion.slerp(qstart, qend, qtemp, o.t);
+		//         safegriff.quaternion.copy( qtemp );
+		//       });	
+
+		// var o = {t: 0};
+		// var spin_griff = new TWEEN.Tween(o).to({t: 1}, time )
+		// 	  .easing ( easing )
+		//       .onUpdate(function () {
+		//         safegriff.quaternion.slerp( qend, o.t );
+		//       });		
+
+
         // close_door.chain( close_wheel );      
         // wheel.chain( door );
-
         // griff.chain( wheel );
 
         return {
@@ -297,6 +321,7 @@ define([
 		            safedoorGroup.rotation.set ( 0, 0, 0 );
 		            safewheel.rotation.set( 0, 0, 0 );
 		            safegriff.rotation.set( 0, 0, 0 );
+		            safegriff.quaternion.set( 0, 0, 0, 1 );
 		            sound1.setVolume( 0.1 )
 
 		        },

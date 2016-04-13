@@ -15,8 +15,7 @@ define([
     "skycube",
     "lights",
     "physics",
-    "Room",
-    "safe"
+    "Room"
 	], function ( 
              THREE, 
              TWEEN, 
@@ -219,6 +218,15 @@ define([
 		dg.add( options, "thirdPerson" ).name("Third Person Camera").onChange( thirdPerson );
 		// dg.add( options, "reset" ).name("Reset Camera");
 		dg.add( controls, "reset" ).name("Reset Player");
+
+
+        require(["safe"]);
+        var options = {
+        	safe: function() {
+        		require(["safe"]);
+        	}
+        }
+        // dg.add( options, "safe" );
 
 		// DEBUG GUI
 
