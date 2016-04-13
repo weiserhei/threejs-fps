@@ -4,7 +4,8 @@
 
 define([
        "three",
-       ], function (THREE){
+       "scene"
+       ], function (THREE,scene){
 
 	'use strict';
  
@@ -91,11 +92,11 @@ define([
 			switch ( event.keyCode ) {
 
 				case 70: //f
-					slowmo = !slowmo;
+					// slowmo = !slowmo;
 					break;
 
 				case 9: //tabulator
-					event.preventDefault();
+					// event.preventDefault();
 					// var x = document.getElementById("centerDiv");
 					// centerDiv.style.cssText="visibility:visible;"
 					break;
@@ -142,28 +143,28 @@ define([
 					break;
 					
 				case 81: // q
-					moonPhysics(); //various.js
+					// moonPhysics(); //various.js
 					break;
 					
 				case 82: // r
 					// env.player.currentWeapon.reload();
-					player.currentWeapon.reload();
+					// player.currentWeapon.reload();
 					break;
 					
 				case 49: //1
-					selectWeapon( 0 );
+					// selectWeapon( 0 );
 					break;
 
 				case 50: //2
-					selectWeapon( 1 );
+					// selectWeapon( 1 );
 					break;
 
 				case 51: //3
-					selectWeapon( 2 );
+					// selectWeapon( 2 );
 					break;		
 
 				case 52: //4
-					selectWeapon( 3 );
+					// selectWeapon( 3 );
 					break;
 			}
 
@@ -211,7 +212,7 @@ define([
 					
 				case 69: //e
 					// env.player.toggle = false;
-					player.toggle = false;
+					// player.toggle = false;
 					break;
 
 			}
@@ -268,6 +269,7 @@ define([
 			var div2 = document.createElement('div');
 			div2.innerHTML = '<span style="font-size:40px">Click to play</span><br />(W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)';
 			div2.id ="instructions";
+			div2.style = "opacity:0.5"
 			div.appendChild( div2 );
 
 			// var blocker = document.getElementById( 'blocker' );

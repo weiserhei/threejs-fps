@@ -6,7 +6,7 @@ define([
        "three",
        "camera",
        "container",
-       "FPSMover"
+       "FPSMover",
        ], function ( THREE, camera, container, FPSMover ) {
 
     'use strict';
@@ -49,6 +49,7 @@ define([
 
 	var controls = new FPSMover( camera, container );
 	// controls.getControls().enabled = true;
+
 	
     return controls;
 });

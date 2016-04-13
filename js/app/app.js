@@ -9,30 +9,36 @@ define([
     "camera",
     "renderer",
     "controls",
+    "container",
     "stats",
     "debugGUI",
     "tweenHelper",
     "skycube",
     "lights",
     "physics",
-    "Room"
+    "Room",
+    "safe",
+    "Crosshair"
 	], function ( 
              THREE, 
              TWEEN, 
              scene, 
              camera, 
              renderer, 
-             controls, 
+             controls,
+             container,
              stats, 
              debugGUI, 
              tweenHelper, 
              skycube,
              lights,
              physics,
-             Room             
+             Room,
+             safe,
+             Crosshair
              ) {
 	
-	'use strict';
+	// 'use strict';
 
 	// Start program
     var initialize = function () {
@@ -188,15 +194,22 @@ define([
 		}
 		*/
 
+		var crosshair = new Crosshair( 0.003, 0.002, camera );
+
 		function thirdPerson( value ) {
 			if( value ) {
 				camera.position.set( 0, 1.5, 6 );
-				controls.mesh.visible = value;
+				controls.mesh.material.visible = value;
+				crosshair.visible = false;
+
 			} else {
 				camera.position.set( 0, 0, 0 );
-				controls.mesh.visible = value;
+				controls.mesh.material.visible = value;
+				crosshair.visible = true;
 			}
 		}
+
+
 
 		var options = {
 			reset: function() { 
@@ -210,7 +223,6 @@ define([
 				physics.meshToBody( newBarrel, 2 );
 				scene.add( newBarrel );
 
-
 			},
 			thirdPerson: false
 		};
@@ -219,14 +231,168 @@ define([
 		// dg.add( options, "reset" ).name("Reset Camera");
 		dg.add( controls, "reset" ).name("Reset Player");
 
-
-        require(["safe"]);
         var options = {
         	safe: function() {
         		require(["safe"]);
         	}
         }
         // dg.add( options, "safe" );
+
+        var raycaster = new THREE.Raycaster();
+        var intersections = [];
+        var interactionDistance = 1.5;
+
+        var active = [];
+        var toggle = false;
+
+        function interact( object ) {
+
+			if ( object.parent instanceof THREE.Group ) {
+
+				var parent = object.parent;
+				// console.log( "parent", parent );
+
+				for ( var i = 0; i < parent.children.length; i ++ ) {
+					var child = parent.children[ i ];
+					// console.log( "child", child );
+
+        			active.push( child );
+					
+					if ( child.material instanceof THREE.MultiMaterial ) {
+
+        				// console.log( "material", child.material )
+        				
+        				for ( var j = 0; j < child.material.materials.length; j ++ ) {
+        					var material = child.material.materials[ j ];
+        					if ( child.userData.color === undefined ) {
+        						child.userData.color = [];
+        					}
+        					child.userData.color.push( material.color.clone() );
+        					// material.wireframe = true;
+        					// material.emissive.setHex( 0xFF0000 );
+        					material.emissive.setHex( 0x112211 );
+        				}
+        				
+        			} else {
+	        			// target.material.wireframe = true;
+        			}
+
+				}
+			}
+
+        }
+
+        function resetActive( array ) {
+
+        	for ( var i = 0; i < array.length; i ++ ) {
+	    		// for ( var i = 0; i < object.children.length; i ++ ) {
+			        // var child = object.children[ i ];
+			        var child = array[ i ];
+					// console.log( "child", child );
+
+					if ( child.material instanceof THREE.MultiMaterial ) {
+
+	    				// console.log( "material", child.material )
+	    				
+	    				for ( var j = 0; j < child.material.materials.length; j ++ ) {
+
+	    					if ( child.userData.color !== undefined ) {
+
+	        					var material = child.material.materials[ j ];
+	        					var hsl = child.userData.color.pop();
+
+	        					material.emissive.setHex( 0x000000 );
+	    					}
+	    					// material.wireframe = true;
+	    					// material.emissive.setHex( 0x000000 );
+	    				}
+	    				
+	    			} else {
+	        			// target.material.wireframe = true;
+	    			}
+	    		// }
+        	}
+        	// array = [];
+        	return [];
+    	}
+
+        caster = {
+        	fire: function() {
+
+				// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
+				// scene.add( arrowHelper );
+
+	        	raycaster.setFromCamera( new THREE.Vector2(), camera );
+	        	intersections = raycaster.intersectObjects( safe.door.children );
+
+        		// console.log("fire", intersections);
+
+	        	if ( intersections.length > 0 ) {
+        			var target = intersections[ 0 ];
+        			// console.log( intersections[ 0 ] );
+
+        			if ( target.distance < interactionDistance ) {
+
+        				interact( target.object );
+
+        			} else {
+        				active = resetActive( active );
+        			}
+
+	        	} else {
+	        		active = resetActive( active );
+	        	}
+
+        		// console.log( scene.children );
+        		// console.log( safe );
+        	}
+        }
+
+        document.addEventListener('keydown',onDocumentKeyDown,false);
+		document.addEventListener('keyup',onDocumentKeyUp,false);
+
+		function onDocumentKeyDown(event){
+			event = event || window.event;
+			var keycode = event.keyCode;
+
+			switch( keycode ) {
+				case 69 : //E
+	        		// execute only once on keydown, until reset
+					if( toggle ) { return; }
+					toggle = !toggle;
+
+	        		if ( active[ 0 ] !== undefined ) {
+	        			active[ 0 ].parent.userData.fsm.interact();
+	        		}
+				break;
+			}
+
+		}
+
+		function onDocumentKeyUp(event){
+			event = event || window.event;
+			var keycode = event.keyCode;
+
+			switch( keycode ) {
+				case 69 : //E
+	        		// execute only once on keydown, until reset
+					toggle = false;
+				break;
+			}
+
+		}
+
+        function handleMouseDown( event ) {
+        	if ( event.button === 0 ) {
+
+        	} else {
+
+        	}
+        }
+
+        // document.body.addEventListener( "mousedown", handleMouseDown );
+
+        // dg.add( caster, "fire" );
 
 		// DEBUG GUI
 
@@ -237,13 +403,14 @@ define([
 	// MAIN LOOP
     var animate = function () {
 
+    	caster.fire();
+
     	var delta = clock.getDelta();
 
     	physics.update( delta );
     	controls.update();
 
 		TWEEN.update();
-		// controls.update();
 		stats.update();
 
 		skycube.update( camera, renderer );

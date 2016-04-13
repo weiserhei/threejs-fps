@@ -92,7 +92,7 @@ define([
 			);
 			character.castShadow = directionMesh.castShadow = true;
 
-			character.add( directionMesh );
+			// character.add( directionMesh );
 			directionMesh.position.set( 0, 0, -radius * 2 );
 			
 			// character.geometry.translate( 0, - character.geometry.parameters.height, 0 );
@@ -111,7 +111,7 @@ define([
 		*/
 
 		this.mesh = createCharacterTestCapsule( radius, height );
-		this.mesh.visible = visualizePlayer;
+		this.mesh.material.visible = visualizePlayer;
 
 		scene.add( this.mesh );
 

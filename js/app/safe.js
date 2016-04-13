@@ -14,6 +14,7 @@ define([
 
     'use strict';
 
+
     // SOUNDS
 	var sound1 = new THREE.PositionalAudio( listener );
 	sound1.load( 'assets/sounds/safe_door.ogg' );
@@ -66,7 +67,7 @@ define([
 
         var tweens = setupTweens();
         fsm = setupFSM( tweens );
-       
+       	safedoorGroup.userData.fsm = fsm;
     };
 
     // MODEL
@@ -141,7 +142,6 @@ define([
         // geometry.translate( -0.531 + xoffset, 0.681 + 0.25, 0.106 + zoffset );
         var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
         mesh.position.set( - 0.106, 0.38, -0.545 );
-        handleMesh( mesh );
 
         safewheel = mesh;
         handleMesh( mesh );
@@ -362,6 +362,12 @@ define([
       }
     });
     */
+    var exports = {
+    	fsm: fsm,
+    	object: safeGroup,
+    	door: safedoorGroup
+    };
 
-    return fsm;
+    return exports;
+
 });
