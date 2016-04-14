@@ -46,6 +46,7 @@ define([
 
 	var safewheel, safegriff, safedoor;
 	var safedoorGroup = new THREE.Group();
+
 	safedoorGroup.position.set( - 0.58, 0.53, 0.54 );
 
 	var safeGroup = new THREE.Group();
@@ -54,6 +55,7 @@ define([
 
 	safeGroup.rotation.y = Math.PI / 2;
 	safeGroup.position.set ( 0, 0, -1 );
+	
 	safeGroup.add( sound1 );
 	safeGroup.add( sound2 );
 	safeGroup.add( sound3 );
@@ -75,6 +77,23 @@ define([
 		var tweens = setupTweens();
 		fsm = setupFSM( tweens );
 		safedoorGroup.userData.fsm = fsm;
+
+		// var box = new THREE.Box3();
+		// box.setFromObject( safedoorGroup );
+
+		// door bounding box for raycasting
+		var bbox = new THREE.BoundingBoxHelper( safedoorGroup );
+		bbox.update();
+		bbox.position.set( - 0.02, 0.40, -0.54 );
+		// var pos1 = safedoorGroup.position.clone();
+		// pos1.add( safeGroup.getWorldPosition() );
+		// bbox.position.copy( pos1 );
+		bbox.material.visible = false;
+		bbox.rotation.copy( safeGroup.rotation );
+		// scene.add ( bbox );
+		safedoorGroup.add ( bbox );
+
+		safedoorGroup.userData.bbox = bbox;
 	};
 
 	// MODEL
@@ -92,53 +111,42 @@ define([
 
 	function handleMesh( mesh ) {
 		// scene.add( mesh );
+		var stdMaterial = mesh.material;
+		var highlightMaterial = mesh.material.clone();
+
+		if ( highlightMaterial instanceof THREE.MultiMaterial ) {
+
+			// console.log( "material", child.material )
+			
+			for ( var i = 0; i < highlightMaterial.materials.length; i ++ ) {
+				var material = highlightMaterial.materials[ i ];
+				// if ( mesh.userData.color === undefined ) {
+					// mesh.userData.color = [];
+				// }
+				// mesh.userData.color.push( material.color.clone() );
+				// material.wireframe = true;
+				// material.color.setHex( 0xFF0000 );
+				// material.emissive.setHex( 0x112211 );
+				// material.emissive.setHex( 0x011001 );
+				// material.transparent = true;
+				// material.opacity = 0.8;
+				material.color.offsetHSL( 0, 0.04, 0.08 );
+			}
+			
+		} else {
+			// target.material.wireframe = true;
+		}
+
 
 		mesh.userData.highlight = function() {
 
-			if ( mesh.material instanceof THREE.MultiMaterial ) {
+			this.material = highlightMaterial;
 
-				// console.log( "material", child.material )
-				
-				for ( var j = 0; j < mesh.material.materials.length; j ++ ) {
-					var material = mesh.material.materials[ j ];
-					if ( mesh.userData.color === undefined ) {
-						mesh.userData.color = [];
-					}
-					// mesh.userData.color.push( material.color.clone() );
-					// material.wireframe = true;
-					// material.color.setHex( 0xFF0000 );
-					// material.emissive.setHex( 0x112211 );
-					material.emissive.setHex( 0x011001 );
-				}
-				
-			} else {
-				// target.material.wireframe = true;
-			}
 		}.bind( mesh );
 
 		mesh.userData.reset = function() {
 
-			if ( mesh.material instanceof THREE.MultiMaterial ) {
-
-				// console.log( "material", mesh.material )
-				
-				for ( var j = 0; j < mesh.material.materials.length; j ++ ) {
-
-					if ( mesh.userData.color !== undefined ) {
-
-    					var material = mesh.material.materials[ j ];
-    					// var color = mesh.userData.color[ j ];
-    					// console.log("color", color );
-    					// material.color = color;
-    					material.emissive.setHex( 0x000000 );
-						// material.wireframe = true;
-					}
-
-				}
-				
-			} else {
-    			// target.material.wireframe = true;
-			}
+			this.material = stdMaterial;
 
 		}.bind( mesh );
 

@@ -112,7 +112,7 @@ define([
         var safetext = hud.box("Press E");
 
         function setActive( object ) {
-
+        	// console.log( object );
 			if ( object.parent instanceof THREE.Group ) {
 
 				var parent = object.parent;
@@ -167,32 +167,35 @@ define([
 
 		}
 
+		// todo
+		// raycaster has to wait for bounding box meshes
+		// chain it / use loading manager
         caster = {
-        	fire: function() {
+        	fire: function( objects ) {
 
-				// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
-				// scene.add( arrowHelper );
+					// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
+					// scene.add( arrowHelper );
 
-	        	raycaster.setFromCamera( new THREE.Vector2(), camera );
-	        	intersections = raycaster.intersectObjects( safe.door.children );
+		        	raycaster.setFromCamera( new THREE.Vector2(), camera );
+		        	intersections = raycaster.intersectObjects( objects );
 
-        		// console.log("fire", intersections);
+	        		// console.log("fire", intersections);
+	        		
+		        	if ( intersections.length > 0 ) {
+	        			var target = intersections[ 0 ];
+	        			// console.log( intersections[ 0 ] );
 
-	        	if ( intersections.length > 0 ) {
-        			var target = intersections[ 0 ];
-        			// console.log( intersections[ 0 ] );
+	        			if ( target.distance < interactionDistance ) {
 
-        			if ( target.distance < interactionDistance ) {
+	        				setActive( target.object );
 
-        				setActive( target.object );
+	        			} else {
+	        				resetActive();
+	        			}
 
-        			} else {
-        				resetActive();
-        			}
-
-	        	} else {
-        			resetActive();
-	        	}
+		        	} else {
+	        			resetActive();
+		        	}
 
         	}
         }
@@ -253,7 +256,11 @@ define([
 	// MAIN LOOP
     var animate = function () {
 
-    	caster.fire();
+		if ( safe.door.userData.bbox !== undefined ) {
+			// also possible without bounding box ( safe.door.children )
+    		caster.fire( [ safe.door.userData.bbox ] );
+    		// caster.fire( safe.door.children );
+    	}
 
     	delta = clock.getDelta();
 
