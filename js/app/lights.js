@@ -9,7 +9,7 @@ define(["three", "scene"], function ( THREE, scene ){
     scene.add( ambientLight );
 
 	// Spot Top
-	var spotTop = addShadowedLight( 2.1, 8, 3, 0xffffff, 0.6 );
+	var dirLight = addShadowedLight( 2.1, 8, 3, 0xffffff, 0.6 );
 		
 	function addShadowedLight( x, y, z, color, intensity ) {
 

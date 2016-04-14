@@ -1,5 +1,10 @@
 /**
-* Setup the control method
+* Safe Object (interactive)
+* consists of
+* Model (mesh)
+* Tweens
+* State Machine
+* Sounds
 */
 
 define([
@@ -50,6 +55,8 @@ define([
 	safeGroup.rotation.y = Math.PI / 2;
 	safeGroup.position.set ( 0, 0, -1 );
 	safeGroup.add( sound1 );
+	safeGroup.add( sound2 );
+	safeGroup.add( sound3 );
 
 	// collision
 	physics.makeStaticBox(new THREE.Vector3(1,0.3,1), safeGroup.position, undefined );
@@ -65,7 +72,7 @@ define([
 	};
 	manager.onLoad = function() {
 
-	var tweens = setupTweens();
+		var tweens = setupTweens();
 		fsm = setupFSM( tweens );
 		safedoorGroup.userData.fsm = fsm;
 	};
@@ -85,6 +92,56 @@ define([
 
 	function handleMesh( mesh ) {
 		// scene.add( mesh );
+
+		mesh.userData.highlight = function() {
+
+			if ( mesh.material instanceof THREE.MultiMaterial ) {
+
+				// console.log( "material", child.material )
+				
+				for ( var j = 0; j < mesh.material.materials.length; j ++ ) {
+					var material = mesh.material.materials[ j ];
+					if ( mesh.userData.color === undefined ) {
+						mesh.userData.color = [];
+					}
+					// mesh.userData.color.push( material.color.clone() );
+					// material.wireframe = true;
+					// material.color.setHex( 0xFF0000 );
+					// material.emissive.setHex( 0x112211 );
+					material.emissive.setHex( 0x011001 );
+				}
+				
+			} else {
+				// target.material.wireframe = true;
+			}
+		}.bind( mesh );
+
+		mesh.userData.reset = function() {
+
+			if ( mesh.material instanceof THREE.MultiMaterial ) {
+
+				// console.log( "material", mesh.material )
+				
+				for ( var j = 0; j < mesh.material.materials.length; j ++ ) {
+
+					if ( mesh.userData.color !== undefined ) {
+
+    					var material = mesh.material.materials[ j ];
+    					// var color = mesh.userData.color[ j ];
+    					// console.log("color", color );
+    					// material.color = color;
+    					material.emissive.setHex( 0x000000 );
+						// material.wireframe = true;
+					}
+
+				}
+				
+			} else {
+    			// target.material.wireframe = true;
+			}
+
+		}.bind( mesh );
+
 		safedoorGroup.add( mesh );
 	}
 
@@ -207,7 +264,7 @@ define([
 		var spin_griff = tweenVector( source, target, time, easing );
 
 		// rotation (using slerp)  
-		//       var euler = new THREE.Euler( Math.PI * 2, 0, 0, 'XYZ');
+		// var euler = new THREE.Euler( Math.PI * 2, 0, 0, 'XYZ');
 		// var qend = new THREE.Quaternion().setFromEuler(euler); //dst quaternion
 		// console.log( qend );
 		// var source = safegriff;

@@ -7,7 +7,9 @@ define([
        "camera",
        "container",
        "FPSMover",
-       ], function ( THREE, camera, container, FPSMover ) {
+       "Crosshair",
+       "debugGUI"
+       ], function ( THREE, camera, container, FPSMover, Crosshair, debugGUI ) {
 
     'use strict';
 
@@ -50,6 +52,31 @@ define([
 	var controls = new FPSMover( camera, container );
 	// controls.getControls().enabled = true;
 
-	
+	var crosshair = new Crosshair( 0.003, 0.002, camera );
+
+	function thirdPerson( value ) {
+		if( value ) {
+			camera.position.set( 0, 1.5, 6 );
+			controls.mesh.material.visible = value;
+			crosshair.visible = false;
+
+		} else {
+			camera.position.set( 0, 0, 0 );
+			controls.mesh.material.visible = value;
+			crosshair.visible = true;
+		}
+	}
+
+	var options = {
+		thirdPerson: false,
+		reset: function() { 
+			tweenHelper.resetCamera( 600 );
+		},
+	}
+	var dg = debugGUI.getFolder("Controls")
+	dg.add( options, "thirdPerson" ).name("Third Person Camera").onChange( thirdPerson );
+	dg.add( controls, "reset" ).name("Reset Player");
+	// dg.add( options, "reset" ).name("Reset Camera");
+
     return controls;
 });
