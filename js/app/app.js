@@ -298,7 +298,7 @@ define([
         function removeHighlight( mesh ) {
 			if ( mesh.material instanceof THREE.MultiMaterial ) {
 
-				// console.log( "material", child.material )
+				// console.log( "material", mesh.material )
 				
 				for ( var j = 0; j < mesh.material.materials.length; j ++ ) {
 
