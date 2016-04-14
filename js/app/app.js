@@ -285,8 +285,9 @@ define([
 					}
 					// mesh.userData.color.push( material.color.clone() );
 					// material.wireframe = true;
-					// material.emissive.setHex( 0xFF0000 );
-					material.emissive.setHex( 0x112211 );
+					// material.color.setHex( 0xFF0000 );
+					// material.emissive.setHex( 0x112211 );
+					material.emissive.setHex( 0x011001 );
 				}
 				
 			} else {
@@ -304,11 +305,13 @@ define([
 					if ( mesh.userData.color !== undefined ) {
 
     					var material = mesh.material.materials[ j ];
-    					// var hsl = child.userData.color.pop();
+    					// var color = mesh.userData.color[ j ];
+    					// console.log("color", color );
+    					// material.color = color;
     					material.emissive.setHex( 0x000000 );
+						// material.wireframe = true;
 					}
-					// material.wireframe = true;
-					// material.emissive.setHex( 0x000000 );
+
 				}
 				
 			} else {
@@ -324,7 +327,7 @@ define([
 			        var child = active[ i ];
 					// console.log( "child", child );
 					if ( child.parent.userData.active ) { 
-						
+
 						child.parent.userData.active = false;
 						safetext.show( false );
 						continue; 
@@ -358,17 +361,13 @@ define([
         				interact( target.object );
 
         			} else {
-        				// active = resetActive( active );
         				resetActive();
         			}
 
 	        	} else {
         			resetActive();
-	        		// active = resetActive( active );
 	        	}
 
-        		// console.log( scene.children );
-        		// console.log( safe );
         	}
         }
 
