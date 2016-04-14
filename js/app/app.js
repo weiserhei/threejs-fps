@@ -296,6 +296,7 @@ define([
         }
 
         function removeHighlight( mesh ) {
+
 			if ( mesh.material instanceof THREE.MultiMaterial ) {
 
 				// console.log( "material", mesh.material )
@@ -319,27 +320,34 @@ define([
 			}
         }
 
-        function resetActive() {
+		function resetActive() {
 
-        	for ( var i = 0; i < active.length; i ++ ) {
-	    		// for ( var i = 0; i < object.children.length; i ++ ) {
-			        // var child = object.children[ i ];
-			        var child = active[ i ];
-					// console.log( "child", child );
-					if ( child.parent.userData.active ) { 
+			if ( active.length > 0 ) {
 
-						child.parent.userData.active = false;
-						safetext.show( false );
-						continue; 
+				if ( active[ 0 ].parent instanceof THREE.Group ) {
+
+					var parent = active[ 0 ].parent;
+					// console.log( "parent", parent );
+					// if ( parent.userData.active ) { return; }
+
+					parent.userData.active = false;
+					safetext.show( false );
+
+					for ( var i = 0; i < parent.children.length; i ++ ) {
+						var child = parent.children[ i ];
+						// console.log( "child", child );
+
+						var index = active.indexOf(child);
+						if (index > -1) {
+							active.splice(index, 1);
+						}
+						removeHighlight( child );
+
 					}
+				}
+			}
 
-					removeHighlight( child );
-
-	    		// }
-        	}
-        	// array = [];
-        	return [];
-    	}
+		}
 
         caster = {
         	fire: function() {
