@@ -18,7 +18,8 @@ define([
     "physics",
     "Room",
     "safe",
-    "Crosshair"
+    "Crosshair",
+    "HUD"
 	], function ( 
              THREE, 
              TWEEN, 
@@ -35,7 +36,8 @@ define([
              physics,
              Room,
              safe,
-             Crosshair
+             Crosshair,
+             HUD
              ) {
 	
 	// 'use strict';
@@ -210,7 +212,6 @@ define([
 		}
 
 
-
 		var options = {
 			reset: function() { 
 				tweenHelper.resetCamera( 600 );
@@ -245,71 +246,92 @@ define([
         var active = [];
         var toggle = false;
 
+        var hud = new HUD( container );
+        var safetext = hud.box("Press E");
+
         function interact( object ) {
 
 			if ( object.parent instanceof THREE.Group ) {
 
 				var parent = object.parent;
 				// console.log( "parent", parent );
+				if ( parent.userData.active ) { return; }
+
+				parent.userData.active = true;
+				safetext.show( true );
 
 				for ( var i = 0; i < parent.children.length; i ++ ) {
 					var child = parent.children[ i ];
 					// console.log( "child", child );
 
         			active.push( child );
-					
-					if ( child.material instanceof THREE.MultiMaterial ) {
-
-        				// console.log( "material", child.material )
-        				
-        				for ( var j = 0; j < child.material.materials.length; j ++ ) {
-        					var material = child.material.materials[ j ];
-        					if ( child.userData.color === undefined ) {
-        						child.userData.color = [];
-        					}
-        					child.userData.color.push( material.color.clone() );
-        					// material.wireframe = true;
-        					// material.emissive.setHex( 0xFF0000 );
-        					material.emissive.setHex( 0x112211 );
-        				}
-        				
-        			} else {
-	        			// target.material.wireframe = true;
-        			}
+        			highlight( child );
 
 				}
 			}
 
         }
 
-        function resetActive( array ) {
+        function highlight( mesh ) {
 
-        	for ( var i = 0; i < array.length; i ++ ) {
+			if ( mesh.material instanceof THREE.MultiMaterial ) {
+
+				// console.log( "material", child.material )
+				
+				for ( var j = 0; j < mesh.material.materials.length; j ++ ) {
+					var material = mesh.material.materials[ j ];
+					if ( mesh.userData.color === undefined ) {
+						mesh.userData.color = [];
+					}
+					// mesh.userData.color.push( material.color.clone() );
+					// material.wireframe = true;
+					// material.emissive.setHex( 0xFF0000 );
+					material.emissive.setHex( 0x112211 );
+				}
+				
+			} else {
+    			// target.material.wireframe = true;
+			}
+        }
+
+        function removeHighlight( mesh ) {
+			if ( mesh.material instanceof THREE.MultiMaterial ) {
+
+				// console.log( "material", child.material )
+				
+				for ( var j = 0; j < mesh.material.materials.length; j ++ ) {
+
+					if ( mesh.userData.color !== undefined ) {
+
+    					var material = mesh.material.materials[ j ];
+    					// var hsl = child.userData.color.pop();
+    					material.emissive.setHex( 0x000000 );
+					}
+					// material.wireframe = true;
+					// material.emissive.setHex( 0x000000 );
+				}
+				
+			} else {
+    			// target.material.wireframe = true;
+			}
+        }
+
+        function resetActive() {
+
+        	for ( var i = 0; i < active.length; i ++ ) {
 	    		// for ( var i = 0; i < object.children.length; i ++ ) {
 			        // var child = object.children[ i ];
-			        var child = array[ i ];
+			        var child = active[ i ];
 					// console.log( "child", child );
+					if ( child.parent.userData.active ) { 
+						
+						child.parent.userData.active = false;
+						safetext.show( false );
+						continue; 
+					}
 
-					if ( child.material instanceof THREE.MultiMaterial ) {
+					removeHighlight( child );
 
-	    				// console.log( "material", child.material )
-	    				
-	    				for ( var j = 0; j < child.material.materials.length; j ++ ) {
-
-	    					if ( child.userData.color !== undefined ) {
-
-	        					var material = child.material.materials[ j ];
-	        					var hsl = child.userData.color.pop();
-
-	        					material.emissive.setHex( 0x000000 );
-	    					}
-	    					// material.wireframe = true;
-	    					// material.emissive.setHex( 0x000000 );
-	    				}
-	    				
-	    			} else {
-	        			// target.material.wireframe = true;
-	    			}
 	    		// }
         	}
         	// array = [];
@@ -336,11 +358,13 @@ define([
         				interact( target.object );
 
         			} else {
-        				active = resetActive( active );
+        				// active = resetActive( active );
+        				resetActive();
         			}
 
 	        	} else {
-	        		active = resetActive( active );
+        			resetActive();
+	        		// active = resetActive( active );
 	        	}
 
         		// console.log( scene.children );

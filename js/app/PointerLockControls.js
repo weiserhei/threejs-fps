@@ -282,8 +282,9 @@ define([
 			var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
 			if ( havePointerLock ) {
-
+				
 				var element = document.body;
+				// var element = window;
 
 				var pointerlockchange = function ( event ) {
 
