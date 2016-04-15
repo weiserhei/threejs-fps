@@ -24,6 +24,8 @@ define([
 		infoText.className = "infoText";
 		// infoText.style.opacity = "0";
 		// infoText.classList.add("hidden");
+
+		infoText.initial = message;
 		infoText.innerHTML = message;
 
 		this.container.appendChild( infoText );
@@ -31,10 +33,16 @@ define([
 		infoText.played = false;
 		infoText.autoFadeOut = false;
 
-		infoText.show = function( value ) {
+		infoText.show = function( value, message ) {
 
 			// if( this.played ) { return; }
 			this.played = true;
+
+			if( message ) {
+				
+				this.innerHTML = this.initial + " " + message;
+				
+			}
 
 			if ( value ) {
 				// this.classList.remove("hidden");

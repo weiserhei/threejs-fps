@@ -31,5 +31,15 @@ define(["jquery","CanvasLoader"], function ($, CanvasLoader) {
 		// $('.loading-container').fadeOut();
 	}
 
-    return container;
+	var complete = function() {
+
+        // set bar to 100% to prevent overflow
+        // progressbar.style.width = 1 * barwidth + "px";
+        container.fadeOut();
+    };
+
+    return {
+    	container: container,
+    	complete: complete
+    };
 });
