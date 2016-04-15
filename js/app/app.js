@@ -16,8 +16,9 @@ define([
     "skycube",
     "physics",
     "Room",
-    "safe",
-    "HUD"
+    "initSafe",
+    "HUD",
+    "initItems"
 	], function ( 
          THREE, 
          TWEEN, 
@@ -32,17 +33,28 @@ define([
          skycube,
          physics,
          Room,
-         safe,
-         HUD
+         initSafe,
+         HUD,
+         initItems
          ) {
 	
-	'use strict';
+	// 'use strict';
 
 	function isFunction(v){if(v instanceof Function){return true;}};
+
 	var caster;
+	var objects = [];
 
 	// Start program
-    var initialize = function () {
+    var initialize = function ( preloaded ) {
+
+    	var safe = initSafe( preloaded.safe );
+    	objects.push( safe.raycastMesh );
+
+    	var items = new initItems( preloaded.items );
+    	var meshes = items.getRaycastMeshes();
+    	objects = objects.concat( meshes );
+    	console.log( objects );
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
@@ -105,14 +117,16 @@ define([
         var intersections = [];
         var interactionDistance = 1.5;
 
-        var active = [];
+        active = [];
         var toggle = false;
 
         var hud = new HUD( container );
         var safetext = hud.box("Press E");
+        var itemText = hud.box("Press E to pickup");
 
         function setActive( object ) {
-        	// console.log( object );
+        	// console.log( "setActive", object );
+
 			if ( object.parent instanceof THREE.Group ) {
 
 				var parent = object.parent;
@@ -133,6 +147,17 @@ define([
 
 				}
 			}
+			else if ( ! object.userData.active ) {
+				// items
+				// console.log("active", object );
+				console.log( object.userData.name );
+
+				itemText.show( true, object.userData.name );
+				object.userData.highlight();
+				object.userData.active = true;
+				active.push( object );
+
+			}
 
         }
 
@@ -140,26 +165,53 @@ define([
 
 			if ( active.length > 0 ) {
 
-				if ( active[ 0 ].parent instanceof THREE.Group ) {
+				for ( var j = 0; j < active.length; j ++ ) {
 
-					var parent = active[ 0 ].parent;
-					// console.log( "parent", parent );
-					// if ( parent.userData.active ) { return; }
+					if ( active[ 0 ].parent instanceof THREE.Group ) {
 
-					parent.userData.active = false;
-					safetext.show( false );
+						var parent = active[ 0 ].parent;
+						// console.log( "parent", parent );
+						// if ( parent.userData.active ) { return; }
 
-					for ( var i = 0; i < parent.children.length; i ++ ) {
-						var child = parent.children[ i ];
-						// console.log( "child", child );
+						parent.userData.active = false;
+						safetext.show( false );
 
-						var index = active.indexOf(child);
-						if (index > -1) {
-							active.splice(index, 1);
+						for ( var i = 0; i < parent.children.length; i ++ ) {
+							var child = parent.children[ i ];
+							// console.log( "child", child );
+
+							var index = active.indexOf(child);
+							if (index > -1) {
+								active.splice(index, 1);
+							}
+							if ( isFunction( child.userData.reset ) ) {
+								child.userData.reset();
+							}
+
 						}
-						if ( isFunction( child.userData.reset ) ) {
-							child.userData.reset();
+					}
+					else {
+
+						itemText.show( false );
+						active[ 0 ].userData.reset();
+						active[ 0 ].userData.active = false;
+
+						/* meh */
+						/* overlapping bounding boxes */
+						for ( var i = 0; i < active.length; i ++ ) {
+
+							if ( active[ i ].parent instanceof THREE.Group ) {
+
+								var parent = active[ i ].parent;
+								var child = active[ i ];
+								parent.userData.active = false;
+								if ( isFunction( child.userData.reset ) ) {
+									child.userData.reset();
+								}
+
+							}
 						}
+						active = [];
 
 					}
 				}
@@ -173,29 +225,29 @@ define([
         caster = {
         	fire: function( objects ) {
 
-					// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
-					// scene.add( arrowHelper );
+				// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
+				// scene.add( arrowHelper );
 
-		        	raycaster.setFromCamera( new THREE.Vector2(), camera );
-		        	intersections = raycaster.intersectObjects( objects );
+	        	raycaster.setFromCamera( new THREE.Vector2(), camera );
+	        	intersections = raycaster.intersectObjects( objects );
 
-	        		// console.log("fire", intersections);
-	        		
-		        	if ( intersections.length > 0 ) {
-	        			var target = intersections[ 0 ];
-	        			// console.log( intersections[ 0 ] );
+        		// console.log("fire", intersections);
+        		
+	        	if ( intersections.length > 0 ) {
+        			var target = intersections[ 0 ];
+        			// console.log( intersections[ 0 ] );
 
-	        			if ( target.distance < interactionDistance ) {
+        			if ( target.distance < interactionDistance ) {
 
-	        				setActive( target.object );
+        				setActive( target.object );
 
-	        			} else {
-	        				resetActive();
-	        			}
+        			} else {
+        				resetActive();
+        			}
 
-		        	} else {
-	        			resetActive();
-		        	}
+	        	} else {
+        			resetActive();
+	        	}
 
         	}
         }
@@ -213,8 +265,19 @@ define([
 					if( toggle ) { return; }
 					toggle = !toggle;
 
-	        		if ( active[ 0 ] !== undefined ) {
-	        			active[ 0 ].parent.userData.fsm.interact();
+					var object = active[ 0 ];
+	        		if ( object !== undefined ) {
+						// console.log( object );
+	        			if ( object.parent.userData.fsm !== undefined ) {
+
+		        			if ( isFunction( object.parent.userData.fsm.interact() ) ) {
+		        				object.parent.userData.fsm.interact();
+		        			} 
+
+	        			}
+	        			else if ( isFunction( object.userData.interact() ) ) {
+	        				object.userData.interact();
+	        			}
 	        		}
 				break;
 			}
@@ -256,11 +319,7 @@ define([
 	// MAIN LOOP
     var animate = function () {
 
-		if ( safe.door.userData.bbox !== undefined ) {
-			// also possible without bounding box ( safe.door.children )
-    		caster.fire( [ safe.door.userData.bbox ] );
-    		// caster.fire( safe.door.children );
-    	}
+    	caster.fire( objects );
 
     	delta = clock.getDelta();
 
