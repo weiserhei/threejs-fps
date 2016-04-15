@@ -338,7 +338,7 @@ define([
 
 			});
 
-			folder.open();
+			// folder.open();
 
 			folder.add( fsm, "current" ).name("Current State").listen();
 			folder.add( fsm, "interact" ).name("interact");
