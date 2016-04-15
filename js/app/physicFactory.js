@@ -205,7 +205,7 @@ define([
 		plane.castShadow = true;
 		plane.receiveShadow = true;
 		plane.goblin = new Goblin.RigidBody(
-			//new Goblin.PlaneShape( orientation, half_width, half_length ),
+			// new Goblin.PlaneShape( orientation, half_width, half_length ),
 			new Goblin.BoxShape(
 				orientation === 1 || orientation === 2 ? half_width : 0.005,
 				orientation === 0 ? half_width : ( orientation === 2 ? half_length : 0.005 ),

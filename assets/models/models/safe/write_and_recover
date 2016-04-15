@@ -1,0 +1,170 @@
+import bpy
+import re
+
+#
+# EXPORT LOC & ROT of safe
+#
+# by Tobias Staib
+# 
+
+filename = "safe_details.txt"
+curloc = bpy.data.filepath+"\\..\\"
+file = open(curloc+filename, "r")
+
+
+
+##### write the postions #############################################
+#write position data
+
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        print("found object containing safe in name: " + obj.name) 
+        file.write("#three.js ready data")
+        file.write(obj.name+"\n location (x,z,-y):\n %s, %s, %s\n\n" %(obj.location.x, obj.location.z, -obj.location.y))
+
+file.close()
+##################################################
+
+
+
+"""
+###### Write and recover ############################################
+# try to re place the objects...
+j = 0
+
+while j < 10:
+    
+    curname = file.readline()
+    file.readline() #for location bla bla bla
+    curline = file.readline()
+    file.readline()
+   
+    curname = curname.strip("\n")
+    print(curname)
+
+    j += 1
+
+    print(curline)
+    
+    curtres = re.findall("\d+.\d+",curline) 
+    
+    print(curtres)
+ 
+    x = float(curtres[0])
+    y = float(curtres[1])
+    z = float(curtres[2]) 
+  
+    bpy.data.objects[curname].location.x = x
+    bpy.data.objects[curname].location.y = y
+    bpy.data.objects[curname].location.z = z
+ 
+    curtres = []
+##################################################################
+"""
+ 
+ 
+ 
+ 
+ 
+ 
+file.close()
+
+
+
+"""
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        if obj.type != 'MESH':
+            break
+        
+        obj.select = True
+        
+        bpy.ops.export_scene(filepath="//..//"+obj.name+".js")
+        print("exported "+obj.name+".js")
+        
+        bpy.ops.object.select_all(action='DESELECT')
+
+
+
+
+
+
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        #if obj.type is 'EMPTY':
+            obj.select = True
+      
+
+
+file.write("#m: Türe gespiegelt\n")
+file.write("#r: Rotation um z\n")
+file.write("#l: Location mit x, y, z\n#---\n")
+file.write("#Türen Typ 1 - Kleine Türen\n\n")
+
+for obj in df1.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+    
+file.write("#Türen Typ 2 - Große Türen -rechts\n\n")    
+for obj in df2.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+
+file.write("#Türen Typ 3 - Große Türen - links\n\n")
+for obj in df3.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+    
+file.close()
+
+
+
+########################
+
+import bpy
+
+#
+# EXPORT LOC, ROT of DOORs
+#
+# by Tobias Staib
+# 
+
+
+filename = "door_details.txt"
+curloc = bpy.data.filepath+"\\..\\"
+
+
+file = open(curloc+filename, "w")
+
+df1 = bpy.data.objects["door_father_1"]
+df2 = bpy.data.objects["door_father_2"]
+df3 = bpy.data.objects["door_father_3"]
+
+
+file.write("#m: Türe gespiegelt\n")
+file.write("#r: Rotation um z\n")
+file.write("#l: Location mit x, y, z\n#---\n")
+file.write("#Türen Typ 1 - Kleine Türen\n\n")
+
+for obj in df1.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+    
+file.write("#Türen Typ 2 - Große Türen -rechts\n\n")    
+for obj in df2.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+
+file.write("#Türen Typ 3 - Große Türen - links\n\n")
+for obj in df3.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+    
+file.close()
+"""

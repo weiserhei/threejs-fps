@@ -1,0 +1,127 @@
+import bpy
+
+#
+# EXPORT LOC & ROT of safe
+#
+# by Tobias Staib
+# 
+
+
+"""
+#write position data
+filename = "safe_details.txt"
+curloc = bpy.data.filepath+"\\..\\"
+
+file = open(curloc+filename, "w")
+
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        print("found object containing safe in name: " + obj.name) 
+        file.write(obj.name+"\n location (x,y,z):\n %s, %s, %s\n\n" %(obj.location.x, obj.location.y, obj.location.z))
+
+file.close()
+"""
+
+
+"""
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        if obj.type != 'MESH':
+            break
+        
+        obj.select = True
+        
+        bpy.ops.export_scene(filepath="//..//"+obj.name+".js")
+        print("exported "+obj.name+".js")
+        
+        bpy.ops.object.select_all(action='DESELECT')
+"""
+
+
+
+
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        if obj.type is "MESH":
+            obj.select = False
+      
+
+
+
+
+
+
+"""
+
+file.write("#m: Türe gespiegelt\n")
+file.write("#r: Rotation um z\n")
+file.write("#l: Location mit x, y, z\n#---\n")
+file.write("#Türen Typ 1 - Kleine Türen\n\n")
+
+for obj in df1.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+    
+file.write("#Türen Typ 2 - Große Türen -rechts\n\n")    
+for obj in df2.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+
+file.write("#Türen Typ 3 - Große Türen - links\n\n")
+for obj in df3.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+    
+file.close()
+
+
+
+########################
+
+import bpy
+
+#
+# EXPORT LOC, ROT of DOORs
+#
+# by Tobias Staib
+# 
+
+
+filename = "door_details.txt"
+curloc = bpy.data.filepath+"\\..\\"
+
+
+file = open(curloc+filename, "w")
+
+df1 = bpy.data.objects["door_father_1"]
+df2 = bpy.data.objects["door_father_2"]
+df3 = bpy.data.objects["door_father_3"]
+
+
+file.write("#m: Türe gespiegelt\n")
+file.write("#r: Rotation um z\n")
+file.write("#l: Location mit x, y, z\n#---\n")
+file.write("#Türen Typ 1 - Kleine Türen\n\n")
+
+for obj in df1.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+    
+file.write("#Türen Typ 2 - Große Türen -rechts\n\n")    
+for obj in df2.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+
+file.write("#Türen Typ 3 - Große Türen - links\n\n")
+for obj in df3.children:
+    file.write("m: "+str(obj.scale.y)+"\n")
+    file.write("r: "+str(obj.rotation_euler[2])+"\n\n")
+    file.write("l: %s, %s, %s\n\n" % (obj.location.x, obj.location.y, obj.location.z))  
+    
+file.close()
+"""

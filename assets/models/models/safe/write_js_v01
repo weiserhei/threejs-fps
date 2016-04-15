@@ -1,0 +1,176 @@
+import bpy
+import re
+import glob
+import os
+
+
+#
+# EXPORT LOC & ROT of safe
+#
+# by Tobias Staib
+# 
+
+#filename = "safe_details.txt"
+
+filename = "init_safe.js"
+curloc = bpy.data.filepath+"\\..\\"
+file = open(curloc+filename, "w+")
+
+
+
+
+# ich nehme an es gibt ein <name>.js und in dieser Blender Szene gibt es ebenfalls ein objekt <name>
+
+os.chdir(bpy.data.filepath+"\\..\\")
+for files in glob.glob("safe*.js"):
+    
+    curname = files.rstrip(".js")
+    
+    
+    #myobj = bpy.data.objects["Empty"].children
+    
+    myobj = bpy.context.selected_objects
+    
+    obj = myobj[0]
+    
+    i = 0
+    for ele in myobj:
+        if ele.name == curname:
+            obj = myobj[i]
+            print("found: " +obj.name)
+        i = i + 1
+    
+  
+    
+    print(obj.location)
+    
+    
+    #new way
+    curpos = obj.matrix_local.to_translation()
+    
+    print(curpos)
+    
+    fac = 10
+    
+    x = curpos[0]*fac
+    y = curpos[1]*fac
+    z = curpos[2]*fac
+  
+    
+ 
+    file.write("jsonLoader.load(\"Content/models/office/"+curname+".js\", function callback(geometry, materials) {\n")
+    file.write(     curname+"= new THREE.Mesh(geometry, new THREE.MeshFaceMaterial( materials ));\n")
+    file.write("    for ( i = "+curname+".material.materials.length - 1; i >= 0 ; i -- ) {\n")
+    file.write("        obj = "+curname+".material.materials[ i ];\n")
+    file.write("        obj.shading= THREE.FlatShading;\n")
+    file.write("    }\n")
+    file.write("    "+curname+".scale.set(10,10,10);\n") #fix as all things are factor 10 scaled
+    file.write("    "+curname+".position.set("+str(x)+", "+str(z)+", "+str(-y)+");\n")
+    file.write("    "+curname+".castShadow = true;\n")
+    file.write("    "+curname+".receiveShadow = true;\n")
+    file.write("    scene.add("+curname+");\n")
+    file.write("\n")
+    
+    
+    print("curname:     "+curname)
+    print("filename:    "+files)
+
+
+
+"""
+#write position data
+
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        print("found object containing safe in name: " + obj.name) 
+        file.write("#three.js ready data")
+        file.write(obj.name+"\n location (x,z,-y):\n %s, %s, %s\n\n" %(obj.location.x*10, obj.location.z*10, -obj.location.y*10))
+"""
+
+
+
+
+
+file.close()
+
+
+
+
+
+
+
+
+
+"""
+##### write the postions #############################################
+#write position data
+
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        print("found object containing safe in name: " + obj.name) 
+        file.write("#three.js ready data")
+        file.write(obj.name+"\n location (x,z,-y):\n %s, %s, %s\n\n" %(obj.location.x*10, obj.location.z*10, -obj.location.y*10))
+
+file.close()
+#####################################################################
+"""
+
+
+"""
+###### Write and recover ############################################
+# try to re place the objects...
+j = 0
+
+while j < 10:
+    
+    curname = file.readline()
+    file.readline() #for location bla bla bla
+    curline = file.readline()
+    file.readline()
+   
+    curname = curname.strip("\n")
+    print(curname)
+
+    j += 1
+
+    print(curline)
+    
+    curtres = re.findall("\d+.\d+",curline) 
+    
+    print(curtres)
+ 
+    x = float(curtres[0])
+    y = float(curtres[1])
+    z = float(curtres[2]) 
+  
+    bpy.data.objects[curname].location.x = x
+    bpy.data.objects[curname].location.y = y
+    bpy.data.objects[curname].location.z = z
+ 
+    curtres = []
+##################################################################
+"""
+ 
+ 
+ 
+ 
+ 
+file.close()
+
+
+
+
+
+"""
+for obj in bpy.data.objects:
+    if "safe" in obj.name:
+        if obj.type != 'MESH':
+            break
+        
+        obj.select = True
+        
+        bpy.ops.export_scene(filepath="//..//"+obj.name+".js")
+        print("exported "+obj.name+".js")
+        
+        bpy.ops.object.select_all(action='DESELECT')
+"""

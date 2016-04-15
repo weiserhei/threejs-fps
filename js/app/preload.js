@@ -79,7 +79,11 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
 
 
     // MODEL
-    var jsonLoader = new THREE.JSONLoader( loadingManager ); 
+    var jsonLoader = new THREE.JSONLoader( loadingManager );
+
+    jsonLoader.onError = function( error ) {
+        console.error( error );
+    }
 
     var start = function () {
 
@@ -90,6 +94,31 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
         // safedoor.material.materials[ 2 ].shading = THREE.FlatShading;
         // }, onLoad, onProgress, onError );
 
+        var url = "assets/models/buch/buch.js";
+        jsonLoader.load( url, function callback(geometry, materials) {
+
+            var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+            // var mesh = new THREE.Mesh( geometry, materials[ 0 ] );
+            // mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
+
+            var buch = { meshes: {} };
+            buch.mesh = mesh;
+            items.buch = buch;
+
+        } );
+
+        var url = "assets/models/darkkey/darkkey.js";
+        jsonLoader.load( url, function callback(geometry, materials) {
+
+            var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+            // var mesh = new THREE.Mesh( geometry, materials[ 0 ] );
+            // mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
+
+            var darkkey = {};
+            darkkey.mesh = mesh;
+            items.darkkey = darkkey;
+
+        } );
 
         var url = "assets/models/wrenchkey/wrenchkey.js";
         jsonLoader.load( url, function callback(geometry, materials) {
@@ -108,9 +137,9 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
             var mesh = new THREE.Mesh( geometry, materials[ 0 ] );
             // mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
 
-            var wrenchkey = { meshes: {} };
-            items.wrenchkey = wrenchkey;
+            var wrenchkey = {};
             wrenchkey.mesh = mesh;
+            items.wrenchkey = wrenchkey;
 
         } );
 
@@ -120,9 +149,9 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
             var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
             // var mesh = new THREE.Mesh( geometry, materials[ 0 ] );
             // mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
-            var key = { meshes: {} };
-            items.key = key;
+            var key = {};
             key.mesh = mesh;
+            items.key = key;
 
         } );
 

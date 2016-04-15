@@ -76,7 +76,8 @@ define([
 		// var sound3 = preloaded.sounds.sound3;
 
 		// collision
-		physics.makeStaticBox(new THREE.Vector3(1,0.3,1), safeGroup.position, undefined );
+		// physics.makeStaticBox(new THREE.Vector3(1,0.3,1), safeGroup.position, undefined );
+		physics.makeStaticBox(new THREE.Vector3(1,1.2,1), safeGroup.position, undefined );
 
 		var tweens = setupTweens();
 		var fsm = setupFSM( tweens );
@@ -89,7 +90,6 @@ define([
 		function addHighlight( mesh ) {
 
 			mesh.userData.highlight = function() {
-				console.log("highlight bbox");
 
 				for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
 
@@ -116,7 +116,7 @@ define([
 			}
 
 			mesh.userData.hud = {};
-			mesh.userData.hud.action = "use";
+			mesh.userData.hud.action = "use the";
 			mesh.userData.name = "safe";
 
 			for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {

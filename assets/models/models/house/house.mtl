@@ -1,0 +1,577 @@
+# Blender MTL File: 'house.blend'
+# Material Count: 58
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl aussenwand_einleibung
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_ground.png
+
+newmtl aussenwand_einleibung_NONE
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+
+newmtl aussenwand_einleibung_untitled
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+
+newmtl boden_bad1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_ground.png
+
+newmtl boden_bad2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_ground.png
+
+newmtl boden_bib
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.996970 0.996970 0.996970
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_ground.png
+
+newmtl boden_keller
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_boden_keller.jpg
+
+newmtl boden_keller_NONE
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_boden_keller.jpg
+
+newmtl boden_keller_wc_boden.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_wand_c_05.png
+
+newmtl boden_kitchen
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_ground.png
+
+newmtl boden_marble
+Ns 27.450980
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_marble.png
+
+newmtl boden_marble_NONE
+Ns 27.450980
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_marble.png
+
+newmtl boden_marble_mywall_ts_01_large.png
+Ns 27.450980
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl boden_marble_seamless_marble_sjpg36356.jpg
+Ns 27.450980
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_marble.png
+
+newmtl boden_marble_untitled
+Ns 27.450980
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_marble.png
+
+newmtl boden_wc
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_ground.png
+
+newmtl boden_wohnen
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_ground.png
+
+newmtl boden_wohnen_default_marble.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\default_marble.png
+
+newmtl boden_wohnen_untitled
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_default_ground.png
+
+newmtl boden_wohnen_wooden_parquet_floor_background_tileable.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_default_ground.png
+
+newmtl dach
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\textures\house_roof.jpg
+
+newmtl decke_gesamt
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_zimmerdecke01.jpg
+
+newmtl decke_gesamt_NONE
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_zimmerdecke01.jpg
+
+newmtl fensterglas
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\fenster_regen.png
+map_d E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\fenster_regen.png
+
+newmtl gras
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_gras.jpg
+
+newmtl hoehlenwand
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_rock.jpg
+
+newmtl keller_labor
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_labor.jpg
+
+newmtl labdoor
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.381518 0.499659 0.445993
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+
+newmtl labglass
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.470254 0.624573 0.487152
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.365188
+illum 1
+
+newmtl metal_doorhandle
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.081625 0.081625 0.081625
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+
+newmtl metal_doorhandle_mywood.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.081625 0.081625 0.081625
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\mywood.jpg
+
+newmtl metal_zaun
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.016031 0.016031 0.016031
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl tree_sprite
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\tree_sprite.png
+map_d E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\tree_sprite.png
+
+newmtl wand_bad1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_bad1_wand.png
+
+newmtl wand_bad2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\bad2_wand.png
+
+newmtl wand_bib_oben
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl wand_bib_unten
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl wand_gang
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl wand_gang_smooth
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl wand_keller
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_wand_keller.jpg
+
+newmtl wand_keller_NONE
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_wand_keller.jpg
+
+newmtl wand_ktichen
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl wand_stein
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\textures\\house_outerwall.jpg
+
+newmtl wand_stein_brickwork-texture.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\textures\house_outerwall.jpg
+
+newmtl wand_wc
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl wand_wohnen_oben
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_wand_a_02.png
+
+newmtl wand_wohnen_oben_NONE
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_wand_a_02.png
+
+newmtl wand_wohnen_oben_depositphotos_1208787-Abstract-floral-seamless-background..jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\depositphotos_1208787-Abstract-floral-seamless-background..jpg
+
+newmtl wand_wohnen_oben_mywall_ts_01_large.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl wand_wohnen_unten
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wand_a_01x.jpg
+
+newmtl wood_cross
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd house_wood03.jpg
+
+newmtl wood_doors
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_rock.jpg
+
+newmtl wood_doors_WoodPlanksFloors0026_11_S.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\doors\mywood.jpg
+
+newmtl wood_doors_WoodPlanksFloors0026_11_S.jpg.001
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\mywood.jpg
+
+newmtl wood_doors_house_wood01.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_wood01.jpg
+
+newmtl wood_doors_mywood.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\Documents\Dropbox\dark_key_indie_game\04_GameContent\Textures\sample_textures\mywood.jpg
+
+newmtl zaun
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.635412 0.635412 0.635412
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 1
+map_Kd E:\Documents\DarkKeyProject2\DarkKeyProject\Content\models\house\house_zaun2.png
+map_d E:\\Documents\\DarkKeyProject2\\DarkKeyProject\\Content\\models\\house\\house_zaun2.png
