@@ -115,11 +115,12 @@ define([
 		var boundingBoxSize = helper.box.max.sub( helper.box.min );
 		var geometry = new THREE.BoxGeometry( boundingBoxSize.x , boundingBoxSize.y, boundingBoxSize.z );
 
-		var material = new THREE.MeshBasicMaterial( { visible: true, wireframe: true } );
+		var material = new THREE.MeshBasicMaterial( { visible: false, wireframe: true } );
 		var itemMesh = new THREE.Mesh( geometry, material );
 
 		// object.geometry.translate( 0, - boundingBoxSize.y / 2, 0 );
 		itemMesh.add( this.mesh );
+		itemMesh.userData = this.mesh.userData;
 		itemMesh.position.set( 0, 5, 0 );
 		// mesh.position.set( 0, mesh.geometry.parameters.height / 2 + 1.5, 0 );
 		// mesh.rotation.z = Math.PI / 1.5;
