@@ -117,45 +117,25 @@ define([
         var intersections = [];
         var interactionDistance = 1.5;
 
-        active = [];
+        var active;
         var toggle = false;
 
         var hud = new HUD( container );
-        var safetext = hud.box("Press E");
-        var itemText = hud.box("Press E to pickup");
+        var infoText = hud.box("Press E to ");
 
         function setActive( object ) {
         	// console.log( "setActive", object );
 
-			if ( object.parent instanceof THREE.Group ) {
+			 if ( object !== active ) {
 
-				var parent = object.parent;
-				// console.log( "parent", parent );
-				if ( parent.userData.active ) { return; }
-
-				parent.userData.active = true;
-				safetext.show( true );
-
-				for ( var i = 0; i < parent.children.length; i ++ ) {
-					var child = parent.children[ i ];
-					// console.log( "child", child );
-
-        			active.push( child );
-					if ( isFunction( child.userData.highlight ) ) {
-						child.userData.highlight();
-					}
-
-				}
-			}
-			else if ( ! object.userData.active ) {
+			 	resetActive();
 				// items
-				// console.log("active", object );
+				console.log("active", object );
 				console.log( object.userData.name );
 
-				itemText.show( true, object.userData.name );
+				infoText.show( true, object.userData.hud.action + " " + object.userData.name );
 				object.userData.highlight();
-				object.userData.active = true;
-				active.push( object );
+				active = object;
 
 			}
 
@@ -163,65 +143,19 @@ define([
 
 		function resetActive() {
 
-			if ( active.length > 0 ) {
+			if ( active !== undefined ) {
 
-				for ( var j = 0; j < active.length; j ++ ) {
+				infoText.show( false );
 
-					if ( active[ 0 ].parent instanceof THREE.Group ) {
-
-						var parent = active[ 0 ].parent;
-						// console.log( "parent", parent );
-						// if ( parent.userData.active ) { return; }
-
-						parent.userData.active = false;
-						safetext.show( false );
-
-						for ( var i = 0; i < parent.children.length; i ++ ) {
-							var child = parent.children[ i ];
-							// console.log( "child", child );
-
-							var index = active.indexOf(child);
-							if (index > -1) {
-								active.splice(index, 1);
-							}
-							if ( isFunction( child.userData.reset ) ) {
-								child.userData.reset();
-							}
-
-						}
-					}
-					else {
-
-						itemText.show( false );
-						active[ 0 ].userData.reset();
-						active[ 0 ].userData.active = false;
-
-						/* meh */
-						/* overlapping bounding boxes */
-						for ( var i = 0; i < active.length; i ++ ) {
-
-							if ( active[ i ].parent instanceof THREE.Group ) {
-
-								var parent = active[ i ].parent;
-								var child = active[ i ];
-								parent.userData.active = false;
-								if ( isFunction( child.userData.reset ) ) {
-									child.userData.reset();
-								}
-
-							}
-						}
-						active = [];
-
-					}
+				if ( isFunction( active.userData.reset ) ) {
+					active.userData.reset();
 				}
+				active = undefined;
+
 			}
 
 		}
 
-		// todo
-		// raycaster has to wait for bounding box meshes
-		// chain it / use loading manager
         caster = {
         	fire: function( objects ) {
 
@@ -265,7 +199,7 @@ define([
 					if( toggle ) { return; }
 					toggle = !toggle;
 
-					var object = active[ 0 ];
+					var object = active;
 	        		if ( object !== undefined ) {
 						// console.log( object );
 	        			if ( object.parent.userData.fsm !== undefined ) {

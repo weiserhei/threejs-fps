@@ -50,73 +50,17 @@ define([
 		var safegriff = meshes.safegriff;
 		var safedoor = meshes.safedoor;
 		var safebase = meshes.safebase;
+
 	    var safedoorGroup = new THREE.Group();
+		safedoorGroup.add( safewheel );
+		safedoorGroup.add( safegriff );
+		safedoorGroup.add( safedoor );
 
 	    safedoorGroup.position.set( - 0.58, 0.53, 0.54 );
 
 	    var safeGroup = new THREE.Group();
 	    safeGroup.add( safebase );
 	    safeGroup.add( safedoorGroup );
-
-		handleMesh( safewheel );
-		handleMesh( safegriff );
-		handleMesh( safedoor );
-
-		function handleMesh( mesh ) {
-			// scene.add( mesh );
-			var stdMaterial = mesh.material;
-			var highlightMaterial = mesh.material.clone();
-
-			if ( highlightMaterial instanceof THREE.MultiMaterial ) {
-
-				// console.log( "material", child.material )
-
-				for ( var i = 0; i < highlightMaterial.materials.length; i ++ ) {
-					var material = highlightMaterial.materials[ i ];
-					// if ( mesh.userData.color === undefined ) {
-					// mesh.userData.color = [];
-					// }
-					// mesh.userData.color.push( material.color.clone() );
-					// material.wireframe = true;
-					// material.color.setHex( 0xFF0000 );
-					// material.emissive.setHex( 0x112211 );
-					// material.emissive.setHex( 0x011001 );
-					// material.transparent = true;
-					// material.opacity = 0.8;
-					material.color.offsetHSL( 0, 0.04, 0.08 );
-				}
-
-			} else {
-				// target.material.wireframe = true;
-			}
-
-
-			mesh.userData.highlight = function() {
-
-				this.material = highlightMaterial;
-
-			}.bind( mesh );
-
-			mesh.userData.reset = function() {
-
-				this.material = stdMaterial;
-
-			}.bind( mesh );
-
-			safedoorGroup.add( mesh );
-		}
-
-		// var sound1 = preloaded.sounds.sound1;
-		// var sound2 = preloaded.sounds.sound2;
-		// var sound3 = preloaded.sounds.sound3;
-
-		// var safewheel, safegriff, safedoor;
-		// var safedoorGroup = new THREE.Group();
-
-		// safedoorGroup.position.set( - 0.58, 0.53, 0.54 );
-
-		// var safeGroup = new THREE.Group();
-		// safeGroup.add( safedoorGroup );
 
 		scene.add( safeGroup );
 
@@ -126,6 +70,10 @@ define([
 		safeGroup.add( sound1 );
 		safeGroup.add( sound2 );
 		safeGroup.add( sound3 );
+
+		// var sound1 = preloaded.sounds.sound1;
+		// var sound2 = preloaded.sounds.sound2;
+		// var sound3 = preloaded.sounds.sound3;
 
 		// collision
 		physics.makeStaticBox(new THREE.Vector3(1,0.3,1), safeGroup.position, undefined );
@@ -137,6 +85,74 @@ define([
 		// var box = new THREE.Box3();
 		// box.setFromObject( safedoorGroup );
 
+
+		function addHighlight( mesh ) {
+
+			mesh.userData.highlight = function() {
+				console.log("highlight bbox");
+
+				for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
+
+					var mesh = safedoorGroup.children[ i ];
+					if ( mesh.userData.highlightMaterial !== undefined ) {
+						mesh.material = mesh.userData.highlightMaterial;
+					}
+
+				}
+
+			}
+
+			mesh.userData.reset = function() {
+
+				for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
+
+					var mesh = safedoorGroup.children[ i ];
+					if ( mesh.userData.stdMaterial !== undefined ) {
+						mesh.material = mesh.userData.stdMaterial;
+					}
+
+				}
+
+			}
+
+			mesh.userData.hud = {};
+			mesh.userData.hud.action = "use";
+			mesh.userData.name = "safe";
+
+			for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
+
+				var mesh = safedoorGroup.children[ i ];
+
+				mesh.userData.stdMaterial = mesh.material;
+				mesh.userData.highlightMaterial = mesh.material.clone();
+
+				if ( mesh.userData.highlightMaterial instanceof THREE.MultiMaterial ) {
+
+					// console.log( "material", child.material )
+
+					for ( var i = 0; i < mesh.userData.highlightMaterial.materials.length; i ++ ) {
+						var material = mesh.userData.highlightMaterial.materials[ i ];
+						// if ( mesh.userData.color === undefined ) {
+						// mesh.userData.color = [];
+						// }
+						// mesh.userData.color.push( material.color.clone() );
+						// material.wireframe = true;
+						// material.color.setHex( 0xFF0000 );
+						// material.emissive.setHex( 0x112211 );
+						// material.emissive.setHex( 0x011001 );
+						// material.transparent = true;
+						// material.opacity = 0.8;
+						material.color.offsetHSL( 0, 0.04, 0.08 );
+					}
+
+				} else {
+					// target.material.wireframe = true;
+				}
+
+			}
+
+		}
+
 		// door bounding box for raycasting
 		var bbox = new THREE.BoundingBoxHelper( safedoorGroup );
 		bbox.update();
@@ -147,9 +163,9 @@ define([
 		bbox.material.visible = false;
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
-		safedoorGroup.add ( bbox );
+		addHighlight( bbox );
 
-		safedoorGroup.userData.bbox = bbox;
+		safedoorGroup.add ( bbox );
 
 
 		function setupTweens() {
@@ -361,7 +377,7 @@ define([
 			fsm: fsm,
 			object: safeGroup,
 			door: safedoorGroup,
-			raycastMesh: safedoorGroup.userData.bbox
+			raycastMesh: bbox
 		};
 
 		return exports;

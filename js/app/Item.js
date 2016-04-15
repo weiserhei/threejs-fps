@@ -24,9 +24,12 @@ define([
 		mesh.userData = this;
 		this.mesh = mesh;
 		this.name;
+		this.hud = {};
+		this.hud.action = "pickup";
 		this.active = false;
 
 	}
+
 	Item.prototype.highlight = function() {
 
 		var material = this.mesh.material;
@@ -39,8 +42,9 @@ define([
 		}
 		// material.wireframe = true;
 	};
-	Item.prototype.reset = function() {
 
+	Item.prototype.reset = function() {
+		console.log( "reset", this );
 		var material = this.mesh.material;
 		if ( material instanceof THREE.MultiMaterial ) {
 			for ( var i = 0; i < material.materials.length; i ++ ) {
@@ -52,6 +56,7 @@ define([
 		// material.wireframe = false;
 
 	};
+
 	Item.prototype.interact = function() {
 		// pickup Item - hide it
 		console.log("pickup", this );
@@ -59,6 +64,7 @@ define([
 		this.mesh.visible = false;
 		// var material = this.mesh.material.materials[0];
 	};
+
 	Item.prototype.getRaycastMesh = function() {
 
 		// door bounding box for raycasting
