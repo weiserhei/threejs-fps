@@ -93,6 +93,9 @@ define([
 		// constrain safe door to itemslot
 		safe.fsm.onbeforeinteract = function(event, from, to) { 
 
+			// todo
+			// mark interaction as inactive
+			// if not possible
 			if ( this.is( "locked" ) ) {
 			    // some UI action, minigame, unlock this shit
 			   	// return if itemslot isnt filled

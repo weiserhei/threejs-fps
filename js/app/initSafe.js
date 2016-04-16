@@ -93,10 +93,9 @@ define([
 		// var box = new THREE.Box3();
 		// box.setFromObject( safedoorGroup );
 
-
 		function addHighlight( mesh ) {
 
-			mesh.userData.highlight = function() {
+			mesh.userData.highlight = function( inventar, hudElement ) {
 
 				for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
 
@@ -122,8 +121,6 @@ define([
 
 			}
 
-			mesh.userData.hud = {};
-			mesh.userData.hud.action = "use the";
 			mesh.userData.name = "safe";
 
 			for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {

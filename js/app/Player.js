@@ -127,18 +127,16 @@ define([
 			// console.log("active", object );
 			// console.log( "userdata", object.parent.userData );
 
-			// var action = object.userData.hud.action;
-			var action = object.userData.hud.action;
-
-			// if ( ! ( object.parent.userData instanceof Item ) ) {
 			// todo check for interaction class item
 			// instead of ausschlussverfahren
 			var isItem = object.userData instanceof Item;
 			var isItemslot = object.userData instanceof Itemslot;
 
+			// display action from FSM if availiable
 			if ( ! isItem && ! isItemslot ) {
-				// action = object.parent.userData.fsm.transitions()[ 0 ] + " the";
-				action = object.userData.fsm.transitions()[ 0 ] + " the";
+				var action = object.userData.fsm.transitions()[ 0 ] + " the";
+			} else {
+				var action = object.userData.hud.action;
 			}
 
 			this.interactionText.show( true, action + " " + object.userData.name );
