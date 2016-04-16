@@ -33,26 +33,41 @@ define([
 	Player.prototype.interact = function() {
 
 		var object = this.target;
+		var hudElement = this.interactionText;
 
-		if ( object !== undefined ) {
+		// dont do nuffin if no object is in target
+		if ( object === undefined ) {
+			return;
+		}
 
-			// console.log( object );
-			if ( object.parent.userData.fsm !== undefined ) {
+		// console.log( object );
+		var fsm = object.parent.userData.fsm;
+		if ( fsm !== undefined ) {
 
-				if ( isFunction( object.parent.userData.fsm.interact() ) ) {
-					object.parent.userData.fsm.interact();
-				} 
+			if ( isFunction( fsm.interact ) ) {
+				// performance wise? assign new function on each call
+				// maybe link hud element in init function
 
-			}
-			else if ( isFunction( object.userData.interact ) ) {
-
-				if( object.userData instanceof Item ) {
-
-					object.userData.interact();
-					folder.add( object.userData, "name" );
-					this.inventar.push( object.userData );
+				// fsm.onafterinteract = function( event, from, to, msg ) {
+				fsm.onenterstate = function( event, from, to, msg ) {
+					// console.log("leaving state", event, from, to, fsm.transitions() );
+					var action = fsm.transitions()[ 0 ] + " the";
+					hudElement.setText( action + " " + object.userData.name );
 
 				}
+
+				fsm.interact();
+			}
+
+		}
+		else if ( isFunction( object.userData.interact ) ) {
+
+			if( object.userData instanceof Item ) {
+
+				object.userData.interact();
+				folder.add( object.userData, "name" );
+				this.inventar.push( object.userData );
+
 			}
 		}
 

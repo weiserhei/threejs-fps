@@ -43,11 +43,24 @@ define([
 		key.name = "Zauberschlüssel"
 
 		// mesh.scale.set( 0.1, 0.1, 0.1 );
-		key.mesh.position.set( 0.8, 1, 0.8 );
-		key.mesh.rotation.set( 0, Math.PI / 2, Math.PI / 2 );
+		// key.mesh.position.set( 0.0, 1.3, -0.9 );
+		key.mesh.position.set( 0.0, 1.3, -0.9 );
+		// key.mesh.rotation.set( 0, Math.PI / 2, Math.PI / 2 );
+		key.mesh.rotation.set( 0, -2.6, 0 );
 
-		// scene.add( key.mesh );
-		key.physic( 2 );
+		/*
+		var folder = debugGUI.getFolder( "Item" );
+		folder.add( key.mesh.position, "x" ).min( -3 ).max( 3 );
+		folder.add( key.mesh.position, "y" ).min( -3 ).max( 3 );
+		folder.add( key.mesh.position, "z" ).min( -3 ).max( 3 );		
+
+		folder.add( key.mesh.rotation, "x" ).min( -Math.PI ).max( Math.PI );
+		folder.add( key.mesh.rotation, "y" ).min( -Math.PI ).max( Math.PI );
+		folder.add( key.mesh.rotation, "z" ).min( -Math.PI ).max( Math.PI );
+		*/
+
+		scene.add( key.mesh );
+		// key.physic( 2 );
 
 		// buch
 		var mesh = preloaded.buch.mesh;
@@ -81,7 +94,7 @@ define([
 
 		// buch.physic( spawn.scale );
 		var folder = debugGUI.getFolder( "Debug Menu" );
-		folder.add( spawn, "scale" ).min( 0.5 ).max( 10 ).step( 0.5 );;
+		folder.add( spawn, "scale" ).min( 0.5 ).max( 10 ).step( 0.5 );
 		folder.add( spawn, "book" ).name("spawn book");
 
 

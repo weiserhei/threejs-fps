@@ -308,6 +308,11 @@ define([
 					// onunlocked: function() {
 					//     // this.open();
 					// },
+					// onleavestate: function( event, from, to, msg ) {
+					// onafterinteract: function( event, from, to, msg ) {
+					// 	console.log("leaving state", event, from, to, fsm.transitions() );
+
+					// },
 					onleavelocked: function() {
 
 						tweens.wheel.onComplete( function() { 

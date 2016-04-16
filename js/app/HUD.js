@@ -33,6 +33,10 @@ define([
 		infoText.played = false;
 		infoText.autoFadeOut = false;
 
+		infoText.setText = function( text ) {
+			this.innerHTML = this.initial + " " + text;
+		}
+
 		infoText.show = function( value, message ) {
 
 			// if( this.played ) { return; }
