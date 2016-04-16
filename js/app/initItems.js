@@ -1,10 +1,6 @@
 /**
-* Safe Object (interactive)
-* consists of
-* Model (mesh)
-* Tweens
-* State Machine
-* Sounds
+* Initialize Items
+* and some scene objects
 */
 
 define([
@@ -35,7 +31,6 @@ define([
 	physics.makeStaticBox( dimension, position );
 
 
-	
 	function initItems( preloaded, raycastArray ) {
 		// console.log("preloaded", preloaded );
 		var raycastMeshes = [];
@@ -63,38 +58,14 @@ define([
 		zahnrad.mesh.position.set( -2.5, 2, 0 );
 		zahnrad.mesh.rotation.set( Math.PI / 2, 0, 0 );
 		raycastMeshes.push( zahnrad.getRaycastMesh() );
-		zahnrad.physic( 1 );
-		// scene.add( zahnrad.mesh );
+		var compoundMesh = zahnrad.physic( 1 );
+		scene.add( compoundMesh );
 
-		// var temp = zahnrad.mesh.children;
-		// zahnrad.mesh.children = [];
-		// var mesh2 = zahnrad.mesh.clone();
-
-		// zahnrad.mesh.children = temp;
 		var itemslot = new Itemslot( zahnrad );
 		itemslot.mesh.position.set( 2.5, 1.05, 0 );
 		// itemslot.mesh.rotation.set( Math.PI / 2, 0, 0 );
 		raycastMeshes.push( itemslot.getRaycastMesh() );
 		scene.add( itemslot.mesh );
-
-		// // zahnrad2
-		// var mesh2 = preloaded.zahnrad.mesh.clone();
-		// // mesh2.scale.set( 0.7, 0.7, 0.7 );
-		// mesh2.material = mesh2.material.clone();
-		// mesh2.material.opacity = 0.4;
-		// mesh2.material.transparent = true;
-		// mesh2.material.color.setHex( 0xFFFFFF );
-		// // // scale collision box
-		// // mesh2.scale.set( 0.7, 0.7, 0.7 );
-		// var zahnrad2 = new Item( mesh2 );
-		// zahnrad2.name = "Zahnrad2"
-
-		// zahnrad2.mesh.position.set( 2.5, 1.1, 0 );
-		// zahnrad2.mesh.rotation.set( Math.PI / 2, 0, 0 );
-		// raycastMeshes.push( zahnrad2.getRaycastMesh() );
-		// // zahnrad2.physic( 2 );
-		// scene.add( itemslot.mesh );
-
 
 		// key
 		var mesh = preloaded.key.mesh;
@@ -133,7 +104,8 @@ define([
 		buch.name = "Book"
 		// scene.add( buch.mesh );
 		buch.mesh.position.set(0, 5, 0);
-		buch.physic( 2 );
+		var compoundMesh = buch.physic( 2 );
+		scene.add( compoundMesh );
 
 		var spawn = {
 			scale: 5,
@@ -147,7 +119,8 @@ define([
 				buch.mesh.position.set( 0, 5, 0 );
 				buch.name = "Book"
 
-				buch.physic( this.scale );
+				var compoundMesh = buch.physic( this.scale );
+				scene.add( compoundMesh );
 
 				raycastArray.push( buch.getRaycastMesh() );
 

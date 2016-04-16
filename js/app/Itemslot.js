@@ -8,9 +8,8 @@ define([
 	"TWEEN",
 	"debugGUI",
 	"physics",
-	"scene",
 	"listener"
-], function ( THREE, TWEEN, debugGUI, physics, scene, listener ) {
+], function ( THREE, TWEEN, debugGUI, physics, listener ) {
 
 	'use strict';
 
@@ -28,46 +27,72 @@ define([
 	sound3.load( 'assets/sounds/schlag.ogg' );
 	sound3.setVolume( 0.5 );
 
-	//pickableObject
+	//pickableObject Hull
 
 	function Itemslot( item ) {
 
-		this.item = item;
-
+		// clear children for clone
 		var temp = item.mesh.children;
 		item.mesh.children = [];
 
 		var mesh = item.mesh.clone();
+		mesh.material = mesh.material.clone();
 		mesh.rotation.set( 0, 0, 0 );
 
+		// give children back
 		item.mesh.children = temp;
-		// // mesh2.scale.set( 0.7, 0.7, 0.7 );
-		mesh.material = mesh.material.clone();
 
-		this.stdMaterial = mesh.material;
-		
+		// materials
 		mesh.material.opacity = 0.4;
 		mesh.material.transparent = true;
 		// mesh.material.color.setHex( 0xFFFFFF );
+		this.stdMaterial = mesh.material;
 
-		// // // scale collision box
-		// // mesh2.scale.set( 0.7, 0.7, 0.7 );
+		var hasItemHighlightMaterial = new THREE.MeshPhongMaterial();
+		hasItemHighlightMaterial.emissive.setHex( 0x005500 );
+		hasItemHighlightMaterial.opacity = 0.9;
+
+		this.hasItemHighlightMaterial = modifiyMaterial( this.stdMaterial.clone(), hasItemHighlightMaterial );
+
+		// var missingItemHighlightMaterial = new THREE.MeshPhongMaterial();
+		// missingItemHighlightMaterial.emissive.setHex( 0x550000 );
+		// missingItemHighlightMaterial.opacity = 0.4;
+
+		// this.missingItemHighlightMaterial = modifiyMaterial( this.stdMaterial.clone(), missingItemHighlightMaterial );
+		this.missingItemHighlightMaterial = this.stdMaterial.clone();
+
+		// scale collision box
+		// mesh.scale.set( 0.7, 0.7, 0.7 );
 		this.name = item.name;
 		this.active = true;
 
 		// mesh.userData = this;
 		this.mesh = mesh;
+		this.item = item;
 
 		this.hud = {};
 		this.hud.action = "insert the";
 
-		// this.raycastMesh = mesh.children[ 0 ];
-
-		// var proxymesh = this.physic( 5 );
 		this.raycastMesh = this.computeRaycastMesh();
 
 	}
 
+	function modifiyMaterial( currentMaterial, newMaterial ) {
+
+		if ( currentMaterial instanceof THREE.MultiMaterial ) {
+			for ( var i = 0; i < currentMaterial.materials.length; i ++ ) {
+				material.materials[ i ].emissive = newMaterial.emissive;
+				material.materials[ i ].opacity = newMaterial.opacity;
+				material.materials[ i ].transparent = newMaterial.true;
+			}
+		} else {
+			currentMaterial.emissive = newMaterial.emissive;
+			currentMaterial.opacity = newMaterial.opacity;
+			currentMaterial.transparent = true;
+		}
+
+		return currentMaterial;
+	}
 	
 	Itemslot.prototype.computeRaycastMesh = function() {
 
@@ -136,48 +161,23 @@ define([
 		return false;
 	}
 
-
-	function modifiyMaterial( currentMaterial, newMaterial ) {
-		if ( currentMaterial instanceof THREE.MultiMaterial ) {
-			for ( var i = 0; i < currentMaterial.materials.length; i ++ ) {
-				material.materials[ i ].emissive = newMaterial.emissive;
-			}
-		} else {
-			currentMaterial.emissive = newMaterial.emissive;
-			currentMaterial.opacity = newMaterial.opacity;
-			currentMaterial.transparent = true;;
-		}
-
-		return currentMaterial;
-	}
-
-
 	Itemslot.prototype.highlight = function( inventar ) {
 
 		var checkInventar = containsObject( this.item, inventar );
 		// console.log("highlight", checkInventar, inventar);
 
-		var hasItemHighlightMaterial = new THREE.MeshPhongMaterial();
-		hasItemHighlightMaterial.emissive.setHex( 0x005500 );
-		hasItemHighlightMaterial.opacity = 0.9;
-
-		var missingItemHighlightMaterial = new THREE.MeshPhongMaterial();
-		missingItemHighlightMaterial.emissive.setHex( 0x550000 );
-		missingItemHighlightMaterial.opacity = 0.4;
-
-		var hasItemHighlightMaterial = modifiyMaterial( this.stdMaterial.clone(), hasItemHighlightMaterial );
-		var missingItemHighlightMaterial = modifiyMaterial( this.stdMaterial.clone(), missingItemHighlightMaterial );
-
 		if ( checkInventar ) {
-			this.mesh.material = hasItemHighlightMaterial;
+			this.mesh.material = this.hasItemHighlightMaterial;
 		} else {
-			this.mesh.material = missingItemHighlightMaterial;
+			this.mesh.material = this.missingItemHighlightMaterial;
 		}
 
 	};
 
 	Itemslot.prototype.reset = function() {
 		// console.log( "reset", this );
+		// dont change material
+		// if slot is filled
 
 		if ( this.active ) {
 			this.mesh.material = this.stdMaterial;
@@ -186,13 +186,16 @@ define([
 	};
 
 	Itemslot.prototype.interact = function( inventar, dgitem ) {
-		// insert Item - show it
+		// insert Item - remove from inventar, apply item material to item slot
+		// todo
+		// replace hull with the real item
+
 		// console.log("use", this );
 
 		var checkInventar = containsObject( this.item, inventar );
 
 		if ( ! checkInventar ) {
-			// allow overlapping for multiple fast pickups
+			// allow overlapping sound for multiple fast keypresses
 			sound1.isPlaying = false; 
 			sound1.play();		
 			return;
@@ -204,10 +207,7 @@ define([
 			inventar.splice(index, 1);
 		}
 
-		// allow overlapping for multiple fast pickups
-		sound2.isPlaying = false; 
 		sound2.play();		
-
 		sound3.play();
 
 		var folder = debugGUI.getFolder("Inventar");

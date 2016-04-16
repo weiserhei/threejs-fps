@@ -6,11 +6,9 @@
 define([
 	"three",
 	"../libs/state-machine.min",
-	"debugGUI",
 	"physics",
-	"scene",
 	"listener"
-], function ( THREE, StateMachine, debugGUI, physics, scene, listener ) {
+], function ( THREE, StateMachine, physics, listener ) {
 
 	'use strict';
 
@@ -88,9 +86,11 @@ define([
 
 		// mesh.position.set( 0, mesh.geometry.parameters.height / 2 + 1.5, 0 );
 		// mesh.rotation.z = Math.PI / 1.5;
-		scene.add( compundMesh );
 		var rigidBody = physics.meshToBody( compundMesh, 20 );
 		this.mesh.goblin = rigidBody;
+
+		// this.mesh = compundMesh;
+
 		return compundMesh;
 
 	};

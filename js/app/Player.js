@@ -16,7 +16,7 @@ define([
 	function isFunction(v){if(v instanceof Function){return true;}};
 
 	var intersections = [];
-	var interactionDistance = 1.6;
+	var interactionDistance = 1.8;
     var raycaster = new THREE.Raycaster();
 	var vector = new THREE.Vector2();
 
