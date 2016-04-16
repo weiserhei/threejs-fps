@@ -11,7 +11,7 @@ define([
     'use strict';
 
 	var listener = new THREE.AudioListener();
-	// listener.setMasterVolume( 0 );
+	listener.setMasterVolume( 0.5 );
 
     // Do we have a saved value for this controller?
     // if (type != 'function' &&
@@ -27,15 +27,15 @@ define([
 	};
 
     var dg = debugGUI;
+	// dg.remember( SoundControls );
 
 	var folder = dg.getFolder( "Debug Menu" );
-	var controller = dg.remember( SoundControls );
 	folder.add( SoundControls, "master" ).min(0.0).max(1.0).step(0.01).name("Volume").onChange(
 	    function() {
-			listener.setMasterVolume(SoundControls.master);
+			listener.setMasterVolume( SoundControls.master );
 		});
 
-	if ( debugGUI.__rememberedObjects[ 0 ].master !== undefined ) {
+	if ( debugGUI.__rememberedObjects[ 0 ] !== undefined ) {
 		var vol = debugGUI.__rememberedObjects[ 0 ].master;
 		listener.setMasterVolume( vol );
 	}

@@ -17,11 +17,13 @@ define([
 	var intersections = [];
 	var interactionDistance = 1.6;
     var raycaster = new THREE.Raycaster();
+	var vector = new THREE.Vector2();
+
 	var folder = debugGUI.getFolder( "Inventar" );
 
 	function Player( hud ) {
 
-		this.target;
+		this.target = undefined;
 		this.interactionText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
 
 		this.inventar = [];
@@ -56,13 +58,24 @@ define([
 
 	};
 
+	// Player.prototype.raycast = (function() {
+	// 	console.log("once");
+	// 	return function( objects ) {
+	// 		console.log("loop");
+	// 	};
+	// })();
+
 	Player.prototype.raycast = function( objects ) {
+
+		// todo
+		// raycast from player mesh
+		// cleaner and works in third person too then
+
 		// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
 		// scene.add( arrowHelper );
 
-		raycaster.setFromCamera( new THREE.Vector2(), camera );
+		raycaster.setFromCamera( vector, camera );
 		intersections = raycaster.intersectObjects( objects );
-
 		// console.log("fire", intersections);
 
 		if ( intersections.length > 0 ) {
