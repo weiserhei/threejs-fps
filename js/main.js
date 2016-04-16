@@ -57,22 +57,20 @@ require([
 		// loadingScreen.message.innerHTML = "<h1>No webGL, no panoglobe! :(</h1>";
 		Detector.addGetWebGLMessage();
 		
-	} else {
-		
+    } else {
+
         var preloaded = preload();
 
         preloaded.loadingManager.onLoad = function() {
-        
+
             loadingScreen.complete();
 
-            console.log( "Preloading finished" );
+            // The "app" dependency is passed in as "App"
+            App.initialize( preloaded.objects );
+            App.animate();
 
-    		// The "app" dependency is passed in as "App"
-    		App.initialize( preloaded.objects );
-    		App.animate();
-        
         };
 
-	}
+    }
 	
 });

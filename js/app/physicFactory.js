@@ -26,7 +26,7 @@ define([
 		return broadphase;
 	};
 
-	PhysicFactory.prototype.addBody = function( rigidBody, mesh) {
+	PhysicFactory.prototype.addBody = function( rigidBody, mesh ) {
 		this.body_to_mesh_map[ rigidBody.id ] = mesh;
 	};
 
@@ -159,7 +159,8 @@ define([
 			var shape = new Goblin.CylinderShape( radiusBottom, height / 2 );
 			// var mass = 50 * ( (radiusTop + radiusBottom)/2 ) *  height;
 			
-		} 
+		}
+		console.log( shape );
 		// else if ( type === "PlaneGeometry" || type === "PlaneBufferGeometry" ) {
 			
 		// 	// var width = mesh.geometry.parameters.width;
@@ -194,28 +195,33 @@ define([
 
 	PhysicFactory.prototype.createPlane = function ( orientation, half_width, half_length, mass, material ) {
 
+		var thickness = 0.4;
+
 		var plane = new THREE.Mesh(
 			new THREE.BoxGeometry(
-				orientation === 1 || orientation === 2 ? half_width * 2 : 0.01,
-				orientation === 0 ? half_width * 2 : ( orientation === 2 ? half_length * 2 : 0.01 ),
-				orientation === 0 || orientation === 1 ? half_length * 2 : 0.01
+				orientation === 1 || orientation === 2 ? half_width * 2 : thickness,
+				orientation === 0 ? half_width * 2 : ( orientation === 2 ? half_length * 2 : thickness ),
+				orientation === 0 || orientation === 1 ? half_length * 2 : thickness
 			),
 			material
 		);
-		plane.castShadow = true;
+		// plane.castShadow = true;
+		plane.position.set( 0, -thickness / 2, 0 );
 		plane.receiveShadow = true;
 		plane.goblin = new Goblin.RigidBody(
 			// new Goblin.PlaneShape( orientation, half_width, half_length ),
 			new Goblin.BoxShape(
-				orientation === 1 || orientation === 2 ? half_width : 0.005,
-				orientation === 0 ? half_width : ( orientation === 2 ? half_length : 0.005 ),
-				orientation === 0 || orientation === 1 ? half_length : 0.005
-			),
+				// orientation === 1 || orientation === 2 ? half_width : 0.005,
+				orientation === 1 || orientation === 2 ? half_width : thickness / 2,
+				orientation === 0 ? half_width : ( orientation === 2 ? half_length : thickness / 2 ),
+				orientation === 0 || orientation === 1 ? half_length : thickness / 2
+			),			
 			mass
 		);
 
+		plane.goblin.position.set( 0, - thickness / 2, 0 )
 		// objects.push( plane );
-		this.body_to_mesh_map[plane.goblin.id] = plane;
+		// this.body_to_mesh_map[plane.goblin.id] = plane;
 
 		this.world.addRigidBody( plane.goblin );
 
@@ -239,15 +245,15 @@ define([
 	        var mesh = this.body_to_mesh_map[ body.id ];
 
 	        // update position
-	        mesh.position.x = body.position.x;
-	        mesh.position.y = body.position.y;
-	        mesh.position.z = body.position.z;
+			mesh.position.x = body.position.x;
+			mesh.position.y = body.position.y;
+			mesh.position.z = body.position.z;
 
 	        // update rotation
-	        mesh.quaternion._x = body.rotation.x;
-	        mesh.quaternion._y = body.rotation.y;
-	        mesh.quaternion._z = body.rotation.z;
-	        mesh.quaternion._w = body.rotation.w;
+			mesh.quaternion._x = body.rotation.x;
+			mesh.quaternion._y = body.rotation.y;
+			mesh.quaternion._z = body.rotation.z;
+			mesh.quaternion._w = body.rotation.w;
 	    }
 
 	};

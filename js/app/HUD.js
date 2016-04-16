@@ -75,7 +75,7 @@ define([
 			// clearTimeout(this.currentTimeout);
 
 			this.currentTimeout = setTimeout(function(){ 
-				this.fadeOut( true ); 
+				// this.fadeOut( true ); 
 			}.bind( this ), 2000);
 		};
 

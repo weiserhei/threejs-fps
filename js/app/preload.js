@@ -45,7 +45,7 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
 
     loadingManager.onProgress = function ( item, loaded, total ) {
 
-        console.log( item, loaded, total );
+        // console.log( item, loaded, total );
         // loadingScreen.setProgress( loaded, total );
 
     };
@@ -107,18 +107,18 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
 
         } );
 
-        var url = "assets/models/darkkey/darkkey.js";
-        jsonLoader.load( url, function callback(geometry, materials) {
+        // var url = "assets/models/darkkey/darkkey.js";
+        // jsonLoader.load( url, function callback(geometry, materials) {
 
-            var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-            // var mesh = new THREE.Mesh( geometry, materials[ 0 ] );
-            // mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
+        //     var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+        //     // var mesh = new THREE.Mesh( geometry, materials[ 0 ] );
+        //     // mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
 
-            var darkkey = {};
-            darkkey.mesh = mesh;
-            items.darkkey = darkkey;
+        //     var darkkey = {};
+        //     darkkey.mesh = mesh;
+        //     items.darkkey = darkkey;
 
-        } );
+        // } );
 
         var url = "assets/models/wrenchkey/wrenchkey.js";
         jsonLoader.load( url, function callback(geometry, materials) {
@@ -159,6 +159,7 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
         jsonLoader.load( url, function callback(geometry, materials) {
 
             geometry.computeBoundingBox();
+            geometry.center();
             var boundingBoxSize = geometry.boundingBox.max.sub( geometry.boundingBox.min );
             // geometry.translate( xoffset, boundingBoxSize.y / 2, zoffset );
 

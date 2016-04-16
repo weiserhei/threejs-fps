@@ -59,7 +59,6 @@ define([
 		var plane = physics.createPlane ( 1, 10, 10, 0, new THREE.MeshBasicMaterial( { map: texture } ) )
 		scene.add( plane );
 
-
 		var box_geometry = new THREE.BoxBufferGeometry( 1, 1, 1 ), // note that the `BoxGeometry` arguments are the box's full width, height, and depth, while the parameters for `Goblin.BoxShape` are expressed as half sizes
 		// var box_geometry = new THREE.SphereBufferGeometry( 1, 32, 32 ), // note that the `BoxGeometry` arguments are the box's full width, height, and depth, while the parameters for `Goblin.BoxShape` are expressed as half sizes
 		    box_material = new THREE.MeshLambertMaterial({ color: 0xaa8833 });
@@ -70,15 +69,14 @@ define([
 		scene.add( dynamic_mesh );
 		physics.meshToBody( dynamic_mesh, 5 );
 
-		
-
     	var safe = initSafe( preloaded.safe );
     	objects.push( safe.raycastMesh );
 
-    	var items = new initItems( preloaded.items );
-    	var meshes = items.getRaycastMeshes();
-    	objects = objects.concat( meshes );
-    	// console.log( objects );
+    	// var items = new initItems( preloaded.items, objects );
+    	var items = initItems( preloaded.items, objects );
+    	// var meshes = items.getRaycastMeshes();
+    	// objects = objects.concat( meshes );
+    	console.log( objects );
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
@@ -135,13 +133,13 @@ define([
 
         var raycaster = new THREE.Raycaster();
         var intersections = [];
-        var interactionDistance = 1.5;
+        var interactionDistance = 1.6;
 
-        var active;
+		var active;
         var toggle = false;
 
         var hud = new HUD( container );
-        var infoText = hud.box("Press E to ");
+        var infoText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
 
         function setActive( object ) {
         	// console.log( "setActive", object );

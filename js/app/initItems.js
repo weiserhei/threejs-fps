@@ -17,10 +17,10 @@ define([
 
 	'use strict';
 
-	var raycastMeshes = [];
 	
-	function initItems( preloaded ) {
-		console.log("preloaded", preloaded );
+	function initItems( preloaded, raycastArray ) {
+		// console.log("preloaded", preloaded );
+	var raycastMeshes = [];
 
 		// werenchkey
 		var mesh = preloaded.wrenchkey.mesh;
@@ -28,12 +28,12 @@ define([
 		var wrenchkey = new Item( mesh );
 		wrenchkey.name = "Wrenchkey"
 
-		raycastMeshes.push( wrenchkey.getRaycastMesh() );
 		// mesh.scale.set( 0.1, 0.1, 0.1 );
 		wrenchkey.mesh.position.set( 0, 1, 0.5 );
+		raycastMeshes.push( wrenchkey.getRaycastMesh() );
 
 		scene.add( wrenchkey.mesh );
-
+		
 
 		// key
 		var mesh = preloaded.key.mesh;
@@ -51,67 +51,67 @@ define([
 
 		// buch
 		var mesh = preloaded.buch.mesh;
-
 		var buch = new Item( mesh.clone() );
+		// buch.mesh.position.set( 0, 1, 0 );
 		raycastMeshes.push( buch.getRaycastMesh() );
 
-		buch.name = "Buch"
-
+		buch.name = "Book"
+		// scene.add( buch.mesh );
+		buch.mesh.position.set(0, 5, 0);
+		buch.physic( 2 );
 
 		var spawn = {
 			scale: 5,
 			book: function() {
 
 				var mesh = preloaded.buch.mesh;
+				mesh.material = preloaded.buch.mesh.material.clone();
 
 				var buch = new Item( mesh.clone() );
-				raycastMeshes.push( buch.getRaycastMesh() );
-
-				buch.name = "Buch"
+				// raycastMeshes.push( buch.getRaycastMesh() );
+				buch.mesh.position.set( 0, 5, 0 );
+				buch.name = "Book"
 
 				buch.physic( this.scale );
+
+				raycastArray.push( buch.getRaycastMesh() );
 
 			}
 		}
 
-		buch.physic( spawn.scale );
+		// buch.physic( spawn.scale );
 		debugGUI.add( spawn, "scale" ).min( 0.5 ).max( 10 ).step( 0.5 );;
 		debugGUI.add( spawn, "book" ).name("spawn book");
 
-		// buch
-		// var mesh = preloaded.buch.mesh;
 
-		// var buch = new Item( mesh );
-		// raycastMeshes.push( buch.getRaycastMesh() );
+		// darkkey
+		// var mesh = preloaded.darkkey.mesh;
 
-		// buch.name = "Buch"
+		// var darkkey = new Item( mesh );
+		// raycastMeshes.push( darkkey.getRaycastMesh() );
 
-		// buch.physic( 2 );
-		// buch.mesh.position.set( -0.8, 1, 0.8 );
-		// buch.mesh.rotation.set( 0, Math.PI / 2, Math.PI / 2 );
+		// darkkey.name = "darkkey"
 
-		// scene.add( buch.mesh );
+		// // mesh.scale.set( 0.1, 0.1, 0.1 );
+		// darkkey.mesh.position.set( -0.8, 1, -0.8 );
+		// darkkey.mesh.rotation.set( 0, Math.PI / 2, Math.PI / 2 );
 
-		// buch
-		var mesh = preloaded.darkkey.mesh;
+		// scene.add( darkkey.mesh );
 
-		var darkkey = new Item( mesh );
-		raycastMeshes.push( darkkey.getRaycastMesh() );
+		// concat loses context
+		// http://stackoverflow.com/questions/16679565/why-cant-i-concat-an-array-reference-in-javascript
+		raycastArray.push.apply( raycastArray, raycastMeshes );
 
-		darkkey.name = "darkkey"
+		// or do this
+		// for ( var i = 0; i < raycastMeshes.length; i ++ ) {
+		// 	raycastArray.push( raycastMeshes[ i ] );
+		// }
 
-		// mesh.scale.set( 0.1, 0.1, 0.1 );
-		darkkey.mesh.position.set( -0.8, 1, -0.8 );
-		darkkey.mesh.rotation.set( 0, Math.PI / 2, Math.PI / 2 );
-
-		scene.add( darkkey.mesh );
-
-		
 	}
 
-	initItems.prototype.getRaycastMeshes = function() {
-		return raycastMeshes;
-	}
+	// initItems.prototype.getRaycastMeshes = function() {
+	// 	return raycastMeshes;
+	// }
 
 	return initItems;
 

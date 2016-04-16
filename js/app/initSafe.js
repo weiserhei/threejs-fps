@@ -56,7 +56,7 @@ define([
 		safedoorGroup.add( safegriff );
 		safedoorGroup.add( safedoor );
 
-	    safedoorGroup.position.set( - 0.58, 0.53, 0.54 );
+	    safedoorGroup.position.set( - 0.55, 0.615, 0.54 );
 
 	    var safeGroup = new THREE.Group();
 	    safeGroup.add( safebase );
@@ -77,7 +77,7 @@ define([
 
 		// collision
 		// physics.makeStaticBox(new THREE.Vector3(1,0.3,1), safeGroup.position, undefined );
-		physics.makeStaticBox(new THREE.Vector3(1,1.2,1), safeGroup.position, undefined );
+		physics.makeStaticBox(new THREE.Vector3( 1.1, 1.2, 1.1 ), safeGroup.position, undefined );
 
 		var tweens = setupTweens();
 		var fsm = setupFSM( tweens );

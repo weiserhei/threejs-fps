@@ -12,10 +12,18 @@ define([
 	"../libs/state-machine.min",
 	"debugGUI",
 	"physics",
-	"scene"
-], function ( THREE, StateMachine, debugGUI, physics, scene ) {
+	"scene",
+	"listener"
+], function ( THREE, StateMachine, debugGUI, physics, scene, listener ) {
 
 	'use strict';
+
+	// SOUNDS
+	var sound1 = new THREE.Audio( listener );
+	sound1.load( 'assets/sounds/wusch.ogg' );
+	// sound1.autoplay = true;
+	// sound1.setLoop( true );
+	sound1.setVolume( 0.5 );
 
 	//pickableObject
 
@@ -23,22 +31,18 @@ define([
 
 		mesh.userData = this;
 		this.mesh = mesh;
-		this.raycastMesh = computeRaycastMesh( mesh );
 
 		function computeRaycastMesh( mesh ) {
 
 			// door bounding box for raycasting
 			var bbox = new THREE.BoundingBoxHelper( mesh );
 			bbox.update();
+			// bbox.scale.set( 1.5, 1.5, 1.5 );
 			// bbox.position.set( - 0.02, 0.40, -0.54 );
-			// var pos1 = safedoorGroup.position.clone();
-			// pos1.add( safeGroup.getWorldPosition() );
-			// bbox.position.copy( pos1 );
 			// bbox.material.visible = false;
 			// bbox.rotation.copy( safeGroup.rotation );
 			// scene.add ( bbox );
 			mesh.add ( bbox );
-
 			bbox.userData = mesh.userData;
 
 			return bbox;
@@ -47,88 +51,48 @@ define([
 
 		this.name;
 		this.hud = {};
-		this.hud.action = "pickup";
+		this.hud.action = "pickup the";
+		// this.mesh.position.set( 0, 5, 0 );
+
+		// var proxymesh = this.physic( 5 );
+		this.raycastMesh = computeRaycastMesh( mesh );
 
 	}
 
 	Item.prototype.physic = function( scale ) {
-
-		/*
-		var type = this.mesh.geometry.type;
-		// console.log( type );
-
-		var helper = new THREE.BoundingBoxHelper( this.mesh, 0xff0000 );
-		helper.update();
-
-		var bbox = new THREE.Box3().setFromObject( this.mesh );
-		var size = bbox.size();
-		// console.log( bbox.size(), bbox.center() );
-		// var boundingBoxSize2 = bbox.max.sub( bbox.min );
-
-		var boundingBoxSize = helper.box.max.sub( helper.box.min );
-		var geometry = new THREE.BoxGeometry( boundingBoxSize.x , boundingBoxSize.y, boundingBoxSize.z );
-		var geometry = new THREE.BoxGeometry( size.x , size.y, size.z );
-		var material = new THREE.MeshBasicMaterial( { visible:true, wireframe: true } );
-		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.y = 1;
-
-		// this.mesh.geometry.translate( 0, - boundingBoxSize.y / 2, 0 );
-		mesh.add( this.mesh );
-		scene.add( mesh );
-
-		if ( mesh.geometry.parameters !== undefined ) {
-		
-			var width = mesh.geometry.parameters.width;
-			var height = mesh.geometry.parameters.height;
-			var depth = mesh.geometry.parameters.depth;
-
-		}
-
-		var shape = new Goblin.BoxShape( width / 2, height / 2, depth / 2 );
-		console.log("shape", shape );
-		    
-		var dynamic_body = new Goblin.RigidBody( shape, 5 );
-		var position = mesh.getWorldPosition();
-		dynamic_body.position.copy( position );
-
-		var rotation = mesh.quaternion;
-		dynamic_body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, rotation.w );
-
-		physics.world.addRigidBody( dynamic_body );
-
-		// // dynamic_body.friction = 0.8; // reibung
-		// // dynamic_body.restitution = 0.0; //spring or bounciness
-		// // dynamic_body.angularDamping = 0.5;
-
-		// // if ( mass !== 0.0 ) {
-		physics.addBody( dynamic_body, mesh );
-		*/
 
 		this.mesh.scale.set( scale, scale, scale );
 		// CALCULATE BOUNDING BOX BEFORE ROTATION!
 		var helper = new THREE.BoundingBoxHelper( this.mesh, 0xff0000 );
 		helper.update();
 
-		// var bbox = new THREE.Box3().setFromObject( object );
-		// var boundingBoxSize2 = bbox.max.sub( bbox.min );
+		var bbox = new THREE.Box3().setFromObject( this.mesh );
+		var boundingBoxSize = bbox.max.sub( bbox.min );
 
-		var boundingBoxSize = helper.box.max.sub( helper.box.min );
+		// var boundingBoxSize = helper.box.max.sub( helper.box.min );
 		var geometry = new THREE.BoxGeometry( boundingBoxSize.x , boundingBoxSize.y, boundingBoxSize.z );
 
 		var material = new THREE.MeshBasicMaterial( { visible: false, wireframe: true } );
-		var itemMesh = new THREE.Mesh( geometry, material );
+		var compundMesh = new THREE.Mesh( geometry, material );
 
 		// object.geometry.translate( 0, - boundingBoxSize.y / 2, 0 );
-		itemMesh.add( this.mesh );
-		itemMesh.userData = this.mesh.userData;
-		itemMesh.position.set( 0, 5, 0 );
+		compundMesh.position.copy( this.mesh.getWorldPosition() );
+		compundMesh.add( this.mesh );
+
+		console.log( "comp", compundMesh.position );
+		console.log( "this.mesh", this.mesh.position );
+
+		compundMesh.userData = this.mesh.userData;
+		// compundMesh.position.set( 0, 5, 0 );
+		this.mesh.position.set( 0, 0, 0 );
 		// mesh.position.set( 0, mesh.geometry.parameters.height / 2 + 1.5, 0 );
 		// mesh.rotation.z = Math.PI / 1.5;
-		scene.add( itemMesh );
-		physics.meshToBody( itemMesh, 20 );
-		
+		scene.add( compundMesh );
+		var rigidBody = physics.meshToBody( compundMesh, 20 );
+		this.mesh.goblin = rigidBody;
+		return compundMesh;
 
-	}
+	};
 
 	Item.prototype.highlight = function() {
 
@@ -160,9 +124,25 @@ define([
 	Item.prototype.interact = function() {
 		// pickup Item - hide it
 		console.log("pickup", this );
-		// this.mesh.material.visible = false;
+
+		// allow overlapping for multiple fast pickups
+		sound1.isPlaying = false; 
+		sound1.play();
+
 		this.mesh.visible = false;
-		// var material = this.mesh.material.materials[0];
+
+		if ( this.mesh.goblin !== undefined ) {
+			// well hello there, physic item here
+
+			// hide raycast mesh
+			this.getRaycastMesh().visible = false;
+			// remove physic body
+			physics.getWorld().removeRigidBody( this.mesh.goblin );
+
+			// hide compound mesh
+			// this.mesh.parent.visible = false;
+		}
+
 	};
 
 	Item.prototype.getRaycastMesh = function() {
