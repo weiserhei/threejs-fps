@@ -86,7 +86,7 @@ define([
 
 		// mesh.position.set( 0, mesh.geometry.parameters.height / 2 + 1.5, 0 );
 		// mesh.rotation.z = Math.PI / 1.5;
-		var rigidBody = physics.meshToBody( compundMesh, 20 );
+		var rigidBody = physics.meshToBody( compundMesh, 10 * scale );
 		this.mesh.goblin = rigidBody;
 
 		// this.mesh = compundMesh;

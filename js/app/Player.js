@@ -142,7 +142,7 @@ define([
 			}
 
 			this.interactionText.show( true, action + " " + object.userData.name );
-			object.userData.highlight( this.inventar );
+			object.userData.highlight( this.inventar, this.interactionText );
 			this.target = object;
 
 		}

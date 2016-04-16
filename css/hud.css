@@ -62,6 +62,10 @@
     /*color: #FF0000;*/
     color: #00FF39;
 }
+.highlight-inverse {
+    /*inactive*/
+    color: #aaa;
+}
 
 /* Chrome, Safari, Opera */
 @-webkit-keyframes padding {

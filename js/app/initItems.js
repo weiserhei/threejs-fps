@@ -19,6 +19,9 @@ define([
 	var position = new THREE.Vector3( -3, 0, 0 );
 	var table = new THREE.Mesh( new THREE.BoxGeometry( dimension.x, dimension.y, dimension.z ), new THREE.MeshPhongMaterial() );
 	table.position.set( position.x, position.y + dimension.y / 2, position.z );
+	table.matrixAutoUpdate = false;
+	table.updateMatrix();
+	table.castShadow = true;
 	scene.add( table );
 	physics.makeStaticBox( dimension, position );
 
@@ -27,6 +30,9 @@ define([
 	var position = new THREE.Vector3( 3, 0, 0 );
 	var table = new THREE.Mesh( new THREE.BoxGeometry( dimension.x, dimension.y, dimension.z ), new THREE.MeshPhongMaterial() );
 	table.position.set( position.x, position.y + dimension.y / 2, position.z );
+	table.matrixAutoUpdate = false;
+	table.updateMatrix();
+	table.castShadow = true;
 	scene.add( table );
 	physics.makeStaticBox( dimension, position );
 
@@ -103,7 +109,7 @@ define([
 
 		buch.name = "Book"
 		// scene.add( buch.mesh );
-		buch.mesh.position.set(0, 5, 0);
+		buch.mesh.position.set( 0, 5, 0 );
 		var compoundMesh = buch.physic( 2 );
 		scene.add( compoundMesh );
 
@@ -155,6 +161,8 @@ define([
 		// for ( var i = 0; i < raycastMeshes.length; i ++ ) {
 		// 	raycastArray.push( raycastMeshes[ i ] );
 		// }
+
+		return itemslot;
 
 	}
 

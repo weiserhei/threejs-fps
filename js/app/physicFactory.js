@@ -207,6 +207,8 @@ define([
 		);
 		// plane.castShadow = true;
 		plane.position.set( 0, -thickness / 2, 0 );
+		plane.matrixAutoUpdate = false;
+		plane.updateMatrix();
 		plane.receiveShadow = true;
 		plane.goblin = new Goblin.RigidBody(
 			// new Goblin.PlaneShape( orientation, half_width, half_length ),

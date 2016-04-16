@@ -35,7 +35,10 @@ define([
 
 		infoText.setText = function( text ) {
 			this.innerHTML = this.initial + " " + text;
-		}
+		};
+		infoText.setHTML = function( text ) {
+			this.innerHTML = text;
+		};
 
 		infoText.show = function( value, message ) {
 
@@ -61,7 +64,7 @@ define([
 				this.fadeOut();
 
         	}
-		}
+		};
 
 		infoText.fadeIn = function() {
 			// console.log("fadeIn", this);

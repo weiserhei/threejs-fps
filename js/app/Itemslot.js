@@ -161,14 +161,19 @@ define([
 		return false;
 	}
 
-	Itemslot.prototype.highlight = function( inventar ) {
+	Itemslot.prototype.highlight = function( inventar, hudElement ) {
 
 		var checkInventar = containsObject( this.item, inventar );
 		// console.log("highlight", checkInventar, inventar);
 
 		if ( checkInventar ) {
+			// active highlight
 			this.mesh.material = this.hasItemHighlightMaterial;
 		} else {
+			// inactive highlight
+			// hudElement.show( true, "hahaha rekt" );
+			var innerHTML = "Press <span class='highlight-inverse'>[ e ]</span> to " + this.hud.action + " " + this.name;
+			hudElement.setHTML( innerHTML );
 			this.mesh.material = this.missingItemHighlightMaterial;
 		}
 

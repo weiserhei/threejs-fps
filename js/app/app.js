@@ -19,7 +19,8 @@ define([
     "initSafe",
     "HUD",
     "initItems",
-    "Player"
+    "Player",
+    "listener"
 	], function ( 
          THREE, 
          TWEEN, 
@@ -37,7 +38,8 @@ define([
          initSafe,
          HUD,
          initItems,
-         Player
+         Player,
+         listener
          ) {
 	
 	'use strict';
@@ -60,7 +62,7 @@ define([
 		texture.repeat.set( 16, 16 );
 
 		// floor
-		var plane = physics.createPlane ( 1, 10, 10, 0, new THREE.MeshBasicMaterial( { map: texture } ) )
+		var plane = physics.createPlane ( 1, 10, 10, 0, new THREE.MeshPhongMaterial( { map: texture } ) )
 		scene.add( plane );
 
 		var box_geometry = new THREE.BoxBufferGeometry( 1, 1, 1 ), // note that the `BoxGeometry` arguments are the box's full width, height, and depth, while the parameters for `Goblin.BoxShape` are expressed as half sizes
@@ -76,10 +78,33 @@ define([
     	var safe = initSafe( preloaded.safe );
     	objects.push( safe.raycastMesh );
 
+    	// todo
+    	// abstract item initialization
+    	// and constraints to other game elemnts
+
     	// adding item meshes to raycaster objects-array
     	var items = initItems( preloaded.items, objects );
-    	// var meshes = items.getRaycastMeshes();
-    	// objects = objects.concat( meshes );
+
+    	// SOUNDS
+		var sound1 = new THREE.Audio( listener );
+		sound1.load( 'assets/sounds/beep.ogg' );
+		sound1.setVolume( 0.5 );
+
+		// constrain safe door to itemslot
+		safe.fsm.onbeforeinteract = function(event, from, to) { 
+
+			if ( this.is( "locked" ) ) {
+			    // some UI action, minigame, unlock this shit
+			   	// return if itemslot isnt filled
+			    if ( items.active === true ) {
+			    	sound1.play();
+			    	// cancel transition
+			    	return false;
+			    }
+
+			}
+
+		};
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 

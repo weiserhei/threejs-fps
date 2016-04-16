@@ -21,14 +21,14 @@ define(["three", "scene"], function ( THREE, scene ){
 		// directionalLight.shadowDarkness = 0.1; //removed :(
 		// directionalLight.shadowBias = -0.005;
 
-		var d = 2;
+		var d = 6;
 		directionalLight.shadow.camera.left = -d;
 		directionalLight.shadow.camera.right = d;
 		directionalLight.shadow.camera.top = d;
 		directionalLight.shadow.camera.bottom = -d;
 
-		directionalLight.shadow.camera.near = directionalLight.position.y - 2;
-		directionalLight.shadow.camera.far = directionalLight.position.y + 2;
+		directionalLight.shadow.camera.near = directionalLight.position.y - d;
+		directionalLight.shadow.camera.far = directionalLight.position.y + d;
 
 		directionalLight.shadow.mapSize.width = directionalLight.shadow.mapSize.height = 2048;
 
