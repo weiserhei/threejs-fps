@@ -7,8 +7,9 @@
 define([
 	"three",
 	"Item",
+	"Itemslot",
 	"debugGUI"
-], function ( THREE, Item, debugGUI ) {
+], function ( THREE, Item, Itemslot, debugGUI ) {
 
 	'use strict';
 
@@ -41,8 +42,8 @@ define([
 		}
 
 		// console.log( object );
-		var fsm = object.parent.userData.fsm;
-		if ( fsm !== undefined ) {
+		if ( object.userData.fsm !== undefined ) {
+			var fsm = object.userData.fsm;
 
 			if ( isFunction( fsm.interact ) ) {
 				// performance wise? assign new function on each call
@@ -68,6 +69,10 @@ define([
 				folder.add( object.userData, "name" );
 				this.inventar.push( object.userData );
 
+			}
+			else if ( object.userData instanceof Itemslot ) {
+				object.userData.interact( this.inventar );
+				// this.inventar
 			}
 		}
 
@@ -121,14 +126,22 @@ define([
 			// console.log("active", object );
 			// console.log( "userdata", object.parent.userData );
 
+			// var action = object.userData.hud.action;
 			var action = object.userData.hud.action;
 
-			if ( ! ( object.parent.userData instanceof Item ) ) {
-				action = object.parent.userData.fsm.transitions()[ 0 ] + " the";
+			// if ( ! ( object.parent.userData instanceof Item ) ) {
+			// todo check for interaction class item
+			// instead of ausschlussverfahren
+			var isItem = object.userData instanceof Item;
+			var isItemslot = object.userData instanceof Itemslot;
+
+			if ( ! isItem && ! isItemslot ) {
+				// action = object.parent.userData.fsm.transitions()[ 0 ] + " the";
+				action = object.userData.fsm.transitions()[ 0 ] + " the";
 			}
 
 			this.interactionText.show( true, action + " " + object.userData.name );
-			object.userData.highlight();
+			object.userData.highlight( this.inventar );
 			this.target = object;
 
 		}

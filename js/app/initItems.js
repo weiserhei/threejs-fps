@@ -13,7 +13,8 @@ define([
 	"debugGUI",
 	"physics",
 	"Item",
-], function ( THREE, scene, debugGUI, physics, Item ) {
+	"Itemslot"
+], function ( THREE, scene, debugGUI, physics, Item, Itemslot ) {
 
 	'use strict';
 
@@ -24,13 +25,23 @@ define([
 	table.position.set( position.x, position.y + dimension.y / 2, position.z );
 	scene.add( table );
 	physics.makeStaticBox( dimension, position );
+
+	// table2
+	var dimension = new THREE.Vector3( 2, 1, 1 );
+	var position = new THREE.Vector3( 3, 0, 0 );
+	var table = new THREE.Mesh( new THREE.BoxGeometry( dimension.x, dimension.y, dimension.z ), new THREE.MeshPhongMaterial() );
+	table.position.set( position.x, position.y + dimension.y / 2, position.z );
+	scene.add( table );
+	physics.makeStaticBox( dimension, position );
+
+
 	
 	function initItems( preloaded, raycastArray ) {
 		// console.log("preloaded", preloaded );
 		var raycastMeshes = [];
 
 		// werenchkey
-		var mesh = preloaded.wrenchkey.mesh;
+		var mesh = preloaded.wrenchkey.mesh.clone();
 
 		var wrenchkey = new Item( mesh );
 		wrenchkey.name = "Wrenchkey"
@@ -41,19 +52,49 @@ define([
 
 		scene.add( wrenchkey.mesh );
 
-		// werenchkey
-		var mesh = preloaded.zahnrad.mesh;
+		// zahnrad
+		var mesh = preloaded.zahnrad.mesh.clone();
 
 		// scale collision box
-		mesh.scale.set( 0.7, 0.7, 0.7 );
+		mesh.scale.set( 0.8, 0.8, 0.8 );
 		var zahnrad = new Item( mesh );
 		zahnrad.name = "Zahnrad"
 
 		zahnrad.mesh.position.set( -2.5, 2, 0 );
 		zahnrad.mesh.rotation.set( Math.PI / 2, 0, 0 );
 		raycastMeshes.push( zahnrad.getRaycastMesh() );
-		zahnrad.physic( 2 );
+		zahnrad.physic( 1 );
 		// scene.add( zahnrad.mesh );
+
+		// var temp = zahnrad.mesh.children;
+		// zahnrad.mesh.children = [];
+		// var mesh2 = zahnrad.mesh.clone();
+
+		// zahnrad.mesh.children = temp;
+		var itemslot = new Itemslot( zahnrad );
+		itemslot.mesh.position.set( 2.5, 1.05, 0 );
+		itemslot.mesh.rotation.set( Math.PI / 2, 0, 0 );
+		raycastMeshes.push( itemslot.getRaycastMesh() );
+		scene.add( itemslot.mesh );
+
+		// // zahnrad2
+		// var mesh2 = preloaded.zahnrad.mesh.clone();
+		// // mesh2.scale.set( 0.7, 0.7, 0.7 );
+		// mesh2.material = mesh2.material.clone();
+		// mesh2.material.opacity = 0.4;
+		// mesh2.material.transparent = true;
+		// mesh2.material.color.setHex( 0xFFFFFF );
+		// // // scale collision box
+		// // mesh2.scale.set( 0.7, 0.7, 0.7 );
+		// var zahnrad2 = new Item( mesh2 );
+		// zahnrad2.name = "Zahnrad2"
+
+		// zahnrad2.mesh.position.set( 2.5, 1.1, 0 );
+		// zahnrad2.mesh.rotation.set( Math.PI / 2, 0, 0 );
+		// raycastMeshes.push( zahnrad2.getRaycastMesh() );
+		// // zahnrad2.physic( 2 );
+		// scene.add( itemslot.mesh );
+
 
 		// key
 		var mesh = preloaded.key.mesh;

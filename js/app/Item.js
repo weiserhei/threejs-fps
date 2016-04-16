@@ -25,7 +25,7 @@ define([
 
 	function Item( mesh ) {
 
-		mesh.userData = this;
+		// mesh.userData = this;
 		this.mesh = mesh;
 
 		// function computeRaycastMesh( mesh ) {
@@ -53,8 +53,10 @@ define([
 		// bbox.material.visible = false;
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
-		this.mesh.add ( bbox );
-		bbox.userData = this.mesh.userData;
+
+		this.mesh.add( bbox );
+		// bbox.userData = this.mesh.userData;
+		bbox.userData = this;
 
 		return bbox;
 	}

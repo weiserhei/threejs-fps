@@ -88,7 +88,7 @@ define([
 
 		var tweens = setupTweens();
 		var fsm = setupFSM( tweens );
-		safedoorGroup.userData.fsm = fsm;
+		// safedoorGroup.userData.fsm = fsm;
 
 		// var box = new THREE.Box3();
 		// box.setFromObject( safedoorGroup );
@@ -171,7 +171,7 @@ define([
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
 		addHighlight( bbox );
-
+		bbox.userData.fsm = fsm;
 		safedoorGroup.add ( bbox );
 
 
