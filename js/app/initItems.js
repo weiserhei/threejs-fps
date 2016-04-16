@@ -12,11 +12,18 @@ define([
 	"scene",
 	"debugGUI",
 	"physics",
-	"Item"
+	"Item",
 ], function ( THREE, scene, debugGUI, physics, Item ) {
 
 	'use strict';
 
+	// table
+	var dimension = new THREE.Vector3( 2, 1, 1 );
+	var position = new THREE.Vector3( -3, 0, 0 );
+	var table = new THREE.Mesh( new THREE.BoxGeometry( dimension.x, dimension.y, dimension.z ), new THREE.MeshPhongMaterial() );
+	table.position.set( position.x, position.y + dimension.y / 2, position.z );
+	scene.add( table );
+	physics.makeStaticBox( dimension, position );
 	
 	function initItems( preloaded, raycastArray ) {
 		// console.log("preloaded", preloaded );
@@ -33,6 +40,20 @@ define([
 		raycastMeshes.push( wrenchkey.getRaycastMesh() );
 
 		scene.add( wrenchkey.mesh );
+
+		// werenchkey
+		var mesh = preloaded.zahnrad.mesh;
+
+		// scale collision box
+		mesh.scale.set( 0.7, 0.7, 0.7 );
+		var zahnrad = new Item( mesh );
+		zahnrad.name = "Zahnrad"
+
+		zahnrad.mesh.position.set( -2.5, 2, 0 );
+		zahnrad.mesh.rotation.set( Math.PI / 2, 0, 0 );
+		raycastMeshes.push( zahnrad.getRaycastMesh() );
+		zahnrad.physic( 2 );
+		// scene.add( zahnrad.mesh );
 
 		// key
 		var mesh = preloaded.key.mesh;

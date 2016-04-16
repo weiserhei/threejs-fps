@@ -107,6 +107,18 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
 
         } );
 
+        var url = "assets/models/keller/keller_gear.js";
+        jsonLoader.load( url, function callback(geometry, materials) {
+
+            // var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+            var mesh = new THREE.Mesh( geometry, materials[ 0 ] );
+            geometry.scale( 0.5, 0.5, 0.5 );
+            var zahnrad = {};
+            zahnrad.mesh = mesh;
+            items.zahnrad = zahnrad;
+
+        } );
+
         // var url = "assets/models/darkkey/darkkey.js";
         // jsonLoader.load( url, function callback(geometry, materials) {
 
