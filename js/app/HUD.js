@@ -37,6 +37,7 @@ define([
 			this.innerHTML = this.initial + " " + text;
 		};
 		infoText.setHTML = function( text ) {
+			console.log("setting html", text );
 			this.innerHTML = text;
 		};
 

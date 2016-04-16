@@ -41,8 +41,8 @@ define([
     sound4.setRefDistance( 8 );
     sound4.setVolume( 0.1 );
 
-	function safe( preloaded ) {
-
+	function safe( preloaded, constraint ) {
+		console.log("constraint", constraint );
 		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
 
 		// DEBUG GUI
@@ -93,9 +93,15 @@ define([
 		// var box = new THREE.Box3();
 		// box.setFromObject( safedoorGroup );
 
-		function addHighlight( mesh ) {
+		function addHighlight( mesh, constraint ) {
 
 			mesh.userData.highlight = function( inventar, hudElement ) {
+
+				if ( constraint.active === true ) {
+					var innerHTML = "Press <span class='highlight-inverse'>[ e ]</span> to " + fsm.transitions()[ 0 ] + " the " + this.name;
+					hudElement.setHTML( innerHTML );
+				} else {
+				}
 
 				for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
 
@@ -167,7 +173,7 @@ define([
 		bbox.material.visible = false;
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
-		addHighlight( bbox );
+		addHighlight( bbox, constraint );
 		bbox.userData.fsm = fsm;
 		safedoorGroup.add ( bbox );
 
@@ -251,6 +257,12 @@ define([
 
 		}
 
+		    	// SOUNDS
+		var sound5 = new THREE.Audio( listener );
+		sound5.load( 'assets/sounds/beep.ogg' );
+		sound5.setVolume( 0.5 );
+
+
 		function setupFSM( tweens ) {
 
 			// todo: user interaction to unlock / keypad overlay
@@ -271,6 +283,24 @@ define([
 					{ name: 'interact', from: 'locked', to: 'opened' },
 				],
 				callbacks: {
+					// constrain safe door to itemslot
+					onbeforeinteract: function(event, from, to) { 
+
+						if ( this.is( "locked" ) ) {
+						    // some UI action, minigame, unlock this shit
+						   	// return if itemslot isnt filled
+						    if ( constraint.active === true ) {
+						    	sound5.play();
+						    	// cancel transition
+						    	return false;
+						    }
+
+						    // safe.raycastMesh.userData.innerHTML = "";
+
+						}
+
+					},
+
 					onclosed: function(event, from, to, msg) { 
 
 						tweens.open.stop();
@@ -289,17 +319,6 @@ define([
 						tweens.close.stop();
 						tweens.open.start();
 						sound3.play();
-
-					},
-					onbeforeinteract: function(event, from, to) { 
-
-						// console.log( "onbeforeinteract", this.current ); 
-
-						// if ( this.is( "locked" ) ) {
-						//     // alert("pause");
-						//     // some UI action, minigame, unlock this shit
-
-						// }
 
 					},
 					// onunlocked: function() {

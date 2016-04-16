@@ -75,9 +75,6 @@ define([
 		scene.add( dynamic_mesh );
 		physics.meshToBody( dynamic_mesh, 5 );
 
-    	var safe = initSafe( preloaded.safe );
-    	objects.push( safe.raycastMesh );
-
     	// todo
     	// abstract item initialization
     	// and constraints to other game elemnts
@@ -85,29 +82,8 @@ define([
     	// adding item meshes to raycaster objects-array
     	var items = initItems( preloaded.items, objects );
 
-    	// SOUNDS
-		var sound1 = new THREE.Audio( listener );
-		sound1.load( 'assets/sounds/beep.ogg' );
-		sound1.setVolume( 0.5 );
-
-		// constrain safe door to itemslot
-		safe.fsm.onbeforeinteract = function(event, from, to) { 
-
-			// todo
-			// mark interaction as inactive
-			// if not possible
-			if ( this.is( "locked" ) ) {
-			    // some UI action, minigame, unlock this shit
-			   	// return if itemslot isnt filled
-			    if ( items.active === true ) {
-			    	sound1.play();
-			    	// cancel transition
-			    	return false;
-			    }
-
-			}
-
-		};
+    	var safe = initSafe( preloaded.safe, items );
+    	objects.push( safe.raycastMesh );
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
