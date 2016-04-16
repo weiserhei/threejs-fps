@@ -104,7 +104,15 @@ define([
 		 	this.resetActive();
 			// items
 			// console.log("active", object );
-			this.interactionText.show( true, object.userData.hud.action + " " + object.userData.name );
+			// console.log( "userdata", object.parent.userData );
+
+			var action = object.userData.hud.action;
+
+			if ( ! ( object.parent.userData instanceof Item ) ) {
+				action = object.parent.userData.fsm.transitions()[ 0 ] + " the";
+			}
+
+			this.interactionText.show( true, action + " " + object.userData.name );
 			object.userData.highlight();
 			this.target = object;
 
