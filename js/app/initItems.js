@@ -47,7 +47,8 @@ define([
 		key.mesh.position.set( 0.8, 1, 0.8 );
 		key.mesh.rotation.set( 0, Math.PI / 2, Math.PI / 2 );
 
-		scene.add( key.mesh );
+		// scene.add( key.mesh );
+		key.physic( 2 );
 
 		// buch
 		var mesh = preloaded.buch.mesh;

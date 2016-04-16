@@ -160,7 +160,7 @@ define([
 			// var mass = 50 * ( (radiusTop + radiusBottom)/2 ) *  height;
 			
 		}
-		console.log( shape );
+
 		// else if ( type === "PlaneGeometry" || type === "PlaneBufferGeometry" ) {
 			
 		// 	// var width = mesh.geometry.parameters.width;
