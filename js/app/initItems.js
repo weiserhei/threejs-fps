@@ -20,7 +20,7 @@ define([
 	
 	function initItems( preloaded, raycastArray ) {
 		// console.log("preloaded", preloaded );
-	var raycastMeshes = [];
+		var raycastMeshes = [];
 
 		// werenchkey
 		var mesh = preloaded.wrenchkey.mesh;
@@ -33,7 +33,6 @@ define([
 		raycastMeshes.push( wrenchkey.getRaycastMesh() );
 
 		scene.add( wrenchkey.mesh );
-		
 
 		// key
 		var mesh = preloaded.key.mesh;
@@ -116,15 +115,5 @@ define([
 	// }
 
 	return initItems;
-
-	// SOUNDS
-    // var sound1 = new THREE.PositionalAudio( listener );
-    // sound1.load( 'assets/sounds/safe_door.ogg' );
-    // sound1.setRefDistance( 8 );
-    // sound1.setVolume( 0.1 );
-
-	// collision
-	// physics.makeStaticBox(new THREE.Vector3(1,0.3,1), safeGroup.position, undefined );
-
 
 });

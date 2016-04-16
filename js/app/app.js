@@ -134,6 +134,7 @@ define([
         // 	}
         // }
         // dg.add( options, "safe" );
+		// DEBUG GUI
 
         document.addEventListener('keydown',onDocumentKeyDown,false);
 		document.addEventListener('keyup',onDocumentKeyUp,false);
@@ -179,7 +180,6 @@ define([
 
         // document.body.addEventListener( "mousedown", handleMouseDown );
 
-		// DEBUG GUI
 
 	};
 
