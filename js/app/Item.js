@@ -1,10 +1,6 @@
 /**
-* Safe Object (interactive)
-* consists of
-* Model (mesh)
-* Tweens
-* State Machine
-* Sounds
+* Item class
+* 
 */
 
 define([
@@ -125,7 +121,7 @@ define([
 
 	Item.prototype.interact = function() {
 		// pickup Item - hide it
-		console.log("pickup", this );
+		// console.log("pickup", this );
 
 		// allow overlapping for multiple fast pickups
 		sound1.isPlaying = false; 

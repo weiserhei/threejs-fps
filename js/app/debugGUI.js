@@ -25,7 +25,9 @@ define([
         return this.addThreeColor(material.uniforms[uniformName],"value").name(label||uniformName);
     };
 
-    var gui = new dat.GUI();
+    // var gui = new dat.GUI();
+    var gui = new dat.GUI({ load: JSON });
+
 
     dat.GUI.prototype.getFolder = function( name ) {
         if ( gui.__folders[ name ] ) {
@@ -37,9 +39,9 @@ define([
         return folder;
     };
     
-    var folder = gui.addFolder("Debug Menu");
+    // var folder = gui.addFolder("Debug Menu");
     // folder.open();
 
-    return folder;
+    return gui;
 
 });

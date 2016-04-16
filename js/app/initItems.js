@@ -81,8 +81,9 @@ define([
 		}
 
 		// buch.physic( spawn.scale );
-		debugGUI.add( spawn, "scale" ).min( 0.5 ).max( 10 ).step( 0.5 );;
-		debugGUI.add( spawn, "book" ).name("spawn book");
+		var folder = debugGUI.getFolder( "Debug Menu" );
+		folder.add( spawn, "scale" ).min( 0.5 ).max( 10 ).step( 0.5 );;
+		folder.add( spawn, "book" ).name("spawn book");
 
 
 		// darkkey

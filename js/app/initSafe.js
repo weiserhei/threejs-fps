@@ -35,6 +35,12 @@ define([
     sound3.setRefDistance( 8 );
     sound3.setVolume( 0.1 );
 
+    var sound4 = new THREE.PositionalAudio( listener );
+    // sound4.load( 'assets/sounds/click.ogg' ); // needs delay 300ms
+    sound4.load( 'assets/sounds/click_slow.ogg' );
+    sound4.setRefDistance( 8 );
+    sound4.setVolume( 0.1 );
+
 	function safe( preloaded ) {
 
 		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
@@ -67,9 +73,10 @@ define([
 		safeGroup.rotation.y = Math.PI / 2;
 		safeGroup.position.set ( 0, 0, -1 );
 		
-		safeGroup.add( sound1 );
+		safewheel.add( sound1 ); // wheel sound
 		safeGroup.add( sound2 );
 		safeGroup.add( sound3 );
+		safegriff.add( sound4 ); // clicks
 
 		// var sound1 = preloaded.sounds.sound1;
 		// var sound2 = preloaded.sounds.sound2;
@@ -315,8 +322,14 @@ define([
 							// sound1.gain.gain.exponentialRampToValueAtTime( 0.01, sound1.context.currentTime + 2.5 );
 
 						} );
+						tweens.unlock.onStart( 
+							function() { 
+								// sound is too short for the animation :s
+								// setTimeout( function() { sound4.play(); }, 300 );
+								sound4.play() 
+							} 
+						);
 						tweens.unlock.start();
-						// sound1.play();
 
 						return StateMachine.ASYNC;
 
