@@ -55,6 +55,7 @@ define([
 		// scene.add ( bbox );
 
 		this.mesh.add( bbox );
+		bbox.rotation.copy( this.mesh.rotation );
 		// bbox.userData = this.mesh.userData;
 		bbox.userData = this;
 

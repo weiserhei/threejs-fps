@@ -5,11 +5,12 @@
 
 define([
 	"three",
+	"TWEEN",
 	"debugGUI",
 	"physics",
 	"scene",
 	"listener"
-], function ( THREE, debugGUI, physics, scene, listener ) {
+], function ( THREE, TWEEN, debugGUI, physics, scene, listener ) {
 
 	'use strict';
 
@@ -21,15 +22,15 @@ define([
 	sound1.setVolume( 0.5 );	
 	var sound2 = new THREE.Audio( listener );
 	sound2.load( 'assets/sounds/harfe.ogg' );
-	// sound1.autoplay = true;
-	// sound1.setLoop( true );
-	sound2.setVolume( 0.5 );
+	sound2.setVolume( 0.5 );	
+
+	var sound3 = new THREE.Audio( listener );
+	sound3.load( 'assets/sounds/schlag.ogg' );
+	sound3.setVolume( 0.5 );
 
 	//pickableObject
 
 	function Itemslot( item ) {
-
-		console.log("slot", item );
 
 		this.item = item;
 
@@ -37,9 +38,12 @@ define([
 		item.mesh.children = [];
 
 		var mesh = item.mesh.clone();
+		mesh.rotation.set( 0, 0, 0 );
+
 		item.mesh.children = temp;
 		// // mesh2.scale.set( 0.7, 0.7, 0.7 );
 		mesh.material = mesh.material.clone();
+
 		this.stdMaterial = mesh.material;
 		
 		mesh.material.opacity = 0.4;
@@ -79,6 +83,8 @@ define([
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
 		this.mesh.add ( bbox );
+
+		bbox.rotation.copy( this.mesh.rotation );
 		bbox.userData = this;
 
 		return bbox;
@@ -179,7 +185,7 @@ define([
 
 	};
 
-	Itemslot.prototype.interact = function( inventar ) {
+	Itemslot.prototype.interact = function( inventar, dgitem ) {
 		// insert Item - show it
 		// console.log("use", this );
 
@@ -200,7 +206,29 @@ define([
 
 		// allow overlapping for multiple fast pickups
 		sound2.isPlaying = false; 
-		sound2.play();
+		sound2.play();		
+
+		sound3.play();
+
+		var folder = debugGUI.getFolder("Inventar");
+		folder.remove( dgitem );
+
+		function tweenVector( source, target, time, easing ) {
+			return new TWEEN.Tween( source ).to( {
+				x: target.x,
+				y: target.y,
+				z: target.z
+				}, time )
+				.easing( easing );
+		}
+
+		// open wheel
+		var source = this.mesh.rotation;
+		var target = new THREE.Vector3( 0, 0, Math.PI * 2 );
+		var time = 2000;
+		var easing = TWEEN.Easing.Sinusoidal.InOut;
+		var turn_wheel = tweenVector( source, target, time, easing );
+		turn_wheel.start();
 
 		// hide raycast mesh
 		// visible = false affecting children in terms of rendering

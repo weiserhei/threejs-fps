@@ -73,7 +73,7 @@ define([
 		// zahnrad.mesh.children = temp;
 		var itemslot = new Itemslot( zahnrad );
 		itemslot.mesh.position.set( 2.5, 1.05, 0 );
-		itemslot.mesh.rotation.set( Math.PI / 2, 0, 0 );
+		// itemslot.mesh.rotation.set( Math.PI / 2, 0, 0 );
 		raycastMeshes.push( itemslot.getRaycastMesh() );
 		scene.add( itemslot.mesh );
 

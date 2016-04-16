@@ -113,6 +113,7 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
             // var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
             var mesh = new THREE.Mesh( geometry, materials[ 0 ] );
             geometry.scale( 0.6, 0.6, 0.6 );
+
             var zahnrad = {};
             zahnrad.mesh = mesh;
             items.zahnrad = zahnrad;

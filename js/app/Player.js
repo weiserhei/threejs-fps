@@ -30,7 +30,8 @@ define([
 		this.inventar = [];
 
 	}
-
+	// meh remove pls
+	var dgitem;
 	Player.prototype.interact = function() {
 
 		var object = this.target;
@@ -66,12 +67,12 @@ define([
 			if( object.userData instanceof Item ) {
 
 				object.userData.interact();
-				folder.add( object.userData, "name" );
+				dgitem = folder.add( object.userData, "name" );
 				this.inventar.push( object.userData );
 
 			}
 			else if ( object.userData instanceof Itemslot ) {
-				object.userData.interact( this.inventar );
+				object.userData.interact( this.inventar, dgitem );
 				// this.inventar
 			}
 		}
