@@ -89,7 +89,7 @@ define([
 			mesh.userData.highlight = function( inventar, hudElement ) {
 
 				if ( constraint.active === true ) {
-					var innerHTML = "You need to " + constraint2.hud.action + " the <span class='highlight-inactive'>" + constraint.name + "</span>";
+					var innerHTML = "You need to " + constraint2.hud.action + " <span class='highlight-inactive'>" + constraint.name + "</span>";
 					innerHTML += " to " + fsm.transitions()[ 0 ] + " the " + this.name;
 					hudElement.setHTML( innerHTML );
 				}
