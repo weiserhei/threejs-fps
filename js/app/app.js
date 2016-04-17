@@ -2,6 +2,20 @@
  * Core application handling
  * Initialize App
  */
+
+ /*
+  * ToDo
+  * Ein level machen das komplett dunkel ist
+  * strom anschalten um weg zu finden 
+  * (random fässer im keller verteilen um labyrinth zu machen)
+  *
+  * Insert book in shelf and slide it away
+  *
+  * Schublade öffnen mit tastendruck
+  * Leere Schubladen einstreuen
+  * 
+  */
+
 define([
     "three",
     "TWEEN",

@@ -15,30 +15,11 @@ define([
 
     'use strict';
 
-    var sounds = [];
+    // preload sounds?
+
     var objects = {};
     var items = {};
     objects.items = items;
-
-    // // SOUNDS
-    // var sound1 = new THREE.PositionalAudio( listener );
-    // sound1.load( 'assets/sounds/safe_door.ogg' );
-    // sound1.setRefDistance( 8 );
-    // sound1.setVolume( 0.1 );
-
-    // var sound2 = new THREE.PositionalAudio( listener );
-    // sound2.load( 'assets/sounds/door.ogg' );
-    // sound2.setRefDistance( 8 );
-    // sound2.setVolume( 0.1 );
-
-    // var sound3 = new THREE.PositionalAudio( listener );
-    // sound3.load( 'assets/sounds/quietsch2.ogg' );
-    // sound3.setRefDistance( 8 );
-    // sound3.setVolume( 0.1 );
-
-    // safe.sounds.sound1 = sound1;
-    // safe.sounds.sound2 = sound2;
-    // safe.sounds.sound3 = sound3;
 
     objects.safe = safe;
     objects.sicherungskasten = loadSicherungskasten;
@@ -161,7 +142,6 @@ define([
 
         return {
         	loadingManager: loadingManager,
-        	sounds: sounds,
             objects: objects,
         };
 

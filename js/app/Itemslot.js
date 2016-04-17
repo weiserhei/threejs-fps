@@ -1,5 +1,6 @@
 /**
-* Item class
+* Itemslot class
+* creates Hull for an Item
 * 
 */
 
@@ -8,26 +9,10 @@ define([
 	"TWEEN",
 	"debugGUI",
 	"physics",
-	"listener"
-], function ( THREE, TWEEN, debugGUI, physics, listener ) {
+	"sounds"
+], function ( THREE, TWEEN, debugGUI, physics, sounds ) {
 
 	'use strict';
-
-	// SOUNDS
-	var sound1 = new THREE.Audio( listener );
-	sound1.load( 'assets/sounds/lightswitch.ogg' );
-	// sound1.autoplay = true;
-	// sound1.setLoop( true );
-	sound1.setVolume( 0.5 );	
-	var sound2 = new THREE.Audio( listener );
-	sound2.load( 'assets/sounds/harfe.ogg' );
-	sound2.setVolume( 0.5 );	
-
-	var sound3 = new THREE.Audio( listener );
-	sound3.load( 'assets/sounds/schlag.ogg' );
-	sound3.setVolume( 0.5 );
-
-	//pickableObject Hull
 
 	function Itemslot( item ) {
 
@@ -218,8 +203,8 @@ define([
 
 		if ( ! checkInventar ) {
 			// allow overlapping sound for multiple fast keypresses
-			sound1.isPlaying = false; 
-			sound1.play();		
+			sounds.lightswitch.isPlaying = false; 
+			sounds.lightswitch.play();		
 			return;
 		}
 
@@ -229,8 +214,8 @@ define([
 			inventar.splice(index, 1);
 		}
 
-		sound2.play();		
-		sound3.play();
+		sounds.harfe.play();		
+		sounds.schlag.play();
 		// console.log("removing", dgitem );
 
 		var folder = debugGUI.getFolder("Inventar");

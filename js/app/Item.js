@@ -7,17 +7,10 @@ define([
 	"three",
 	"../libs/state-machine.min",
 	"physics",
-	"listener"
-], function ( THREE, StateMachine, physics, listener ) {
+	"sounds"
+], function ( THREE, StateMachine, physics, sounds ) {
 
 	'use strict';
-
-	// SOUNDS
-	var sound1 = new THREE.Audio( listener );
-	sound1.load( 'assets/sounds/wusch.ogg' );
-	// sound1.autoplay = true;
-	// sound1.setLoop( true );
-	sound1.setVolume( 0.5 );
 
 	//pickableObject
 
@@ -130,8 +123,8 @@ define([
 		// console.log("pickup", this );
 
 		// allow overlapping for multiple fast pickups
-		sound1.isPlaying = false; 
-		sound1.play();
+		sounds.wusch.isPlaying = false; 
+		sounds.wusch.play();
 
 		this.pickedUp = true;
 

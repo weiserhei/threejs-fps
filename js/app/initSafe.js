@@ -14,40 +14,15 @@ define([
 	"scene",
 	"debugGUI",
 	"physics",
-	"listener"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, listener ) {
+	"sounds"
+], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds ) {
 
 	'use strict';
 
-	// SOUNDS
-    var sound1 = new THREE.PositionalAudio( listener );
-    sound1.load( 'assets/sounds/safe_door.ogg' );
-    sound1.setRefDistance( 8 );
-    sound1.setVolume( 0.1 );
-
-    var sound2 = new THREE.PositionalAudio( listener );
-    sound2.load( 'assets/sounds/door.ogg' );
-    sound2.setRefDistance( 8 );
-    sound2.setVolume( 0.1 );
-
-    var sound3 = new THREE.PositionalAudio( listener );
-    sound3.load( 'assets/sounds/quietsch2.ogg' );
-    sound3.setRefDistance( 8 );
-    sound3.setVolume( 0.1 );
-
-    var sound4 = new THREE.PositionalAudio( listener );
-    // sound4.load( 'assets/sounds/click.ogg' ); // needs delay 300ms
-    sound4.load( 'assets/sounds/click_slow.ogg' );
-    sound4.setRefDistance( 8 );
-    sound4.setVolume( 0.1 );
-
-	var sound5 = new THREE.Audio( listener );
-	sound5.load( 'assets/sounds/beep.ogg' );
-	sound5.setVolume( 0.5 );
+	var safesound = sounds.positional.safe;
 
 	function safe( preloaded, constraint, hudElement ) {
-		console.log("constraint", constraint );
-		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
+		// console.log("constraint", constraint );
 		
 		var name = "Safe";
 		var folder = debugGUI.getFolder( name );
@@ -88,14 +63,10 @@ define([
 		safeGroup.rotation.y = Math.PI / 2;
 		safeGroup.position.set ( 0, 0, -1 );
 		
-		safewheel.add( sound1 ); // wheel sound
-		safeGroup.add( sound2 );
-		safeGroup.add( sound3 );
-		safegriff.add( sound4 ); // clicks
-
-		// var sound1 = preloaded.sounds.sound1;
-		// var sound2 = preloaded.sounds.sound2;
-		// var sound3 = preloaded.sounds.sound3;
+		safewheel.add( safesound.safe_door ); // wheel sound
+		safeGroup.add( safesound.door );
+		safeGroup.add( safesound.quietsch2 );
+		safegriff.add( safesound.click_slow ); // clicks
 
 		// collision
 		// physics.makeStaticBox(new THREE.Vector3(1,0.3,1), safeGroup.position, undefined );
@@ -315,7 +286,7 @@ define([
 						    // some UI action, minigame, unlock this shit
 						   	// return if itemslot isnt filled
 						    if ( constraint.active === true ) {
-						    	sound5.play();
+						    	sounds.beep.play();
 						    	// cancel transition
 						    	return false;
 						    }
@@ -331,18 +302,18 @@ define([
 						tweens.close.start();
 						tweens.close.onComplete( 
 						                function() { 
-						                	sound2.play(); 
+						                	safesound.door.play(); 
 						                	// stop soundfile before finished
-											setTimeout(function(){ sound2.stop(); }, 600);
+											setTimeout(function(){ safesound.door.stop(); }, 600);
 						                } );
-						sound3.play();
+						safesound.quietsch2.play();
 
 					},
 					onopened: function() {
 
 						tweens.close.stop();
 						tweens.open.start();
-						sound3.play();
+						safesound.quietsch2.play();
 
 					},
 					// onunlocked: function() {
@@ -357,12 +328,12 @@ define([
 
 						tweens.wheel.onComplete( function() { 
 							fsm.transition(); 
-							sound1.stop();						
+							safesound.safe_door.stop();						
 						} );
 						tweens.unlock.chain( tweens.wheel );
 						tweens.unlock.onComplete( function() { 
 
-							sound1.play(); 
+							safesound.safe_door.play(); 
 							// broken
 							// sound1.gain.gain.exponentialRampToValueAtTime( 0.01, sound1.context.currentTime + 2.5 );
 
@@ -371,7 +342,7 @@ define([
 							function() { 
 								// sound is too short for the animation :s
 								// setTimeout( function() { sound4.play(); }, 300 );
-								sound4.play() 
+								safesound.click_slow.play() 
 							} 
 						);
 						tweens.unlock.start();
@@ -389,7 +360,6 @@ define([
 						safewheel.rotation.set( 0, 0, 0 );
 						safegriff.rotation.set( 0, 0, 0 );
 						safegriff.quaternion.set( 0, 0, 0, 1 );
-						sound1.setVolume( 0.1 )
 
 					},
 				}

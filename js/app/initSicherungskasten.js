@@ -16,26 +16,15 @@ define([
 	"scene",
 	"debugGUI",
 	"physics",
-	"listener"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, listener ) {
+	"sounds"
+], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds ) {
 
 	'use strict';
 
-	// SOUNDS
-	
-	var sound1 = new THREE.PositionalAudio( listener );
-	sound1.load( 'assets/sounds/schlag.ogg' );
-	sound1.setRefDistance( 8 );
-	sound1.setVolume( 0.5 );    
-
-	var sound2 = new THREE.PositionalAudio( listener );
-	sound2.load( 'assets/sounds/sicherung2.ogg' );
-	sound2.setRefDistance( 8 );
-	sound2.setVolume( 0.5 );
-    
+	var sicherungssound = sounds.positional.sicherungskasten;
 
 	function sicherungskasten( preloaded, constraint, constraint2, hudElement ) {
-		console.log("constraint", constraint );
+		// console.log("constraint", constraint );
 		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
 		
 		var name = "Sicherungskasten";
@@ -69,8 +58,8 @@ define([
 		// scene.updateMatrixWorld();
 		// console.log( sicherung.getWorldPosition() );
 
-		sicherungsgruppe.add( sound1 ); // wheel sound
-		sicherungsgruppe.add( sound2 );
+		sicherungsgruppe.add( sicherungssound.schlag ); // schalter
+		sicherungsgruppe.add( sicherungssound.sicherung2 ); // summen
 		// safeGroup.add( sound3 );
 		// safegriff.add( sound4 ); // clicks
 
@@ -310,7 +299,7 @@ define([
 					},
 					oninteract: function( event, from, to ) {
 						// console.log( event, from, to );
-						sound1.play();
+						sicherungssound.schlag.play();
 
 					},
 					onleaveup: function( event, from, to ) {
@@ -329,8 +318,8 @@ define([
 					},
 					onup: function() {
 						pl.intensity = 0;
-						if ( sound2.isPlaying ) {
-							sound2.stop();
+						if ( sicherungssound.sicherung2.isPlaying ) {
+							sicherungssound.sicherung2.stop();
 						}
 						constraint2.mesh.material.emissive.setHex( 0x000000 );
 					},
@@ -341,7 +330,7 @@ define([
 							this.interact();
 							return false;
 						}
-						sound2.play();
+						sicherungssound.sicherung2.play();
 					},
 					// onclosed: function(event, from, to, msg) { 
 
