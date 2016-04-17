@@ -9,8 +9,9 @@ define([
 	"TWEEN",
 	"debugGUI",
 	"physics",
-	"sounds"
-], function ( THREE, TWEEN, debugGUI, physics, sounds ) {
+	"sounds",
+	"InteractionBox"
+], function ( THREE, TWEEN, debugGUI, physics, sounds, InteractionBox ) {
 
 	'use strict';
 
@@ -82,19 +83,7 @@ define([
 	
 	Itemslot.prototype.computeRaycastMesh = function() {
 
-		// bounding box for raycasting
-		// scale up for easy access
-		this.mesh.scale.multiplyScalar( 1.5 );
-		var bbox = new THREE.BoundingBoxHelper( this.mesh );
-		bbox.update();
-		this.mesh.scale.multiplyScalar( 2/3 );
-		// bbox.scale.set( 1.5, 1.5, 1.5 );
-		// this.mesh.position.set( 0, 0, 0 );
-		// bbox.position.set( - 0.02, 0.40, -0.54 );
-		// bbox.material.visible = false;
-		// bbox.rotation.copy( safeGroup.rotation );
-		// scene.add ( bbox );
-		this.mesh.add ( bbox );
+		var bbox = new InteractionBox( this.mesh );
 
 		bbox.rotation.copy( this.mesh.rotation );
 		bbox.userData = this;

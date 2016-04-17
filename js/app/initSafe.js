@@ -15,8 +15,9 @@ define([
 	"debugGUI",
 	"physics",
 	"sounds",
-	"InteractionElement"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement ) {
+	"InteractionElement",
+	"InteractionBox"
+], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox ) {
 
 	'use strict';
 
@@ -77,30 +78,19 @@ define([
 		// box.setFromObject( safedoorGroup );
 
 		// door bounding box for raycasting
-		var bbox = new THREE.BoundingBoxHelper( safedoorGroup );
-		bbox.update();
+		var bbox = new InteractionBox( safedoorGroup, 1 );
 		bbox.position.set( - 0.02, 0.40, -0.54 );
-		// var pos1 = safedoorGroup.position.clone();
-		// pos1.add( safeGroup.getWorldPosition() );
-		// bbox.position.copy( pos1 );
-		bbox.material.visible = false;
 		// bbox.rotation.copy( safeGroup.rotation );
-		// scene.add ( bbox );
-		// addHighlightMaterial( safedoorGroup );
-
-		// addHighlight( bbox, safedoorGroup, constraint );
-		safedoorGroup.add ( bbox );
 
 		var tweens = setupTweens();
-		var fsm = setupFSM( tweens );
+		var fsm = setupFSM( tweens, bbox );
+		// fsm.unlock();
 
 		var iE = new InteractionElement( "safe door" );
 		iE.addHighlightMaterial( safedoorGroup );
 		iE.addHighlightFunction( bbox, fsm, constraint );
 
 		bbox.userData.fsm = fsm;
-		// safedoorGroup.userData.fsm = fsm;
-		// fsm.unlock();
 
 
 		function setupTweens() {
@@ -183,7 +173,7 @@ define([
 		}
 
 
-		function setupFSM( tweens ) {
+		function setupFSM( tweens, bbox ) {
 
 			// todo: user interaction to unlock / keypad overlay
 

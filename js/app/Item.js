@@ -7,8 +7,9 @@ define([
 	"three",
 	"../libs/state-machine.min",
 	"physics",
-	"sounds"
-], function ( THREE, StateMachine, physics, sounds ) {
+	"sounds",
+	"InteractionBox"
+], function ( THREE, StateMachine, physics, sounds, InteractionBox ) {
 
 	'use strict';
 
@@ -36,21 +37,9 @@ define([
 
 	Item.prototype.computeRaycastMesh = function() {
 
-		// bounding box for raycasting
-		// scale up for easy access
-		this.mesh.scale.multiplyScalar( 1.5 );
-		var bbox = new THREE.BoundingBoxHelper( this.mesh );
-		bbox.update();
-		this.mesh.scale.multiplyScalar( 2/3 );
-		// bbox.scale.set( 1.5, 1.5, 1.5 );
-		// bbox.position.set( - 0.02, 0.40, -0.54 );
-		// bbox.material.visible = false;
-		// bbox.rotation.copy( safeGroup.rotation );
-		// scene.add ( bbox );
-
-		this.mesh.add( bbox );
+		var bbox = new InteractionBox( this.mesh );
 		bbox.rotation.copy( this.mesh.rotation );
-		// bbox.userData = this.mesh.userData;
+
 		bbox.userData = this;
 
 		return bbox;

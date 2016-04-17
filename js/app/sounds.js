@@ -86,12 +86,12 @@ define([
 	var sound1 = new THREE.PositionalAudio( listener );
 	sound1.load( 'assets/sounds/schlag.ogg' );
 	sound1.setRefDistance( 8 );
-	sound1.setVolume( 0.5 );    
+	sound1.setVolume( 0.1 );    
 
 	var sound2 = new THREE.PositionalAudio( listener );
 	sound2.load( 'assets/sounds/sicherung2.ogg' );
 	sound2.setRefDistance( 8 );
-	sound2.setVolume( 0.5 );
+	sound2.setVolume( 0.3 );
 
 	var sicherungskasten = {};
 	sicherungskasten.schlag = sound1;

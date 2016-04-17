@@ -17,8 +17,9 @@ define([
 	"debugGUI",
 	"physics",
 	"sounds",
-	"InteractionElement"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement ) {
+	"InteractionElement",
+	"InteractionBox"
+], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox ) {
 
 	'use strict';
 
@@ -61,12 +62,6 @@ define([
 
 		sicherungsgruppe.add( sicherungssound.schlag ); // schalter
 		sicherungsgruppe.add( sicherungssound.sicherung2 ); // summen
-		// safeGroup.add( sound3 );
-		// safegriff.add( sound4 ); // clicks
-
-		// var sound1 = preloaded.sounds.sound1;
-		// var sound2 = preloaded.sounds.sound2;
-		// var sound3 = preloaded.sounds.sound3;
 
 		// collision
 		// physics.makeStaticBox(new THREE.Vector3( 1.1, 1.2, 1.1 ), safeGroup.position, undefined );
@@ -80,29 +75,20 @@ define([
 
 		// var boundingBoxSize = bbox.boundingBox.max.sub( geometry.boundingBox.min );
 
-		schalter.scale.multiplyScalar( 1.5 );
-		var bbox = new THREE.BoundingBoxHelper( schalter );
-		bbox.update();
-		
-		schalter.scale.multiplyScalar( 2/3 );
 		// bbox.geometry.translate( 0, bbox.size.y, 0 );
 		// bbox.position.set( - 0.02, 0.40, -0.54 );
 		// var pos1 = safedoorGroup.position.clone();
 		// pos1.add( safeGroup.getWorldPosition() );
 		// bbox.position.copy( pos1 );
-		bbox.material.visible = true;
+		// bbox.material.visible = true;
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
-
-
-		// bbox.userData.fsm = fsm;
-		// bbox.position.set( 0, 0, 0 );
-		// bbox.position.copy( schalter.position );
 
 		// if(color == "kerze"){ c = 0xFACC2E; }
 		// else if(color == "mystic") { c = 0x00ffaa; }
 
-		scene.updateMatrixWorld(); // !!
+		// scene.updateMatrixWorld(); // !!
+		schalter.updateMatrixWorld();
 		var pos = constraint2.mesh.getWorldPosition();
 		pos.z -= 0.1;
 		pos.x += 0.1;
@@ -125,18 +111,18 @@ define([
 		// helper.update();
 		// scene.add(helper);
 
-
 		var tweens = setupTweens();
 		var fsm = setupFSM( tweens );
 
+		// raycast box
+		var bbox = new InteractionBox( schalter );
+		bbox.position.z = 0;
+		bbox.userData.fsm = fsm;
+
 		var iE = new InteractionElement( "schalter" );
+		// schalter.add ( bbox );
 		iE.addHighlightMaterial( schalter );
 		iE.addHighlightFunction( bbox, fsm, constraint2 );
-
-		schalter.add ( bbox );
-		bbox.position.z = 0;
-
-		bbox.userData.fsm = fsm;
 
 		// flackern( pl );
 
