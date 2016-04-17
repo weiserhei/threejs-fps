@@ -40,12 +40,12 @@ define([
     sound4.load( 'assets/sounds/click_slow.ogg' );
     sound4.setRefDistance( 8 );
     sound4.setVolume( 0.1 );
-    
+
 	var sound5 = new THREE.Audio( listener );
 	sound5.load( 'assets/sounds/beep.ogg' );
 	sound5.setVolume( 0.5 );
 
-	function safe( preloaded, constraint ) {
+	function safe( preloaded, constraint, hudElement ) {
 		console.log("constraint", constraint );
 		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
 		
@@ -101,11 +101,6 @@ define([
 		// physics.makeStaticBox(new THREE.Vector3(1,0.3,1), safeGroup.position, undefined );
 		physics.makeStaticBox(new THREE.Vector3( 1.1, 1.2, 1.1 ), safeGroup.position, undefined );
 
-		var tweens = setupTweens();
-		var fsm = setupFSM( tweens );
-		// safedoorGroup.userData.fsm = fsm;
-		// fsm.unlock();
-
 		// var box = new THREE.Box3();
 		// box.setFromObject( safedoorGroup );
 
@@ -114,7 +109,8 @@ define([
 			mesh.userData.highlight = function( inventar, hudElement ) {
 
 				if ( constraint.active === true ) {
-					var innerHTML = "Press <span class='highlight-inverse'>[ e ]</span> to " + fsm.transitions()[ 0 ] + " the " + this.name;
+					var innerHTML = "You need to " + constraint.hud.action + " the <span class='highlight-inactive'>" + constraint.name + "</span>";
+					innerHTML += " to " + fsm.transitions()[ 0 ] + " the " + this.name;
 					hudElement.setHTML( innerHTML );
 				} else {
 				}
@@ -190,8 +186,13 @@ define([
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
 		addHighlight( bbox, constraint );
-		bbox.userData.fsm = fsm;
 		safedoorGroup.add ( bbox );
+
+		var tweens = setupTweens();
+		var fsm = setupFSM( tweens );
+		bbox.userData.fsm = fsm;
+		// safedoorGroup.userData.fsm = fsm;
+		// fsm.unlock();
 
 
 		function setupTweens() {
@@ -295,6 +296,19 @@ define([
 				],
 				callbacks: {
 					// constrain safe door to itemslot
+					// fsm.onafterinteract = function( event, from, to, msg ) {
+					onenterstate: function( event, from, to ) {
+
+						// todo: centralize this callback
+						// if constraints active
+						// return
+						// else
+
+						var action = this.transitions()[ 0 ] + " the";
+						var text = action + bbox.userData.name;
+						hudElement.setText( text );
+
+					},
 					onbeforeinteract: function(event, from, to) { 
 
 						if ( this.is( "locked" ) ) {
@@ -311,7 +325,6 @@ define([
 						}
 
 					},
-
 					onclosed: function(event, from, to, msg) { 
 
 						tweens.open.stop();

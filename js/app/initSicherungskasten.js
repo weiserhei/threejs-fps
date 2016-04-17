@@ -34,7 +34,7 @@ define([
 	sound2.setVolume( 0.5 );
     
 
-	function sicherungskasten( preloaded, constraint ) {
+	function sicherungskasten( preloaded, constraint, constraint2, hudElement ) {
 		console.log("constraint", constraint );
 		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
 		
@@ -49,13 +49,13 @@ define([
 
 		var sicherung = new THREE.Mesh( new THREE.CylinderGeometry( 0.02, 0.02, 0.09, 16 ), new THREE.MeshPhongMaterial( { color: 0xFFaa00 } ) );
 		sicherung.position.set( -0.010, -0.013, -0.11 );
-
+		
 		// folder.add( sicherung.position, "x" ).min( -2 ).max( 2 ).step( 0.01 );
 		// folder.add( sicherung.position, "y" ).min( -2 ).max( 2 ).step( 0.01 );
 		// folder.add( sicherung.position, "z" ).min( -2 ).max( 2 ).step( 0.01 );
 
 	    var sicherungsgruppe = new THREE.Group();
-		sicherungsgruppe.add( sicherung );
+		// sicherungsgruppe.add( sicherung );
 		sicherungsgruppe.add( schalter );
 		sicherungsgruppe.add( schrank );
 		sicherungsgruppe.add( tuere );
@@ -66,7 +66,9 @@ define([
 		scene.add( sicherungsgruppe );
 
 		// DEBUG GUI
-		
+		// scene.updateMatrixWorld();
+		// console.log( sicherung.getWorldPosition() );
+
 		sicherungsgruppe.add( sound1 ); // wheel sound
 		sicherungsgruppe.add( sound2 );
 		// safeGroup.add( sound3 );
@@ -86,11 +88,11 @@ define([
 
 			mesh.userData.highlight = function( inventar, hudElement ) {
 
-				// if ( constraint.active === true ) {
-				// 	var innerHTML = "Press <span class='highlight-inverse'>[ e ]</span> to " + fsm.transitions()[ 0 ] + " the " + this.name;
-				// 	hudElement.setHTML( innerHTML );
-				// } else {
-				// }
+				if ( constraint.active === true ) {
+					var innerHTML = "You need to " + constraint2.hud.action + " the <span class='highlight-inactive'>" + constraint.name + "</span>";
+					innerHTML += " to " + fsm.transitions()[ 0 ] + " the " + this.name;
+					hudElement.setHTML( innerHTML );
+				}
 
 				// for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
 
@@ -177,7 +179,7 @@ define([
 		bbox.material.visible = true;
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
-		addHighlight( bbox, constraint );
+		addHighlight( bbox, constraint2 );
 		// bbox.userData.fsm = fsm;
 		// bbox.position.set( 0, 0, 0 );
 		schalter.add ( bbox );
@@ -188,7 +190,7 @@ define([
 		// else if(color == "mystic") { c = 0x00ffaa; }
 
 		scene.updateMatrixWorld(); // !!
-		var pos = sicherung.getWorldPosition();
+		var pos = constraint2.mesh.getWorldPosition();
 		pos.z -= 0.1;
 		pos.x += 0.1;
 		// console.log( pos );
@@ -295,17 +297,15 @@ define([
 				],
 				callbacks: {
 					// constrain safe door to itemslot
-					onbeforeinteract: function(event, from, to) { 
+					onenterstate: function( event, from, to ) {
 
-						// if ( this.is( "locked" ) ) {
-						//     // some UI action, minigame, unlock this shit
-						//    	// return if itemslot isnt filled
-						//     if ( constraint.active === true ) {
-						//     	sound5.play();
-						//     	// cancel transition
-						//     	return false;
-						//     }
-						// }
+						if ( constraint2.active ) {
+							return;
+						}
+						var action = this.transitions()[ 0 ] + " the";
+						// var text = action + " <span class='highlight-item'>" + bbox.userData.name + "</span>";
+						var text = action + bbox.userData.name;
+						hudElement.setText( text );
 
 					},
 					oninteract: function( event, from, to ) {
@@ -329,16 +329,15 @@ define([
 					},
 					onup: function() {
 						pl.intensity = 0;
-							console.log( sound2 );
 						if ( sound2.isPlaying ) {
 							sound2.stop();
 						}
-						sicherung.material.emissive.setHex( 0x000000 );
+						constraint2.mesh.material.emissive.setHex( 0x000000 );
 					},
 					ondown: function() {
 						pl.intensity = 1;
-						sicherung.material.emissive.setHex( 0x885533 );
-						if ( ! constraint.pickedUp ) {
+						constraint2.mesh.material.emissive.setHex( 0x885533 );
+						if ( constraint2.active ) {
 							this.interact();
 							return false;
 						}

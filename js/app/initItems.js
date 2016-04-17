@@ -48,7 +48,7 @@ define([
 		wrenchkey.name = "Wrenchkey"
 
 		// mesh.scale.set( 0.1, 0.1, 0.1 );
-		wrenchkey.mesh.position.set( 0, 1, 0.5 );
+		wrenchkey.mesh.position.set( 1, 1, 3.5 );
 		raycastMeshes.push( wrenchkey.getRaycastMesh() );
 
 		scene.add( wrenchkey.mesh );
@@ -72,6 +72,15 @@ define([
 		// itemslot.mesh.rotation.set( Math.PI / 2, 0, 0 );
 		raycastMeshes.push( itemslot.getRaycastMesh() );
 		scene.add( itemslot.mesh );
+
+		// turn wheel
+		var source = itemslot.mesh.rotation;
+		var target = new THREE.Vector3( 0, 0, Math.PI * 2 );
+		var time = 2000;
+		var easing = TWEEN.Easing.Sinusoidal.InOut;
+
+		itemslot.tweenVector( source, target, time, easing );
+
 
 		// key
 		var mesh = preloaded.key.mesh;
@@ -100,6 +109,29 @@ define([
 
 		scene.add( key.mesh );
 		// key.physic( 2 );
+
+		// sicherung.position.set( -0.010, -0.013, -0.11 );
+		var mesh =  new THREE.Mesh( new THREE.CylinderGeometry( 0.02, 0.02, 0.09, 16 ), new THREE.MeshPhongMaterial( { color: 0xFFaa00 } ) );
+		var sicherung = new Item( mesh.clone() );
+		sicherung.mesh.position.set( 3.2, 1.05, 0 );
+		raycastMeshes.push( sicherung.getRaycastMesh() );
+		sicherung.name = "Fuse";
+		scene.add( sicherung.mesh );
+
+		var sicherungsslot = new Itemslot( sicherung );
+		// Object { x: -2.490000009536743, y: 1.4869999885559082, z: 4.610000133514404 }
+		sicherungsslot.mesh.position.set( -2.49, 1.486999, 4.61 );
+		// itemslot.mesh.rotation.set( Math.PI / 2, 0, 0 );
+		raycastMeshes.push( sicherungsslot.getRaycastMesh() );
+		scene.add( sicherungsslot.mesh );
+
+		// var source = sicherungsslot.mesh.rotation;
+		// var target = new THREE.Vector3( Math.PI * 2 , 0, 0);
+		// var time = 2000;
+		// var easing = TWEEN.Easing.Sinusoidal.InOut;
+
+		// sicherungsslot.tweenVector( source, target, time, easing );
+
 
 		// buch
 		var mesh = preloaded.buch.mesh;
@@ -164,7 +196,8 @@ define([
 
 		return {
 			safeconstraint: itemslot,
-			sicherungskastenconstraint: wrenchkey
+			sicherungskastenconstraint: wrenchkey,
+			sicherungsslot: sicherungsslot
 		};
 
 	}

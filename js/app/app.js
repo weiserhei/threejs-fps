@@ -50,6 +50,7 @@ define([
 	var toggle = false;
 
 	var hud = new HUD( container );
+	hud.interactionText = hud.box("Press <span class='highlight-actionkey'>[ e ]</span> to ");
 	// var infoText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
 	var player = new Player( hud );
 
@@ -84,10 +85,10 @@ define([
     	// adding item meshes to raycaster objects-array
     	var items = initItems( preloaded.items, objects );
 
-    	var safe = initSafe( preloaded.safe, items.safeconstraint );
+    	var safe = initSafe( preloaded.safe, items.safeconstraint, hud.interactionText );
     	objects.push( safe.raycastMesh );
 
-    	var sicherungskasten = initSicherungskasten( preloaded.sicherungskasten, items.sicherungskastenconstraint );
+    	var sicherungskasten = initSicherungskasten( preloaded.sicherungskasten, items.sicherungskastenconstraint, items.sicherungsslot, hud.interactionText );
     	objects.push( sicherungskasten.raycastMesh );
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );

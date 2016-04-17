@@ -38,6 +38,7 @@ define([
 		var mesh = item.mesh.clone();
 		mesh.material = mesh.material.clone();
 		mesh.rotation.set( 0, 0, 0 );
+		mesh.position.set( 0, 0, 0 );
 
 		// give children back
 		item.mesh.children = temp;
@@ -103,6 +104,7 @@ define([
 		bbox.update();
 		this.mesh.scale.multiplyScalar( 2/3 );
 		// bbox.scale.set( 1.5, 1.5, 1.5 );
+		// this.mesh.position.set( 0, 0, 0 );
 		// bbox.position.set( - 0.02, 0.40, -0.54 );
 		// bbox.material.visible = false;
 		// bbox.rotation.copy( safeGroup.rotation );
@@ -172,7 +174,7 @@ define([
 		} else {
 			// inactive highlight
 			// hudElement.show( true, "hahaha rekt" );
-			var innerHTML = "Press <span class='highlight-inverse'>[ e ]</span> to " + this.hud.action + " " + this.name;
+			var innerHTML = "Press <span class='highlight-inactivekey'>[ e ]</span> to " + this.hud.action + " <span class='highlight-inactive'>" + this.name + "</a>";
 			hudElement.setHTML( innerHTML );
 			this.mesh.material = this.missingItemHighlightMaterial;
 		}
@@ -187,6 +189,21 @@ define([
 		if ( this.active ) {
 			this.mesh.material = this.stdMaterial;
 		}
+
+	};
+
+	Itemslot.prototype.tweenVector = function( source, target, time, easing ) {
+
+		function tweenVector( source, target, time, easing ) {
+			return new TWEEN.Tween( source ).to( {
+				x: target.x,
+				y: target.y,
+				z: target.z
+				}, time )
+				.easing( easing );
+		}
+
+		this.animation = tweenVector( source, target, time, easing );
 
 	};
 
@@ -218,22 +235,9 @@ define([
 		var folder = debugGUI.getFolder("Inventar");
 		folder.remove( dgitem );
 
-		function tweenVector( source, target, time, easing ) {
-			return new TWEEN.Tween( source ).to( {
-				x: target.x,
-				y: target.y,
-				z: target.z
-				}, time )
-				.easing( easing );
+		if ( this.animation !== undefined ) {
+			this.animation.start();
 		}
-
-		// open wheel
-		var source = this.mesh.rotation;
-		var target = new THREE.Vector3( 0, 0, Math.PI * 2 );
-		var time = 2000;
-		var easing = TWEEN.Easing.Sinusoidal.InOut;
-		var turn_wheel = tweenVector( source, target, time, easing );
-		turn_wheel.start();
 
 		// hide raycast mesh
 		// visible = false affecting children in terms of rendering

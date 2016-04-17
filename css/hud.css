@@ -58,12 +58,18 @@
 	opacity: 0;
 }
 
-.highlight {
+.highlight-inactivekey {
     /*color: #FF0000;*/
+    color: #aaa;
+}
+.highlight-actionkey {
+    /*inactive*/
+    color: #00DBFF;
+}
+.highlight-item {
     color: #00FF39;
 }
-.highlight-inverse {
-    /*inactive*/
+.highlight-inactive {
     color: #aaa;
 }
 

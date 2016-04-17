@@ -71,7 +71,7 @@ define([
 		geometry.center();
 		geometry.computeBoundingBox();
 		var boundingBoxSize = geometry.boundingBox.max.sub( geometry.boundingBox.min );
-		console.log( boundingBoxSize );
+
 		var translateZ = boundingBoxSize.z / 2;
 		geometry.translate( 0, 0, - translateZ );
 

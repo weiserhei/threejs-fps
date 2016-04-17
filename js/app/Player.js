@@ -23,8 +23,7 @@ define([
 	function Player( hud ) {
 
 		this.target = undefined;
-		this.interactionText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
-
+		this.hud = hud;
 		this.inventar = [];
 
 	}
@@ -33,7 +32,7 @@ define([
 	Player.prototype.interact = function() {
 
 		var object = this.target;
-		var hudElement = this.interactionText;
+		var hudElement = this.hud.interactionText;
 
 		// dont do nuffin if no object is in target
 		if ( object === undefined ) {
@@ -45,17 +44,6 @@ define([
 			var fsm = object.userData.fsm;
 
 			if ( isFunction( fsm.interact ) ) {
-				// performance wise? assign new function on each call
-				// maybe link hud element in init function
-
-				// fsm.onafterinteract = function( event, from, to, msg ) {
-				fsm.onenterstate = function( event, from, to, msg ) {
-					// console.log("leaving state", event, from, to, fsm.transitions() );
-					var action = fsm.transitions()[ 0 ] + " the";
-					hudElement.setText( action + " " + object.userData.name );
-
-				}
-
 				fsm.interact();
 			}
 
@@ -146,16 +134,16 @@ define([
 
 				if ( hasFSM ) {
 
-					var action = object.userData.fsm.transitions()[ 0 ] + " the";
-					var x = object.userData.fsm.transitions();
+					var action = object.userData.fsm.transitions()[ 0 ] + " the ";
+					var text = action + object.userData.name;
 
 				}
 			} else if ( isAnyObject( object.userData.hud ) ) {
 				var action = object.userData.hud.action;
+				var text = action + " <span class='highlight-item'>" + object.userData.name + "</span>";
 			}
-
-			this.interactionText.show( true, action + " " + object.userData.name );
-			object.userData.highlight( this.inventar, this.interactionText );
+			this.hud.interactionText.show( true, text );
+			object.userData.highlight( this.inventar, this.hud.interactionText );
 			this.target = object;
 
 		}
@@ -166,7 +154,7 @@ define([
 
 		if ( this.target !== undefined ) {
 
-			this.interactionText.show( false );
+			this.hud.interactionText.show( false );
 
 			if ( isFunction( this.target.userData.reset ) ) {
 				this.target.userData.reset();
