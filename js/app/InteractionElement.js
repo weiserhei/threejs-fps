@@ -8,17 +8,10 @@
 */
 
 define([
-	"three",
-	"../libs/state-machine.min",
-	"TWEEN",
-	"scene",
-	"debugGUI",
-	"physics",
-	"listener"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, listener ) {
+	"three"
+], function ( THREE ) {
 
 	'use strict';
-
 
 	function InteractionElement( name ) {
 		this.name = name;
@@ -42,14 +35,14 @@ define([
 
 			}
 
-		} // end if group
-		else {
-			console.log( "wat", mesh );
+		} else {
+
 			mesh.userData.stdMaterial = mesh.material;
 			mesh.userData.highlightMaterial = this.highlightMaterial( mesh.material.clone() );
+
 		}
 
-	}
+	};
 
 	InteractionElement.prototype.highlightMaterial = function( material ) {
 
@@ -76,7 +69,6 @@ define([
 
 		} else {
 			// single material
-			console.log("single mat", material );
 			var multiMaterial = material;
 			material.color.offsetHSL( 0, 0.04, 0.08 );
 			// material.wireframe = true;
@@ -85,15 +77,17 @@ define([
 
 		return multiMaterial;
 
-	}
-
-	function isFunction(v){if(v instanceof Function){return true;}};
+	};
 
 	InteractionElement.prototype.addHighlightFunction = function( raycastMesh, fsm, constraint ) {
 
+		raycastMesh.userData.name = this.name;
+		raycastMesh.userData.highlight = highlight;
+		raycastMesh.userData.reset = reset;
+
 		var highlightMesh = this.mesh;
 
-		raycastMesh.userData.highlight = function( inventar, hudElement ) {
+		function highlight( inventar, hudElement ) {
 
 			if ( constraint.active === true ) {
 				var innerHTML = "You need to " + constraint.hud.action + " <span class='highlight-inactive'>" + constraint.name + "</span>";
@@ -124,7 +118,7 @@ define([
 
 		}
 
-		raycastMesh.userData.reset = function() {
+		function reset() {
 
 			// single mesh like fuse switch
 			if ( highlightMesh.userData.stdMaterial instanceof THREE.Material ) {
@@ -146,41 +140,9 @@ define([
 
 		}
 
-		raycastMesh.userData.name = this.name;
-
 	}
 
 
 	return InteractionElement;
-
-	/*
-	function InteractionElement() {
-		// this.startup();
-	}
-
-	InteractionElement.prototype = {
-
-	}
-
-	// MyFSM.prototype = {
-
-	//   onpanic: function(event, from, to) { alert('panic');        },
-	//   onclear: function(event, from, to) { alert('all is clear'); },
-
-	//   // my other prototype methods
-
-	// };
-
-	StateMachine.create({
-	  target: InteractionElement.prototype,
-	  events: [
-	    { name: 'startup', from: 'none',   to: 'green'  },
-	    { name: 'warn',    from: 'green',  to: 'yellow' },
-	    { name: 'panic',   from: 'yellow', to: 'red'    },
-	    { name: 'calm',    from: 'red',    to: 'yellow' },
-	    { name: 'clear',   from: 'yellow', to: 'green'  }
-	  ]});
-
-	*/
 
 });

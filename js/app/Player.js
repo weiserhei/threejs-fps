@@ -2,33 +2,43 @@
 * Player
 * can raycast to interact with objects
 * has Inventar
+*
 */
 
 define([
 	"three",
 	"Item",
 	"Itemslot",
-	"debugGUI"
-], function ( THREE, Item, Itemslot, debugGUI ) {
+	"debugGUI",
+	"controls",
+	"scene",
+	"Inventar"
+], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar ) {
 
 	'use strict';
+
+	function isAnyObject(value) {
+		return value != null && (typeof value === 'object' || typeof value === 'function');
+	}
+	function isFunction(v){if(v instanceof Function){return true;}};
 
 	var intersections = [];
 	var interactionDistance = 1.8;
     var raycaster = new THREE.Raycaster();
-	var vector = new THREE.Vector2();
+	// var vector = new THREE.Vector2(); // used for raycaster.setFromCamera
+	var origin = new THREE.Vector3();
+	var direction = new THREE.Vector3();
 
-	var folder = debugGUI.getFolder( "Inventar" );
 
 	function Player( hud ) {
 
 		this.target = undefined;
 		this.hud = hud;
-		this.inventar = [];
+
+		this.inventar = new Inventar();
 
 	}
-	// meh remove pls
-	var dgitem;
+
 	Player.prototype.interact = function() {
 
 		var object = this.target;
@@ -38,37 +48,35 @@ define([
 		if ( object === undefined ) {
 			return;
 		}
+        // console.log( object );
+        if ( object.userData.fsm !== undefined ) {
+            var fsm = object.userData.fsm;
 
-		// console.log( object );
-		if ( object.userData.fsm !== undefined ) {
-			var fsm = object.userData.fsm;
+            if ( isFunction( fsm.interact ) ) {
+                fsm.interact();
+            }
 
-			if ( isFunction( fsm.interact ) ) {
-				fsm.interact();
-			}
+        }
+        else if ( isFunction( object.userData.interact ) ) {
 
-		}
-		else if ( isFunction( object.userData.interact ) ) {
+            if( object.userData instanceof Item ) {
 
-			if( object.userData instanceof Item ) {
+                object.userData.interact();
 
-				object.userData.interact();
-				// todo remove item from inventar on use!
-				dgitem = folder.add( object.userData, "name" );
-				this.inventar.push( object.userData );
+                this.inventar.addItem( object.userData );
 
-			}
-			else if ( object.userData instanceof Itemslot ) {
-				// todo remove item from inventar on use!
-				object.userData.interact( this.inventar );
-			}
-			else {
-				console.warn("unknown interaction item");
-				if ( isFunction( object.userData.interact ) ) {
-					object.userData.interact( this.inventar );
-				}
-			}
-		}
+            }
+            else if ( object.userData instanceof Itemslot ) {
+                // todo remove item from inventar on use!
+                object.userData.interact( this.inventar );
+            }
+            else {
+                console.warn("unknown interaction item");
+                if ( isFunction( object.userData.interact ) ) {
+                    object.userData.interact( this.inventar );
+                }
+            }
+        }
 
 	};
 
@@ -81,15 +89,20 @@ define([
 
 	Player.prototype.raycast = function( objects ) {
 
-		// todo
-		// raycast from player mesh
-		// cleaner and works in third person too then
+		// pitchObject (parent of camera in First person mode)
+		origin.copy( controls.getControls().getObject().getWorldPosition() );
+		// direction.set( 0, 0, - 1 ).normalize(); // direction vector must have unit length
+		direction.copy( camera.getWorldDirection() );
+		raycaster.set( origin, direction );
+		intersections = raycaster.intersectObjects( objects, false );
+		// raycaster.setFromCamera( vector, camera );
+		// intersections = raycaster.intersectObjects( objects );
 
-		// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
+		// scene.remove( arrowHelper );
+		// // var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
+		// var arrowHelper = new THREE.ArrowHelper( direction, origin, 5, 0xFF0000 );
 		// scene.add( arrowHelper );
 
-		raycaster.setFromCamera( vector, camera );
-		intersections = raycaster.intersectObjects( objects );
 		// console.log("fire", intersections);
 
 		if ( intersections.length > 0 ) {
@@ -109,11 +122,6 @@ define([
 		}
 
 	};
-
-	function isAnyObject(value) {
-		return value != null && (typeof value === 'object' || typeof value === 'function');
-	}
-	function isFunction(v){if(v instanceof Function){return true;}};
 
 	Player.prototype.setTarget = function( object ) {
 		// console.log( "setActive", object );

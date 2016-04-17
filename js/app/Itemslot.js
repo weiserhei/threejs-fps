@@ -136,21 +136,9 @@ define([
 	};
 	*/
 
-
-	function containsObject(obj, list) {
-		var i;
-		for (i = 0; i < list.length; i++) {
-			if (list[i] === obj) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	Itemslot.prototype.highlight = function( inventar, hudElement ) {
 
-		var checkInventar = containsObject( this.item, inventar );
+		var checkInventar = inventar.containsObject( this.item, inventar );
 		// console.log("highlight", checkInventar, inventar);
 
 		if ( checkInventar ) {
@@ -199,7 +187,7 @@ define([
 
 		// console.log("use", this );
 
-		var checkInventar = containsObject( this.item, inventar );
+		var checkInventar = inventar.containsObject( this.item, inventar );
 
 		if ( ! checkInventar ) {
 			// allow overlapping sound for multiple fast keypresses
@@ -209,17 +197,11 @@ define([
 		}
 
 		// remove item from inventar
-		var index = inventar.indexOf( this.item );
-		if (index > -1) {
-			inventar.splice(index, 1);
-		}
+		inventar.removeItem( this.item );
 
 		sounds.harfe.play();		
 		sounds.schlag.play();
 		// console.log("removing", dgitem );
-
-		var folder = debugGUI.getFolder("Inventar");
-		// folder.remove( dgitem );
 
 		if ( this.animation !== undefined ) {
 			this.animation.start();
