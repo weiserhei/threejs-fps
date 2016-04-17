@@ -220,9 +220,9 @@ define([
 						if ( constraint2.active ) {
 							return;
 						}
-						var action = this.transitions()[ 0 ] + " the";
+						var action = this.transitions()[ 0 ];
 						// var text = action + " <span class='highlight-item'>" + bbox.userData.name + "</span>";
-						var text = action + bbox.userData.name;
+						var text = action + " the " + bbox.userData.name;
 						hudElement.setText( text );
 
 					},

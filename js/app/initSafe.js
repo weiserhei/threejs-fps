@@ -213,8 +213,8 @@ define([
 						// else
 						// todo set text only when no other text is active!!
 
-						var action = this.transitions()[ 0 ] + " the";
-						var text = action + bbox.userData.name;
+						var action = this.transitions()[ 0 ];
+						var text = action + " the " + bbox.userData.name;
 						hudElement.setText( text );
 
 					},
