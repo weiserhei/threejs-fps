@@ -66,15 +66,15 @@ define([
 	function modifiyMaterial( currentMaterial, newMaterial ) {
 
 		if ( currentMaterial instanceof THREE.MultiMaterial ) {
-			for ( var i = 0; i < currentMaterial.materials.length; i ++ ) {
-				material.materials[ i ].emissive = newMaterial.emissive;
-				material.materials[ i ].opacity = newMaterial.opacity;
-				material.materials[ i ].transparent = newMaterial.true;
-			}
+			// for ( var i = 0; i < currentMaterial.materials.length; i ++ ) {
+			// 	material.materials[ i ].emissive = newMaterial.emissive;
+			// 	material.materials[ i ].opacity = newMaterial.opacity;
+			// 	material.materials[ i ].transparent = newMaterial.transparent;
+			// }
 		} else {
 			currentMaterial.emissive = newMaterial.emissive;
 			currentMaterial.opacity = newMaterial.opacity;
-			currentMaterial.transparent = true;
+			currentMaterial.transparent = newMaterial.transparent;
 		}
 
 		return currentMaterial;

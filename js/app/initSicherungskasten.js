@@ -16,8 +16,9 @@ define([
 	"scene",
 	"debugGUI",
 	"physics",
-	"sounds"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds ) {
+	"sounds",
+	"InteractionElement"
+], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement ) {
 
 	'use strict';
 
@@ -73,82 +74,6 @@ define([
 		// var box = new THREE.Box3();
 		// box.setFromObject( safedoorGroup );
 
-		function addHighlight( mesh, constraint ) {
-
-			mesh.userData.highlight = function( inventar, hudElement ) {
-
-				if ( constraint.active === true ) {
-					var innerHTML = "You need to " + constraint2.hud.action + " <span class='highlight-inactive'>" + constraint.name + "</span>";
-					innerHTML += " to " + fsm.transitions()[ 0 ] + " the " + this.name;
-					hudElement.setHTML( innerHTML );
-				}
-
-				// for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
-
-					// var mesh = safedoorGroup.children[ i ];
-					var mesh = schalter;
-					if ( mesh.userData.highlightMaterial !== undefined ) {
-						mesh.material = mesh.userData.highlightMaterial;
-					}
-
-				// }
-
-			}
-
-			mesh.userData.reset = function() {
-
-				// for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
-
-					// var mesh = safedoorGroup.children[ i ];
-					var mesh = schalter;
-					if ( mesh.userData.stdMaterial !== undefined ) {
-						mesh.material = mesh.userData.stdMaterial;
-					}
-
-				// }
-
-			}
-
-			mesh.userData.name = "schalter";
-
-			// for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
-
-				// var mesh = safedoorGroup.children[ i ];
-				var mesh = schalter;
-
-				mesh.userData.stdMaterial = mesh.material;
-				mesh.userData.highlightMaterial = mesh.material.clone();
-
-				// if ( mesh.userData.highlightMaterial instanceof THREE.MultiMaterial ) {
-
-				// 	// console.log( "material", child.material )
-
-				// 	for ( var i = 0; i < mesh.userData.highlightMaterial.materials.length; i ++ ) {
-				// 		var material = mesh.userData.highlightMaterial.materials[ i ];
-				// 		// if ( mesh.userData.color === undefined ) {
-				// 		// mesh.userData.color = [];
-				// 		// }
-				// 		// mesh.userData.color.push( material.color.clone() );
-				// 		// material.wireframe = true;
-				// 		// material.color.setHex( 0xFF0000 );
-				// 		// material.emissive.setHex( 0x112211 );
-				// 		// material.emissive.setHex( 0x011001 );
-				// 		// material.transparent = true;
-				// 		// material.opacity = 0.8;
-				// 		material.color.offsetHSL( 0, 0.04, 0.08 );
-				// 	}
-
-				// } else {
-					// target.material.wireframe = true;
-					mesh.userData.highlightMaterial.color.offsetHSL( 0, 0.04, 0.1 );
-				// }
-
-			// }
-
-		}
-
-		// door bounding box for raycasting
-
 		// var box = new THREE.Box3();
 		// box.setFromObject( schalter );
 		// console.log( box );
@@ -168,11 +93,10 @@ define([
 		bbox.material.visible = true;
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
-		addHighlight( bbox, constraint2 );
+
+
 		// bbox.userData.fsm = fsm;
 		// bbox.position.set( 0, 0, 0 );
-		schalter.add ( bbox );
-		bbox.position.z = 0;
 		// bbox.position.copy( schalter.position );
 
 		// if(color == "kerze"){ c = 0xFACC2E; }
@@ -205,7 +129,12 @@ define([
 		var tweens = setupTweens();
 		var fsm = setupFSM( tweens );
 
-		// fsm.unlock();
+		var iE = new InteractionElement( "schalter" );
+		iE.addHighlightMaterial( schalter );
+		iE.addHighlightFunction( bbox, fsm, constraint2 );
+
+		schalter.add ( bbox );
+		bbox.position.z = 0;
 
 		bbox.userData.fsm = fsm;
 

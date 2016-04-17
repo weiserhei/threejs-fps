@@ -14,8 +14,9 @@ define([
 	"scene",
 	"debugGUI",
 	"physics",
-	"sounds"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds ) {
+	"sounds",
+	"InteractionElement"
+], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement ) {
 
 	'use strict';
 
@@ -75,77 +76,6 @@ define([
 		// var box = new THREE.Box3();
 		// box.setFromObject( safedoorGroup );
 
-		function addHighlight( mesh, constraint ) {
-
-			mesh.userData.highlight = function( inventar, hudElement ) {
-
-				if ( constraint.active === true ) {
-					var innerHTML = "You need to " + constraint.hud.action + " <span class='highlight-inactive'>" + constraint.name + "</span>";
-					innerHTML += " to " + fsm.transitions()[ 0 ] + " the " + this.name;
-					hudElement.setHTML( innerHTML );
-				} else {
-				}
-
-				for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
-
-					var mesh = safedoorGroup.children[ i ];
-					if ( mesh.userData.highlightMaterial !== undefined ) {
-						mesh.material = mesh.userData.highlightMaterial;
-					}
-
-				}
-
-			}
-
-			mesh.userData.reset = function() {
-
-				for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
-
-					var mesh = safedoorGroup.children[ i ];
-					if ( mesh.userData.stdMaterial !== undefined ) {
-						mesh.material = mesh.userData.stdMaterial;
-					}
-
-				}
-
-			}
-
-			mesh.userData.name = "safe";
-
-			for ( var i = 0; i < safedoorGroup.children.length; i ++ ) {
-
-				var mesh = safedoorGroup.children[ i ];
-
-				mesh.userData.stdMaterial = mesh.material;
-				mesh.userData.highlightMaterial = mesh.material.clone();
-
-				if ( mesh.userData.highlightMaterial instanceof THREE.MultiMaterial ) {
-
-					// console.log( "material", child.material )
-
-					for ( var i = 0; i < mesh.userData.highlightMaterial.materials.length; i ++ ) {
-						var material = mesh.userData.highlightMaterial.materials[ i ];
-						// if ( mesh.userData.color === undefined ) {
-						// mesh.userData.color = [];
-						// }
-						// mesh.userData.color.push( material.color.clone() );
-						// material.wireframe = true;
-						// material.color.setHex( 0xFF0000 );
-						// material.emissive.setHex( 0x112211 );
-						// material.emissive.setHex( 0x011001 );
-						// material.transparent = true;
-						// material.opacity = 0.8;
-						material.color.offsetHSL( 0, 0.04, 0.08 );
-					}
-
-				} else {
-					// target.material.wireframe = true;
-				}
-
-			}
-
-		}
-
 		// door bounding box for raycasting
 		var bbox = new THREE.BoundingBoxHelper( safedoorGroup );
 		bbox.update();
@@ -156,11 +86,18 @@ define([
 		bbox.material.visible = false;
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
-		addHighlight( bbox, constraint );
+		// addHighlightMaterial( safedoorGroup );
+
+		// addHighlight( bbox, safedoorGroup, constraint );
 		safedoorGroup.add ( bbox );
 
 		var tweens = setupTweens();
 		var fsm = setupFSM( tweens );
+
+		var iE = new InteractionElement( "safe door" );
+		iE.addHighlightMaterial( safedoorGroup );
+		iE.addHighlightFunction( bbox, fsm, constraint );
+
 		bbox.userData.fsm = fsm;
 		// safedoorGroup.userData.fsm = fsm;
 		// fsm.unlock();
@@ -274,6 +211,7 @@ define([
 						// if constraints active
 						// return
 						// else
+						// todo set text only when no other text is active!!
 
 						var action = this.transitions()[ 0 ] + " the";
 						var text = action + bbox.userData.name;
