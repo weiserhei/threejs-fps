@@ -20,7 +20,8 @@ define([
     "HUD",
     "initItems",
     "Player",
-    "listener"
+    "listener",
+    "initSicherungskasten"
 	], function ( 
          THREE, 
          TWEEN, 
@@ -39,7 +40,8 @@ define([
          HUD,
          initItems,
          Player,
-         listener
+         listener,
+         initSicherungskasten
          ) {
 	
 	'use strict';
@@ -82,8 +84,11 @@ define([
     	// adding item meshes to raycaster objects-array
     	var items = initItems( preloaded.items, objects );
 
-    	var safe = initSafe( preloaded.safe, items );
+    	var safe = initSafe( preloaded.safe, items.safeconstraint );
     	objects.push( safe.raycastMesh );
+
+    	var sicherungskasten = initSicherungskasten( preloaded.sicherungskasten, items.sicherungskastenconstraint );
+    	objects.push( sicherungskasten.raycastMesh );
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
@@ -183,7 +188,6 @@ define([
         }
 
         // document.body.addEventListener( "mousedown", handleMouseDown );
-
 
 	};
 

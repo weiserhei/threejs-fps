@@ -5,7 +5,13 @@
  // If listener is included before initialization of programm
  // sounds cannot be referenced and dont play!
 
-define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
+define([ 
+    "three", 
+    "loadingScreen", 
+    "loadingManager", 
+    "loadSafemodels",
+    "loadSicherungskasten" 
+], function ( THREE, loadingScreen, loadingManager, safe, loadSicherungskasten ) {
 
     'use strict';
 
@@ -30,31 +36,12 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
     // sound3.setRefDistance( 8 );
     // sound3.setVolume( 0.1 );
 
-    // safe
-    var safe = { meshes: {}, sounds: {} };
-    var safewheel, safegriff, safedoor, safebase;
-
     // safe.sounds.sound1 = sound1;
     // safe.sounds.sound2 = sound2;
     // safe.sounds.sound3 = sound3;
 
     objects.safe = safe;
-
-
-    var loadingManager = new THREE.LoadingManager ();
-
-    loadingManager.onProgress = function ( item, loaded, total ) {
-
-        // console.log( item, loaded, total );
-        // loadingScreen.setProgress( loaded, total );
-
-    };
-	
-	loadingManager.onError = function ( url ) {
-	
-		console.warn( "Loading Error", url );
-		
-	}
+    objects.sicherungskasten = loadSicherungskasten;
 
 
     /*
@@ -77,7 +64,6 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
     */
 
 
-
     // MODEL
     var jsonLoader = new THREE.JSONLoader( loadingManager );
 
@@ -87,12 +73,6 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
 
     var start = function () {
 
-        //safe
-        // var url = "assets/models/safe/safe_joined.js";
-        // safeloader.load( url, function callback(geometry, materials) {
-        //     // safedoor = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-        // safedoor.material.materials[ 2 ].shading = THREE.FlatShading;
-        // }, onLoad, onProgress, onError );
 
         var url = "assets/models/buch/buch.js";
         jsonLoader.load( url, function callback(geometry, materials) {
@@ -168,74 +148,6 @@ define([ "three", "loadingScreen" ], function ( THREE,loadingScreen ) {
 
         } );
 
-        var url = "assets/models/safe/safe.js";
-        jsonLoader.load( url, function callback(geometry, materials) {
-
-            geometry.computeBoundingBox();
-            geometry.center();
-            var boundingBoxSize = geometry.boundingBox.max.sub( geometry.boundingBox.min );
-            // geometry.translate( xoffset, boundingBoxSize.y / 2, zoffset );
-
-            // for ( var i = 0; i < materials.length; i ++ ) {
-                // var material = materials[ i ];
-                // console.log( material );
-                // material.shading = THREE.FlatShading;
-            // }
-
-            var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-            mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
-            safe.meshes.safebase = mesh;
-
-        } );
-
-        var url = "assets/models/safe/safe_great_door.js";
-        jsonLoader.load( url, function callback(geometry, materials) {
-
-            geometry.center();
-            geometry.computeBoundingBox();
-            var boundingBoxSize = geometry.boundingBox.max.sub( geometry.boundingBox.min );
-            geometry.translate( 0, 0, - boundingBoxSize.z / 2 );
-            // console.log ( boundingBoxSize );
-
-            // for ( var i = 0; i < materials.length; i ++ ) {
-            //     var material = materials[ i ];
-            //     material.shading = THREE.FlatShading;
-            // }
-
-            var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-            mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
-
-            // safedoor = mesh;
-            safe.meshes.safedoor = mesh;
-
-        });     
-
-        // big wheel
-        var url = "assets/models/safe/safe_wheel.js";
-        jsonLoader.load( url, function callback(geometry, materials) {
-
-            // geometry.center();
-            // geometry.translate( -0.531 + xoffset, 0.681 + 0.25, 0.106 + zoffset );
-            var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-            mesh.position.set( - 0.106, 0.38, -0.545 );
-
-            // safewheel = mesh;
-            safe.meshes.safewheel = mesh;
-
-        } ); 
-
-        // griff
-        var url = "assets/models/safe/safe_griff.js";
-        jsonLoader.load( url, function callback(geometry, materials) {
-
-            // geometry.translate( -0.8216, 1.2544 + 0.25, 0.04 );
-            var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-            mesh.position.set( - 0.04, 0.975, -0.835 );
-
-            // safegriff = mesh;
-            safe.meshes.safegriff = mesh;
-
-        }); 
 
         /*
         while ( manifest.length > 0 ) 

@@ -29,6 +29,9 @@ define([
 		// function computeRaycastMesh( mesh ) {
 		// }
 
+		// temporär -.-
+		this.pickedUp = false;
+
 		this.name;
 		this.hud = {};
 		this.hud.action = "pickup the";
@@ -129,6 +132,8 @@ define([
 		// allow overlapping for multiple fast pickups
 		sound1.isPlaying = false; 
 		sound1.play();
+
+		this.pickedUp = true;
 
 		this.mesh.visible = false;
 		// hide raycast mesh

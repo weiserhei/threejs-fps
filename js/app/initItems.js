@@ -162,7 +162,10 @@ define([
 		// 	raycastArray.push( raycastMeshes[ i ] );
 		// }
 
-		return itemslot;
+		return {
+			safeconstraint: itemslot,
+			sicherungskastenconstraint: wrenchkey
+		};
 
 	}
 

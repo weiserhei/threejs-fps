@@ -19,65 +19,56 @@ define([
 
 	'use strict';
 
-	// SOUNDS
-    var sound1 = new THREE.PositionalAudio( listener );
-    sound1.load( 'assets/sounds/safe_door.ogg' );
-    sound1.setRefDistance( 8 );
-    sound1.setVolume( 0.1 );
+	function InteractionElement() {
+		this.startup();
+	}
 
-    var sound2 = new THREE.PositionalAudio( listener );
-    sound2.load( 'assets/sounds/door.ogg' );
-    sound2.setRefDistance( 8 );
-    sound2.setVolume( 0.1 );
+	InteractionElement.prototype = {
 
-    var sound3 = new THREE.PositionalAudio( listener );
-    sound3.load( 'assets/sounds/quietsch2.ogg' );
-    sound3.setRefDistance( 8 );
-    sound3.setVolume( 0.1 );
+	}
 
-    var sound4 = new THREE.PositionalAudio( listener );
-    // sound4.load( 'assets/sounds/click.ogg' ); // needs delay 300ms
-    sound4.load( 'assets/sounds/click_slow.ogg' );
-    sound4.setRefDistance( 8 );
-    sound4.setVolume( 0.1 );
-    
-	var sound5 = new THREE.Audio( listener );
-	sound5.load( 'assets/sounds/beep.ogg' );
-	sound5.setVolume( 0.5 );
+	// MyFSM.prototype = {
+
+	//   onpanic: function(event, from, to) { alert('panic');        },
+	//   onclear: function(event, from, to) { alert('all is clear'); },
+
+	//   // my other prototype methods
+
+	// };
+
+	StateMachine.create({
+	  target: InteractionElement.prototype,
+	  events: [
+	    { name: 'startup', from: 'none',   to: 'green'  },
+	    { name: 'warn',    from: 'green',  to: 'yellow' },
+	    { name: 'panic',   from: 'yellow', to: 'red'    },
+	    { name: 'calm',    from: 'red',    to: 'yellow' },
+	    { name: 'clear',   from: 'yellow', to: 'green'  }
+	  ]});
+
 
 	function safe( preloaded, constraint ) {
 		console.log("constraint", constraint );
 		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
-		
+
+		// DEBUG GUI
+		var dg = debugGUI;
+
 		var name = "Safe";
-		var folder = debugGUI.getFolder( name );
+		var folder = dg.getFolder( name );
 
 		var meshes = preloaded.meshes;
 		var safewheel = meshes.safewheel;
 		var safegriff = meshes.safegriff;
 		var safedoor = meshes.safedoor;
 		var safebase = meshes.safebase;
-		// var safemiddledoor = meshes.safemiddledoor;
 
 	    var safedoorGroup = new THREE.Group();
 		safedoorGroup.add( safewheel );
 		safedoorGroup.add( safegriff );
 		safedoorGroup.add( safedoor );
-		// safebase.add( safemiddledoor );
-
-		// DEBUG GUI		
-		// var folder = debugGUI.getFolder( "Item" );
-		// folder.add( safemiddledoor.position, "x" ).min( -3 ).max( 3 ).step( 0.05 );
-		// folder.add( safemiddledoor.position, "y" ).min( -3 ).max( 3 ).step( 0.05 );
-		// folder.add( safemiddledoor.position, "z" ).min( -3 ).max( 3 ).step( 0.05 );		
-
-		// folder.add( safemiddledoor.rotation, "x" ).min( -Math.PI ).max( Math.PI ).step( 0.05 );
-		// folder.add( safemiddledoor.rotation, "y" ).min( -Math.PI ).max( Math.PI ).step( 0.05 );
-		// folder.add( safemiddledoor.rotation, "z" ).min( -Math.PI ).max( Math.PI ).step( 0.05 );
 
 	    safedoorGroup.position.set( - 0.55, 0.615, 0.54 );
-
-		// safemiddledoor.position.set( -0.25, -0.435, 0.3 );
 
 	    var safeGroup = new THREE.Group();
 	    safeGroup.add( safebase );
@@ -104,7 +95,6 @@ define([
 		var tweens = setupTweens();
 		var fsm = setupFSM( tweens );
 		// safedoorGroup.userData.fsm = fsm;
-		// fsm.unlock();
 
 		// var box = new THREE.Box3();
 		// box.setFromObject( safedoorGroup );
@@ -272,6 +262,11 @@ define([
 			};
 
 		}
+
+		    	// SOUNDS
+		var sound5 = new THREE.Audio( listener );
+		sound5.load( 'assets/sounds/beep.ogg' );
+		sound5.setVolume( 0.5 );
 
 
 		function setupFSM( tweens ) {

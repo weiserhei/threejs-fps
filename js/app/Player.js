@@ -13,8 +13,6 @@ define([
 
 	'use strict';
 
-	function isFunction(v){if(v instanceof Function){return true;}};
-
 	var intersections = [];
 	var interactionDistance = 1.8;
     var raycaster = new THREE.Raycaster();
@@ -75,6 +73,12 @@ define([
 				object.userData.interact( this.inventar, dgitem );
 				// this.inventar
 			}
+			else {
+				console.warn("unknown interaction item");
+				if ( isFunction( object.userData.interact ) ) {
+					object.userData.interact( this.inventar );
+				}
+			}
 		}
 
 	};
@@ -117,25 +121,36 @@ define([
 
 	};
 
+	function isAnyObject(value) {
+		return value != null && (typeof value === 'object' || typeof value === 'function');
+	}
+	function isFunction(v){if(v instanceof Function){return true;}};
+
 	Player.prototype.setTarget = function( object ) {
 		// console.log( "setActive", object );
 
 		 if ( object !== this.target ) {
 
 		 	this.resetActive();
-			// items
 			// console.log("active", object );
-			// console.log( "userdata", object.parent.userData );
+			// console.log( "userdata", object.userData.fsm );
 
 			// todo check for interaction class item
 			// instead of ausschlussverfahren
 			var isItem = object.userData instanceof Item;
 			var isItemslot = object.userData instanceof Itemslot;
 
-			// display action from FSM if availiable
 			if ( ! isItem && ! isItemslot ) {
-				var action = object.userData.fsm.transitions()[ 0 ] + " the";
-			} else {
+
+				var hasFSM = isFunction( object.userData.fsm.transitions );
+
+				if ( hasFSM ) {
+
+					var action = object.userData.fsm.transitions()[ 0 ] + " the";
+					var x = object.userData.fsm.transitions();
+
+				}
+			} else if ( isAnyObject( object.userData.hud ) ) {
 				var action = object.userData.hud.action;
 			}
 
