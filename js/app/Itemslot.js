@@ -231,9 +231,10 @@ define([
 
 		sound2.play();		
 		sound3.play();
+		// console.log("removing", dgitem );
 
 		var folder = debugGUI.getFolder("Inventar");
-		folder.remove( dgitem );
+		// folder.remove( dgitem );
 
 		if ( this.animation !== undefined ) {
 			this.animation.start();

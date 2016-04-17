@@ -53,13 +53,14 @@ define([
 			if( object.userData instanceof Item ) {
 
 				object.userData.interact();
+				// todo remove item from inventar on use!
 				dgitem = folder.add( object.userData, "name" );
 				this.inventar.push( object.userData );
 
 			}
 			else if ( object.userData instanceof Itemslot ) {
-				object.userData.interact( this.inventar, dgitem );
-				// this.inventar
+				// todo remove item from inventar on use!
+				object.userData.interact( this.inventar );
 			}
 			else {
 				console.warn("unknown interaction item");
