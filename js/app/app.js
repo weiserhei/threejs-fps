@@ -95,50 +95,50 @@ define([
     	var sicherungskasten = initSicherungskasten( preloaded.sicherungskasten, items.sicherungskastenconstraint, items.sicherungsslot, hud.interactionText );
     	objects.push( sicherungskasten.raycastMesh );
 
-		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
+	// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
-		// // set Reset Values
-		// controls.target0 = controls.target.clone();
-		// controls.position0 = camera.position.clone();
-		// controls.zoom0 = camera.zoom;
+	// // set Reset Values
+	// controls.target0 = controls.target.clone();
+	// controls.position0 = camera.position.clone();
+	// controls.zoom0 = camera.zoom;
 
-		// require(["objects"]);
-		require(["lights"]);
-		require(["environment"]);
+	// require(["objects"]);
+	require(["lights"]);
+	require(["environment"]);
 
         document.addEventListener('keydown',onDocumentKeyDown,false);
-		document.addEventListener('keyup',onDocumentKeyUp,false);
+	document.addEventListener('keyup',onDocumentKeyUp,false);
 
-		function onDocumentKeyDown(event){
-			event = event || window.event;
-			var keycode = event.keyCode;
-			// var character = String.fromCharCode( event.keyCode );
+	function onDocumentKeyDown(event){
+		event = event || window.event;
+		var keycode = event.keyCode;
+		// var character = String.fromCharCode( event.keyCode );
 
-			switch( keycode ) {
-				case 69 : //E
-	        		// execute only once on keydown, until reset
-					if( toggle ) { return; }
-					toggle = !toggle;
-					
-					player.interact();
+		switch( keycode ) {
+			case 69 : //E
+	        	// execute only once on keydown, until reset
+				if( toggle ) { return; }
+				toggle = !toggle;
+				
+				player.interact();
 
-				break;
-			}
-
+			break;
 		}
 
-		function onDocumentKeyUp(event){
-			event = event || window.event;
-			var keycode = event.keyCode;
+	}
 
-			switch( keycode ) {
-				case 69 : //E
-	        		// execute only once on keydown, until reset
-					toggle = false;
-				break;
-			}
+	function onDocumentKeyUp(event){
+		event = event || window.event;
+		var keycode = event.keyCode;
 
+		switch( keycode ) {
+			case 69 : //E
+	       		// execute only once on keydown, until reset
+				toggle = false;
+			break;
 		}
+		
+	}
 
         function handleMouseDown( event ) {
         	if ( event.button === 0 ) {
@@ -155,7 +155,7 @@ define([
 	var clock = new THREE.Clock();
 	var delta;
 
-	// MAIN LOOP
+    // MAIN LOOP
     var animate = function () {
 
     	delta = clock.getDelta();
@@ -164,13 +164,13 @@ define([
     	physics.update( delta );
     	controls.update();
 
-		TWEEN.update();
-		stats.update();
+	TWEEN.update();
+	stats.update();
 
-		skycube.update( camera, renderer );
-		renderer.render( scene, camera );
+	skycube.update( camera, renderer );
+	renderer.render( scene, camera );
 
-		requestAnimationFrame( animate );
+	requestAnimationFrame( animate );
 
     };
 
