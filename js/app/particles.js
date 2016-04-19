@@ -271,7 +271,7 @@ define([ "three","ShaderParticleEngine", "debugGUI" ], function ( THREE, SPE, de
             } );
         }
 
-        initDAT( particleGroup );
+        // initDAT( particleGroup );
 
         return particleGroup;
 

@@ -103,6 +103,8 @@ define([
       scene.add( particle.mesh );
       var pos = items.safeconstraint.mesh.position;
       particle.mesh.position.copy( pos );
+      // console.log( particle );
+      // particle.maxParticleCount = 500;
       
       items.safeconstraint.effect = particle;
       items.sicherungsslot.effect = particle;
@@ -119,7 +121,7 @@ define([
 		require(["lights"]);
 		require(["environment"]);
 
-        document.addEventListener('keydown',onDocumentKeyDown,false);
+    document.addEventListener('keydown',onDocumentKeyDown,false);
 		document.addEventListener('keyup',onDocumentKeyUp,false);
 
 		function onDocumentKeyDown(event){
@@ -162,7 +164,7 @@ define([
         }
 
         // document.body.addEventListener( "mousedown", handleMouseDown );
-
+        animate();
 	};
 
 	var clock = new THREE.Clock();
