@@ -47,7 +47,7 @@ require.config({
 require([
     // Load our app module and pass it to our definition function
     'app',
-	'detector',
+    'detector',
     'loadingScreen',
     "preload"
 ], function ( App, Detector, loadingScreen, preload ) {
