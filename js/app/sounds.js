@@ -74,6 +74,15 @@ define([
 	sound4.load( 'assets/sounds/click_slow.ogg' );
 	sound4.setRefDistance( 8 );
 	sound4.setVolume( 0.1 );
+	// sound4.autoplay = true;
+	// sound4.setLoop( true );
+
+	// cone of sound
+	// var panner = sound4.getOutput();
+	// panner.coneInnerAngle = 30;
+	// panner.coneOuterAngle = 60;
+	// panner.coneOuterGain = outerGainFactor;
+
 
 	positional.safe = {};
 	positional.safe.safe_door = sound1;

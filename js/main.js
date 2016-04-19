@@ -17,6 +17,7 @@ require.config({
         'CanvasLoader': {exports: "CanvasLoader"},
         'TWEEN': {exports: "TWEEN"},
         'dat': {exports: "dat"},
+        'ShaderParticleEngine': {deps: ['threeCore'], exports: "SPE"},
 
     },
     // Third party code lives in js/lib
@@ -38,7 +39,8 @@ require.config({
         'csg': "../libs/csg.js",
         'ThreeCSG': "../libs/ThreeCSG",
         // --- end THREE sub-components
-        'PhysicFactory': "physicFactory"
+        'PhysicFactory': "physicFactory",
+        'ShaderParticleEngine': "../libs/SPE.min",
     }
 });
 

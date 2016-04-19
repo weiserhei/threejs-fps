@@ -46,7 +46,8 @@ define([
     "initItems",
     "Player",
     "listener",
-    "initSicherungskasten"
+    "initSicherungskasten",
+    "particles"
 	], function ( 
          THREE, 
          TWEEN, 
@@ -66,7 +67,8 @@ define([
          initItems,
          Player,
          listener,
-         initSicherungskasten
+         initSicherungskasten,
+         particles
          ) {
 	
 	'use strict';
@@ -78,6 +80,8 @@ define([
 	hud.interactionText = hud.box("Press <span class='highlight-actionkey'>[ e ]</span> to ");
 	// var infoText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
 	var player = new Player( hud );
+
+  var particle;
 
 	// Start program
     var initialize = function ( preloaded ) {
@@ -94,6 +98,15 @@ define([
 
     	var sicherungskasten = initSicherungskasten( preloaded.sicherungskasten, items.sicherungskastenconstraint, items.sicherungsslot, hud.interactionText );
     	objects.push( sicherungskasten.raycastMesh );
+
+      particle = particles();
+      scene.add( particle.mesh );
+      var pos = items.safeconstraint.mesh.position;
+      particle.mesh.position.copy( pos );
+      
+      items.safeconstraint.effect = particle;
+      items.sicherungsslot.effect = particle;
+      // particle.mesh.position.set( 0, 1, -0.1 );
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
@@ -155,27 +168,29 @@ define([
 	var clock = new THREE.Clock();
 	var delta;
 
-	// MAIN LOOP
-    var animate = function () {
+  // MAIN LOOP
+  var animate = function () {
 
-    	delta = clock.getDelta();
 
-    	player.raycast( objects );
-    	physics.update( delta );
-    	controls.update();
+    delta = clock.getDelta();
 
-		TWEEN.update();
-		stats.update();
+    particle.tick( delta );
+    player.raycast( objects );
+    physics.update( delta );
+    controls.update();
 
-		skycube.update( camera, renderer );
-		renderer.render( scene, camera );
+    TWEEN.update();
+    stats.update();
 
-		requestAnimationFrame( animate );
+    skycube.update( camera, renderer );
+    renderer.render( scene, camera );
 
-    };
+    requestAnimationFrame( animate );
 
-    return {
-        initialize: initialize,
-        animate: animate
-    }
+  };
+
+  return {
+    initialize: initialize,
+    animate: animate
+  }
 });

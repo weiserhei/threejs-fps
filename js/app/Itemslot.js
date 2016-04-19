@@ -10,7 +10,7 @@ define([
 	"debugGUI",
 	"physics",
 	"sounds",
-	"InteractionBox"
+	"InteractionBox",
 ], function ( THREE, TWEEN, debugGUI, physics, sounds, InteractionBox ) {
 
 	'use strict';
@@ -61,6 +61,8 @@ define([
 		this.hud.action = "insert the";
 
 		this.raycastMesh = this.computeRaycastMesh();
+
+		this.effect;
 
 	}
 
@@ -169,12 +171,70 @@ define([
 
 	};
 
-	Itemslot.prototype.interact = function( inventar, dgitem ) {
+	Itemslot.prototype.interact1 = function( inventar ) {
+
+		// console.log("fire", this.effect, this.mesh.position );
+		this.effect.mesh.position.copy( this.mesh.position );
+		// this.effect.emitter.position.spreadClamp
+		// console.log( this.effect );
+		// console.log( this.effect.attributes );
+		// this.effect.attributes.emitters[ 0 ].position._radius = 0.5;
+
+		// var boundingBoxSize = this.raycastMesh.box.max.sub( this.raycastMesh.box.min );
+
+		// console.log( this.raycastMesh )
+		// console.log( this.raycastMesh.geometry.boundingSphere.radius )
+
+		var size = this.mesh.geometry.boundingSphere.radius;
+
+		// console.log( this.mesh, size );
+
+		for ( var i = 0; i < this.effect.emitters.length; i ++ ) {
+			this.effect.emitters[ i ].position._radius = size / 5;
+		}
+		this.effect.triggerPoolEmitter( 1 );
+		// this.effect.triggerPoolEmitter( 1, this.mesh.position );
+
+		sounds.harfe.play();
+		sounds.schlag.play();
+
+		if ( this.animation !== undefined ) {
+			// this.animation.start();
+		}
+
+		// hide raycast mesh
+		// visible = false affecting children in terms of rendering
+		// but raycaster still intersects!
+		this.raycastMesh.visible = false;
+
+		this.mesh.material = this.item.mesh.material;
+		this.active = false;
+
+		// if ( this.mesh.goblin !== undefined ) {
+		// 	// well hello there, physic item here
+
+		// 	// remove physic body
+		// 	physics.getWorld().removeRigidBody( this.mesh.goblin );
+
+		// 	// hide compound mesh
+		// 	// this.mesh.parent.visible = false;
+		// }
+
+		setTimeout( function() { 
+			this.mesh.material = this.item.mesh.material;
+			this.raycastMesh.visible = true;
+			this.mesh.rotation.set( 0, 0, 0 );
+			this.active = true;
+		}.bind( this ), 1000 );
+
+
+	};
+
+	Itemslot.prototype.interact = function( inventar ) {
 		// insert Item - remove from inventar, apply item material to item slot
 		// todo
 		// replace hull with the real item
 
-		// console.log("use", this );
 
 		var checkInventar = inventar.containsObject( this.item, inventar );
 
@@ -185,12 +245,18 @@ define([
 			return;
 		}
 
+		this.effect.mesh.position.copy( this.mesh.position );
+		var size = this.mesh.geometry.boundingSphere.radius;
+
+		for ( var i = 0; i < this.effect.emitters.length; i ++ ) {
+			this.effect.emitters[ i ].position._radius = size / 5;
+		}
+		this.effect.triggerPoolEmitter( 1 );
 		// remove item from inventar
 		inventar.removeItem( this.item );
 
 		sounds.harfe.play();		
 		sounds.schlag.play();
-		// console.log("removing", dgitem );
 
 		if ( this.animation !== undefined ) {
 			this.animation.start();
