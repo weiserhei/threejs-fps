@@ -27,6 +27,7 @@ define([ "three","ShaderParticleEngine", "debugGUI" ], function ( THREE, SPE, de
             // duration: 0.3,
             maxAge: {
                 value: 0.4
+                // value: 2.8
             },
             position: {
                 // value: new THREE.Vector3( 0, 0, 0 ),
@@ -59,6 +60,7 @@ define([ "three","ShaderParticleEngine", "debugGUI" ], function ( THREE, SPE, de
 
             opacity: {
                 value: [ 0, 0.2, 0.4, 0.0 ]
+                // value: [ 0, 1 ]
             },
 
             size: {

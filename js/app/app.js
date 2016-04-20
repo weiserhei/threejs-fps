@@ -102,7 +102,7 @@ define([
       particle = particles();
       scene.add( particle.mesh );
       var pos = items.safeconstraint.mesh.position;
-      particle.mesh.position.copy( pos );
+      // particle.mesh.position.copy( pos );
       // console.log( particle );
       // particle.maxParticleCount = 500;
       

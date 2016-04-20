@@ -235,7 +235,6 @@ define([
 		// todo
 		// replace hull with the real item
 
-
 		var checkInventar = inventar.containsObject( this.item, inventar );
 
 		if ( ! checkInventar ) {
@@ -245,13 +244,15 @@ define([
 			return;
 		}
 
-		this.effect.mesh.position.copy( this.mesh.position );
 		var size = this.mesh.geometry.boundingSphere.radius;
 
 		for ( var i = 0; i < this.effect.emitters.length; i ++ ) {
 			this.effect.emitters[ i ].position._radius = size / 5;
 		}
+		this.effect.mesh.position.copy( this.mesh.position );
 		this.effect.triggerPoolEmitter( 1 );
+		// this.effect.triggerPoolEmitter( 1, this.mesh.getWorldPosition() );
+		// 
 		// remove item from inventar
 		inventar.removeItem( this.item );
 

@@ -35,6 +35,7 @@ define([
 		var safedoor = meshes.safedoor;
 		var safebase = meshes.safebase;
 		// var safemiddledoor = meshes.safemiddledoor;
+		safebase.castShadow = true;
 
 	    var safedoorGroup = new THREE.Group();
 		safedoorGroup.add( safewheel );

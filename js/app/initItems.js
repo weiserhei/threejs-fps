@@ -19,6 +19,7 @@ define([
 	var position = new THREE.Vector3( -3, 0, 0 );
 	var table = new THREE.Mesh( new THREE.BoxGeometry( dimension.x, dimension.y, dimension.z ), new THREE.MeshPhongMaterial() );
 	table.position.set( position.x, position.y + dimension.y / 2, position.z );
+	table.receiveShadow = true;
 	table.matrixAutoUpdate = false;
 	table.updateMatrix();
 	table.castShadow = true;
@@ -32,6 +33,7 @@ define([
 	table.position.set( position.x, position.y + dimension.y / 2, position.z );
 	table.matrixAutoUpdate = false;
 	table.updateMatrix();
+	table.receiveShadow = true;
 	table.castShadow = true;
 	scene.add( table );
 	physics.makeStaticBox( dimension, position );
@@ -63,6 +65,7 @@ define([
 
 		zahnrad.mesh.position.set( -2.5, 2, 0 );
 		zahnrad.mesh.rotation.set( Math.PI / 2, 0, 0 );
+		zahnrad.mesh.castShadow = true;
 		raycastMeshes.push( zahnrad.getRaycastMesh() );
 		var compoundMesh = zahnrad.physic( 1 );
 		scene.add( compoundMesh );
@@ -114,6 +117,7 @@ define([
 		var mesh =  new THREE.Mesh( new THREE.CylinderGeometry( 0.02, 0.02, 0.09, 16 ), new THREE.MeshPhongMaterial( { color: 0xFFaa00 } ) );
 		var sicherung = new Item( mesh.clone() );
 		sicherung.mesh.position.set( 3.2, 1.05, 0 );
+		sicherung.mesh.castShadow = true;
 		raycastMeshes.push( sicherung.getRaycastMesh() );
 		sicherung.name = "Fuse";
 		scene.add( sicherung.mesh );
@@ -135,6 +139,7 @@ define([
 
 		// buch
 		var mesh = preloaded.buch.mesh;
+		mesh.castShadow = true;
 		var buch = new Item( mesh.clone() );
 		// buch.mesh.position.set( 0, 1, 0 );
 		raycastMeshes.push( buch.getRaycastMesh() );
