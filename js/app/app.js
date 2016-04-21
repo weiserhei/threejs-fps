@@ -45,12 +45,10 @@ define([
 	"skycube",
 	"physics",
 	"Room",
-	"initSafe",
 	"HUD",
 	"initItems",
 	"Player",
 	"listener",
-	"initSicherungskasten",
 	"particles",
 	"Item"
 ], function ( 
@@ -68,12 +66,10 @@ define([
 	skycube,
 	physics,
 	Room,
-	initSafe,
 	HUD,
 	initItems,
 	Player,
 	listener,
-	initSicherungskasten,
 	particles,
 	Item
 ) {
@@ -98,13 +94,7 @@ define([
 		// and constraints to other game elemnts
 
 		// adding item meshes to raycaster objects-array
-		var items = initItems( preloaded.items, objects, player );
-
-		var safe = initSafe( items.safeconstraint, hud.interactionText );
-		objects.push( safe.raycastMesh );
-
-		var sicherungskasten = initSicherungskasten( items.sicherungsslot, hud.interactionText );
-		objects.push( sicherungskasten.raycastMesh );
+		var items = initItems( preloaded.items, objects, player, hud.interactionText );
 
 		particleGroup = particles();
 		scene.add( particleGroup.mesh );
@@ -137,62 +127,6 @@ define([
 		loadingScreen.complete();
 		animate();
 
-
-
-		var toggle = false; // toggle key down
-
-		document.addEventListener('keydown', onDocumentKeyDown, false);
-		document.addEventListener('keyup', onDocumentKeyUp, false);
-
-		function onDocumentKeyDown(event){
-
-			event = event || window.event;
-			var keycode = event.keyCode;
-			// console.log( keycode );
-			// var character = String.fromCharCode( event.keyCode );
-
-			switch( keycode ) {
-				case 69: //E
-					// execute only once on keydown, until reset
-					if( toggle ) { return; }
-					toggle = !toggle;
-
-					player.interact();
-
-					break;
-
-				case 70: //F
-				console.log( "toggle flashlight", player.tools.flashlight);
-					if( player.tools.flashlight.pickedUp ) {
-						player.tools.flashlight.toggle();
-					}
-					break;
-			}
-
-		}
-
-		function onDocumentKeyUp(event){
-
-			event = event || window.event;
-			var keycode = event.keyCode;
-
-			switch( keycode ) {
-				case 69 : //E
-				// execute only once on keydown, until reset
-				toggle = false;
-				break;
-			}
-
-		}
-
-		// document.body.addEventListener( "mousedown", handleMouseDown );
-		// function handleMouseDown( event ) {
-		// 	if ( event.button === 0 ) {
-
-		// 	} else {
-
-		// 	}
-		// }
 
 	};
 

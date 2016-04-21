@@ -95,6 +95,62 @@ define([
 
 		this.inventar = new Inventar();
 
+
+		var toggle = false; // toggle key down
+
+		document.addEventListener('keydown', onDocumentKeyDown.bind( this ), false);
+		document.addEventListener('keyup', onDocumentKeyUp, false);
+
+		function onDocumentKeyDown(event){
+
+			event = event || window.event;
+			var keycode = event.keyCode;
+			// console.log( keycode );
+			// var character = String.fromCharCode( event.keyCode );
+
+			switch( keycode ) {
+				case 69: //E
+					// execute only once on keydown, until reset
+					if( toggle ) { return; }
+					toggle = !toggle;
+
+					this.interact();
+
+					break;
+
+				case 70: //F
+
+					if( this.tools.flashlight.pickedUp ) {
+						this.tools.flashlight.toggle();
+					}
+					break;
+			}
+
+		}
+
+		function onDocumentKeyUp(event){
+
+			event = event || window.event;
+			var keycode = event.keyCode;
+
+			switch( keycode ) {
+				case 69 : //E
+				// execute only once on keydown, until reset
+				toggle = false;
+				break;
+			}
+
+		}
+
+		// document.body.addEventListener( "mousedown", handleMouseDown );
+		// function handleMouseDown( event ) {
+		// 	if ( event.button === 0 ) {
+
+		// 	} else {
+
+		// 	}
+		// }
+
 	}
 
 	Player.prototype.interact = function() {

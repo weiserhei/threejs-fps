@@ -23,7 +23,6 @@ define([
 ], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox, loadSicherungskasten ) {
 
 	'use strict';
-console.log("wird nicht gerufen");
 
 	function sicherungskasten( constraint, hudElement ) {
 		// console.log("constraint", constraint );

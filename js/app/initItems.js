@@ -11,8 +11,10 @@ define([
 	"Item",
 	"Itemslot",
 	"Player",
-	"sounds"
-], function ( THREE, scene, debugGUI, physics, Item, Itemslot, Player, sounds ) {
+	"sounds",
+	"initSafe",
+	"initSicherungskasten"
+], function ( THREE, scene, debugGUI, physics, Item, Itemslot, Player, sounds, initSafe, initSicherungskasten ) {
 
 	'use strict';
 
@@ -41,7 +43,7 @@ define([
 	physics.makeStaticBox( dimension, position );
 
 
-	function initItems( preloaded, raycastArray, player ) {
+	function initItems( preloaded, raycastArray, player, hudElement ) {
 		// console.log("preloaded", preloaded );
 		var raycastMeshes = [];
 
@@ -61,7 +63,7 @@ define([
 			} else {
 				player.flashlight.intensity = 0;
 			}
-			console.log("toggle");
+
 			sounds.lightswitch.play();
 			this.active = !this.active;
 
@@ -116,6 +118,10 @@ define([
 		raycastMeshes.push( itemslot.getRaycastMesh() );
 		scene.add( itemslot.mesh );
 
+
+		var safe = initSafe( itemslot, hudElement );
+		raycastMeshes.push( safe.raycastMesh );
+
 		// turn wheel
 		var source = itemslot.mesh.rotation;
 		var target = new THREE.Vector3( 0, 0, Math.PI * 2 );
@@ -167,6 +173,10 @@ define([
 		// itemslot.mesh.rotation.set( Math.PI / 2, 0, 0 );
 		raycastMeshes.push( sicherungsslot.getRaycastMesh() );
 		scene.add( sicherungsslot.mesh );
+
+
+		var sicherungskasten = initSicherungskasten( sicherungsslot, hudElement );
+		raycastMeshes.push( sicherungskasten.raycastMesh );
 
 		// var source = sicherungsslot.mesh.rotation;
 		// var target = new THREE.Vector3( Math.PI * 2 , 0, 0);
