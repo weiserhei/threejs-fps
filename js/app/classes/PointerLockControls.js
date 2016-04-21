@@ -268,6 +268,7 @@ define([
 
 			var div2 = document.createElement('div');
 			div2.innerHTML = '<span style="font-size:40px">Click to play</span><br />(W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)';
+			div2.innerHTML += '<br>CAPSLOCK = toggle third person camera';
 			div2.id ="instructions";
 			div2.style = "opacity:0.5"
 			div.appendChild( div2 );
