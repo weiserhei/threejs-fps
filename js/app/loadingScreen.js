@@ -1,16 +1,17 @@
 /**
  * Loading Screen
- * with CanvasLoader
+ * 
  */
-define(["jquery"], function ($) {
+
+define([], function () {
 
     'use strict';
 
-	var container = $('.loading-container');
+	// var container = $('.loading-container');
+	var container = document.getElementById("loading-container");
 
 	var progress = document.createElement("progress");
-	// x.style = "-webkit-appearance: none; appearance: none; width:250px;	height:20px;";
-	container[0].appendChild( progress );
+	container.appendChild( progress );
 
 	// progress.max = 1;
 	progress.value = 0;
@@ -18,12 +19,12 @@ define(["jquery"], function ($) {
 	var label = document.createElement( "p" );
 	label.className = "progressText"
 	label.textContent = "0%";
-	container[0].appendChild( label );
+	container.appendChild( label );
 
 	var sub = document.createElement( "p" );
 	sub.className = "sub";
 	sub.textContent = "Processing"
-	container[0].appendChild( sub );
+	container.appendChild( sub );
 
 	function setProgress( loaded, total ) {
 
@@ -36,8 +37,13 @@ define(["jquery"], function ($) {
 
 	function complete() {
 
-		container.fadeOut();
-
+		// container.fadeOut();
+		container.classList.toggle('fade');
+		// hmm idk
+		// its more fluid to fade out using css transitions
+		// but element needs to be removed from the flow
+		// do it via setTimeout
+		setTimeout( function() { container.style.display = "none"; }, 1000 );
 	}
 
 	/*

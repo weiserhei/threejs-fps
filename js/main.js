@@ -49,8 +49,9 @@ require([
     'app',
     'detector',
     'loadingScreen',
+    "loadingManager",
     "preload"
-], function ( App, Detector, loadingScreen, preload ) {
+], function ( App, Detector, loadingScreen, loadingManager, preload ) {
 
 	if ( ! Detector.webgl ) {
 	
@@ -63,10 +64,9 @@ require([
 
         var preloaded = preload();
 
-        preloaded.loadingManager.onLoad = function() {
-
+        loadingManager.onLoad = function() {
             // The "app" dependency is passed in as "App"
-            App.initialize( preloaded.objects );
+            App.initialize( preloaded );
             // App.animate();
 
         };

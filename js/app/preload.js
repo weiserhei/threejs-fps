@@ -12,11 +12,15 @@ define([
 
     'use strict';
 
-    // preload sounds?
-
     var objects = {};
     var items = {};
     objects.items = items;
+
+    var jsonLoader = new THREE.JSONLoader( loadingManager );
+
+    jsonLoader.onError = function( error ) {
+        console.error( error );
+    }
 
     // objects.sicherungskasten = loadSicherungskasten;
 
@@ -39,16 +43,7 @@ define([
     var heightImageUrl = "textures/planets/4k/heightmap_1440.jpg";
     */
 
-
-    // MODEL
-    var jsonLoader = new THREE.JSONLoader( loadingManager );
-
-    jsonLoader.onError = function( error ) {
-        console.error( error );
-    }
-
-    var start = function () {
-
+    function start () {
 
         var url = "assets/models/buch/buch.js";
         jsonLoader.load( url, function callback(geometry, materials) {
@@ -135,13 +130,12 @@ define([
         }
         */
 
-        return {
-        	loadingManager: loadingManager,
-            objects: objects,
-        };
+        return objects;
 
     };
 
     return start;
+
+    // MODEL
 
 });

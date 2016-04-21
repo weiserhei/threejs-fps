@@ -1,6 +1,15 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat:700);
 
-.loading-container {
+div#loading-container.fade {
+    opacity:0;
+    /*background:#00ffaa;*/
+    /*visibility:hidden;*/
+}
+
+
+#loading-container {
+    opacity:1;
+    transition: opacity 1s; 
     width:100%;
     height:100%;
     position:absolute;
