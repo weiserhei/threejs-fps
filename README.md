@@ -12,4 +12,4 @@ This is my prototype for a First Person Game.
 - Fancy looking Preloader
 - Collectable Items
 
-[Run demo](https://weiserhei.github.io/threejs-fps/)
+##[Run demo](https://weiserhei.github.io/threejs-fps/)
