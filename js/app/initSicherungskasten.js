@@ -17,8 +17,8 @@ define([
 	"debugGUI",
 	"physics",
 	"sounds",
-	"InteractionElement",
-	"InteractionBox",
+	"classes/InteractionElement",
+	"classes/InteractionBox",
 	"loadSicherungskasten"
 ], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox, loadSicherungskasten ) {
 

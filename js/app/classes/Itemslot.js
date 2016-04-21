@@ -10,7 +10,7 @@ define([
 	"debugGUI",
 	"physics",
 	"sounds",
-	"InteractionBox"
+	"classes/InteractionBox"
 ], function ( THREE, TWEEN, debugGUI, physics, sounds, InteractionBox ) {
 
 	'use strict';

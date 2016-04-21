@@ -6,8 +6,8 @@ define([
        "three",
        "camera",
        "container",
-       "FPSMover",
-       "Crosshair",
+       "classes/FPSMover",
+       "classes/Crosshair",
        "debugGUI"
        ], function ( THREE, camera, container, FPSMover, Crosshair, debugGUI ) {
 

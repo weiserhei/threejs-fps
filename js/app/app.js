@@ -25,6 +25,10 @@
 * Schublade öffnen mit tastendruck
 * Leere Schubladen einstreuen
 *
+* Weapon Class
+* + models
+* + goblin raycast
+*
 * Menue
 * GameState
 * 
@@ -44,10 +48,9 @@ define([
 	"tweenHelper",
 	"skycube",
 	"physics",
-	"Room",
-	"HUD",
+	"classes/HUD",
 	"initItems",
-	"Player",
+	"classes/Player",
 	"listener",
 	"particles"
 ], function ( 
@@ -64,7 +67,6 @@ define([
 	tweenHelper, 
 	skycube,
 	physics,
-	Room,
 	HUD,
 	initItems,
 	Player,

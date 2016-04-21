@@ -10,12 +10,12 @@
 var spotLightHelper;
 define([
 	"three",
-	"Item",
-	"Itemslot",
+	"classes/Item",
+	"classes/Itemslot",
 	"debugGUI",
 	"controls",
 	"scene",
-	"Inventar"
+	"classes/Inventar"
 ], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar ) {
 
 	'use strict';

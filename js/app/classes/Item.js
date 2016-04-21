@@ -7,7 +7,7 @@ define([
 	"three",
 	"physics",
 	"sounds",
-	"InteractionBox"
+	"classes/InteractionBox"
 ], function ( THREE, physics, sounds, InteractionBox ) {
 
 	'use strict';

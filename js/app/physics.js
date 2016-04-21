@@ -5,7 +5,7 @@
  *
  */
 define([
-       "PhysicFactory"
+       "classes/PhysicFactory"
        ], function ( PhysicFactory ){
 
 	var physics = new PhysicFactory();

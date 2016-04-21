@@ -7,8 +7,8 @@
 
 define([
 	"three",
-	"Item",
-	"Itemslot",
+	"classes/Item",
+	"classes/Itemslot",
 	"debugGUI"
 ], function ( THREE, Item, Itemslot, debugGUI ) {
 

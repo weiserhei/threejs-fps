@@ -8,9 +8,9 @@ define([
 	"scene",
 	"debugGUI",
 	"physics",
-	"Item",
-	"Itemslot",
-	"Player",
+	"classes/Item",
+	"classes/Itemslot",
+	"classes/Player",
 	"sounds",
 	"initSafe",
 	"initSicherungskasten"

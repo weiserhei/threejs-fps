@@ -6,8 +6,8 @@
  */
 define([
        "three",
-       "../libs/goblin"
-       ], function (THREE){
+       "../../libs/goblin"
+       ], function ( THREE ){
 
 	var broadphase = new Goblin.BasicBroadphase();
 	// var broadphase = new Goblin.SAPBroadphase();

@@ -9,7 +9,7 @@ define([
 		"three",
      	"scene",
     	"physics",
-		"PointerLockControls"
+		"classes/PointerLockControls"
        ], function ( THREE, scene, physics, PointerLockControls ){
 
 	'use strict';

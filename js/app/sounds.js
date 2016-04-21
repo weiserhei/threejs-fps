@@ -5,7 +5,7 @@
 
 define([
 	"listener",
-	"SoundLoader",
+	"classes/SoundLoader",
 	"loadingManager"
 ], function ( listener, SoundLoader, loadingManager ) {
 
