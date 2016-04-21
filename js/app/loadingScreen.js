@@ -27,8 +27,8 @@ define(["jquery"], function ($) {
 
 		progress.value = loaded / total;
 		// progress.value = 0.5;
-		label.innerHTML = loaded / total * 100 + "%";
-		sub.innerHTML = loaded + "/"+ total;
+		label.innerHTML = Math.round( loaded / total * 100 ) + "%";
+		sub.innerHTML = loaded + "/" + total;
 
 	}
 
