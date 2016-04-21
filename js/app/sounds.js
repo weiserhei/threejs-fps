@@ -5,90 +5,109 @@
 
 define([
 	"three",
-	"listener"
-], function ( THREE, listener ) {
+	"listener",
+	"loadingManager"
+], function ( THREE, listener, loadingManager ) {
 
 	'use strict';
 
+	// var loader = new THREE.AudioLoader( loadingManager );
+	/*
+	loader.load(
+		// resource URL
+		'audio/ambient_ocean.ogg',
+		// Function when resource is loaded
+		function ( audioBuffer ) {
+			// set the audio object buffer to the loaded object
+			oceanAmbientSound.setBuffer( audioBuffer );
+
+			// play the audio
+			oceanAmbientSound.play();
+		},
+		// Function called when download progresses
+		function ( xhr ) {
+			console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+		},
+		// Function called when download errors
+		function ( xhr ) {
+			console.log( 'An error happened' );
+		}
+	);
+	*/
+
 	var sounds = {};
+	var manifest = [
+		// ITEM PICKUP
+		{ id: "wusch", url: "assets/sounds/wusch.ogg", volume: 0.5  },
+		// ITEM SLOTS
+		{ id: "lightswitch", url: "assets/sounds/lightswitch.ogg", volume: 0.5  },
+		{ id: "harfe", url: "assets/sounds/harfe.ogg", volume: 0.5  },
+		{ id: "schlag", url: "assets/sounds/schlag.ogg", volume: 0.1  },
+		// SAFE
+		{ id: "beep", url: "assets/sounds/beep.ogg", volume: 0.5  },
+	];
 
-	// ITEM PICKUP
-	var sound1 = new THREE.Audio( listener );
-	sound1.load( 'assets/sounds/wusch.ogg' );
-	// sound1.autoplay = true;
-	// sound1.setLoop( true );
-	sound1.setVolume( 0.5 );
+	while ( manifest.length > 0 ) 
+	{
 
-	sounds.wusch = sound1;
+		var item = manifest.shift();
+		var sound = new THREE.Audio( listener );
+		sound.setVolume( item.volume );
+		// sound.setLoop( true );
+		// sound.autoplay = true;
+		sounds[ item.id ] = sound.load( item.url );
 
-	// ITEM SLOTS
-	var sound1 = new THREE.Audio( listener );
-	sound1.load( 'assets/sounds/lightswitch.ogg' );
-	sound1.setVolume( 0.5 );
+		/*
+		sounds[ item.id ] = sound;
+		loader.load( item.url, function ( audioBuffer ) {
+			// console.log("setting Buffer", audioBuffer );
+			console.log( "item", item );
+			sounds[ item.id ].setBuffer( audioBuffer );
+			// sound.setBuffer( audioBuffer );
+		} );
+		*/
+	}
+	
+	// var sound1 = new THREE.Audio( listener );
+	// var url = 'assets/sounds/wusch.ogg';
 
-	sounds.lightswitch = sound1;
-
-	var sound2 = new THREE.Audio( listener );
-	sound2.load( 'assets/sounds/harfe.ogg' );
-	sound2.setVolume( 0.5 );
-
-	sounds.harfe = sound2;
-
-	var sound3 = new THREE.Audio( listener );
-	sound3.load( 'assets/sounds/schlag.ogg' );
-	sound3.setVolume( 0.5 );
-
-	sounds.schlag = sound3;
-
-	// SAFE
-	var sound5 = new THREE.Audio( listener );
-	sound5.load( 'assets/sounds/beep.ogg' );
-	sound5.setVolume( 0.5 );
-
-	sounds.beep = sound5;
+	/* what a bullshit */
+	/* other modules using this sound module
+	 * are not updated when the audio buffer callback
+	 * is set. they just have empty sounds then
+	 */
 
 	// POSITIONAL
 	// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
 
 	var positional = {};
+	positional.safe = {};
 	sounds.positional = positional;
 
-	// SAFE
-	var sound1 = new THREE.PositionalAudio( listener );
-	sound1.load( 'assets/sounds/safe_door.ogg' );
-	sound1.setRefDistance( 8 );
-	sound1.setVolume( 0.1 );
+	var manifest = [
+		// SAFE
+		{ id: "safe_door", url: "assets/sounds/safe_door.ogg", volume: 0.1, setRefDistance: 8  },
+		{ id: "door", url: "assets/sounds/door.ogg", volume: 0.1, setRefDistance: 8  },
+		{ id: "quietsch2", url: "assets/sounds/quietsch2.ogg", volume: 0.5, setRefDistance: 8 },
+		{ id: "click_slow", url: "assets/sounds/click_slow.ogg", volume: 0.1, setRefDistance: 8  },
+	];
 
-	var sound2 = new THREE.PositionalAudio( listener );
-	sound2.load( 'assets/sounds/door.ogg' );
-	sound2.setRefDistance( 8 );
-	sound2.setVolume( 0.1 );
+	while ( manifest.length > 0 ) 
+	{
 
-	var sound3 = new THREE.PositionalAudio( listener );
-	sound3.load( 'assets/sounds/quietsch2.ogg' );
-	sound3.setRefDistance( 8 );
-	sound3.setVolume( 0.1 );
+		var item = manifest.shift();
+		var sound = new THREE.PositionalAudio( listener );
+		sound.setVolume( item.volume );
+		sound.setRefDistance( item.setRefDistance );
+		positional.safe[ item.id ] = sound.load( item.url );
 
-	var sound4 = new THREE.PositionalAudio( listener );
-	// sound4.load( 'assets/sounds/click.ogg' ); // needs delay 300ms
-	sound4.load( 'assets/sounds/click_slow.ogg' );
-	sound4.setRefDistance( 8 );
-	sound4.setVolume( 0.1 );
-	// sound4.autoplay = true;
-	// sound4.setLoop( true );
+	}
 
 	// cone of sound
 	// var panner = sound4.getOutput();
 	// panner.coneInnerAngle = 30;
 	// panner.coneOuterAngle = 60;
 	// panner.coneOuterGain = outerGainFactor;
-
-
-	positional.safe = {};
-	positional.safe.safe_door = sound1;
-	positional.safe.door = sound2;
-	positional.safe.quietsch2 = sound3;
-	positional.safe.click_slow = sound4;
 
 
 	// SICHERUNGSKASTEN
