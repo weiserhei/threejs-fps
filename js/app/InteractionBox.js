@@ -23,7 +23,7 @@ define([
 		// bbox.scale.set( 1.5, 1.5, 1.5 );
 		// this.mesh.position.set( 0, 0, 0 );
 		// bbox.position.set( - 0.02, 0.40, -0.54 );
-		bbox.material.visible = false;
+		// bbox.material.visible = false;
 		// bbox.position.set( 0, 0, 0 );
 		// bbox.rotation.copy( safeGroup.rotation );
 		// scene.add ( bbox );
