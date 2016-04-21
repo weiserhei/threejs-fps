@@ -15,7 +15,7 @@ define([
 
 	}
 
-	function SoundLoader( manager, listener ) {
+	function SoundLoader( listener, manager ) {
 
 		this.listener = listener;
 		this.loader = new THREE.AudioLoader( manager );
@@ -45,7 +45,7 @@ define([
 	};
 
 	// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
-	
+
 	// cone of sound
 	// var panner = sound4.getOutput();
 	// panner.coneInnerAngle = 30;

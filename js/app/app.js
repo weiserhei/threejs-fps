@@ -32,6 +32,7 @@
 define([
     "three",
     "TWEEN",
+    "loadingScreen",
     "scene",
     "camera",
     "renderer",
@@ -52,7 +53,8 @@ define([
     "particles"
 	], function ( 
          THREE, 
-         TWEEN, 
+         TWEEN,
+         loadingScreen,
          scene, 
          camera, 
          renderer, 
@@ -166,6 +168,8 @@ define([
         }
 
         // document.body.addEventListener( "mousedown", handleMouseDown );
+
+        loadingScreen.complete();
         animate();
 	};
 
@@ -174,7 +178,6 @@ define([
 
   // MAIN LOOP
   var animate = function () {
-
 
     delta = clock.getDelta();
 

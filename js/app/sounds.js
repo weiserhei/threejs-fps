@@ -5,9 +5,9 @@
 
 define([
 	"three",
-	"listener"
+	"listener",
 	"SoundLoader",
-	"loadingManager",
+	"loadingManager"
 ], function ( THREE, listener, SoundLoader, loadingManager ) {
 
 	'use strict';

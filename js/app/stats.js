@@ -7,8 +7,10 @@ define(["Stats"], function (Stats) {
 
     var stats = new Stats();
 
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.bottom = '0';
+    // with stats r16 css is hardcoded - mrdoob whyyyy ;...;
+    stats.domElement.style = "position:absolute; left:0; bottom: 0; cursor: pointer; opacity: 0.9; z-index: 10000;";
+    // stats.domElement.style.position = 'absolute';
+    // stats.domElement.style.bottom = '0';
 
 	// // STATS
 	// this.stats = new Stats();

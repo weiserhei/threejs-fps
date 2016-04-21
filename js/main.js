@@ -65,8 +65,6 @@ require([
 
         preloaded.loadingManager.onLoad = function() {
 
-            loadingScreen.complete();
-
             // The "app" dependency is passed in as "App"
             App.initialize( preloaded.objects );
             // App.animate();

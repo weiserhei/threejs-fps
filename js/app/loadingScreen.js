@@ -2,11 +2,43 @@
  * Loading Screen
  * with CanvasLoader
  */
-define(["jquery","CanvasLoader"], function ($, CanvasLoader) {
+define(["jquery"], function ($) {
 
     'use strict';
 
 	var container = $('.loading-container');
+
+	var progress = document.createElement("progress");
+	// x.style = "-webkit-appearance: none; appearance: none; width:250px;	height:20px;";
+	container[0].appendChild( progress );
+
+	progress.max = 1;
+	progress.value = 0;
+
+	var label = document.createElement( "p" );
+	label.className = "progressText"
+	container[0].appendChild( label );
+
+	var sub = document.createElement( "p" );
+	sub.className = "sub";
+	container[0].appendChild( sub );
+
+	function setProgress( loaded, total ) {
+
+		progress.value = loaded / total;
+		// progress.value = 0.5;
+		label.innerHTML = loaded / total * 100 + "%";
+		sub.innerHTML = loaded + "/"+ total;
+
+	}
+
+	function complete() {
+
+		container.fadeOut();
+
+	}
+
+	/*
 	
 	if (container.length) {
 		
@@ -30,16 +62,18 @@ define(["jquery","CanvasLoader"], function ($, CanvasLoader) {
 		container.fadeOut();
 		// $('.loading-container').fadeOut();
 	}
-
+	
 	var complete = function() {
 
         // set bar to 100% to prevent overflow
         // progressbar.style.width = 1 * barwidth + "px";
         container.fadeOut();
     };
+    */
 
     return {
     	container: container,
+    	setProgress: setProgress,
     	complete: complete
     };
 });

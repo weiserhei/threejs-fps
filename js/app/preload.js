@@ -7,9 +7,8 @@
 
 define([ 
     "three", 
-    "loadingScreen", 
     "loadingManager", 
-], function ( THREE, loadingScreen, loadingManager ) {
+], function ( THREE, loadingManager ) {
 
     'use strict';
 

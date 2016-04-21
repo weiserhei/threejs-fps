@@ -1,30 +1,9 @@
-/*@import url(https://fonts.googleapis.com/css?family=Montserrat:700);*/
-
-body 
-{
+body {
 	background-color: #000;
 	margin: 0px;
 	overflow: hidden;
 	width: 100%;
 	height: 100%;
-}
-.onepix-imgloader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 1000;
-    background-color: rgba(26,39,52,0.7);
-    border-radius: 5px;
-    padding:8px;
-    box-shadow: 0px 0px 5px #06090d;
-}
-.loading-container {
-	width:100%;
-	height:100%;
-	position:absolute;
-	/*background-color:#000;*/
-	background-color:rgba(26,39,52,0.7);
-	z-index:999;
 }
 
 #blocker {

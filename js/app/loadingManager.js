@@ -8,8 +8,8 @@ define([ "three", "loadingScreen" ], function ( THREE, loadingScreen ) {
 
 	loadingManager.onProgress = function ( item, loaded, total ) {
 
-		console.log( item, loaded, total );
-		// loadingScreen.setProgress( loaded, total );
+		// console.log( item, loaded, total );
+		loadingScreen.setProgress( loaded, total );
 
 	};
 
