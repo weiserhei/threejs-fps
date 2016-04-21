@@ -119,10 +119,9 @@ define([
 					break;
 
 				case 70: //F
+					
+					this.use();
 
-					if( this.tools.flashlight.pickedUp ) {
-						this.tools.flashlight.toggle();
-					}
 					break;
 			}
 
@@ -153,6 +152,19 @@ define([
 
 	}
 
+	Player.prototype.use = function() {
+
+		var hudElement = this.hud.infoText;
+		if ( hudElement.visible ) {
+			hudElement.fadeOut();
+		}
+
+		if ( this.tools.flashlight.pickedUp ) {
+			this.tools.flashlight.toggle();
+		}
+
+	};
+
 	Player.prototype.interact = function() {
 
 		var object = this.target;
@@ -161,7 +173,8 @@ define([
 			return false;
 		}
 
-		var hudElement = this.hud.interactionText;
+		// var hudElement = this.hud.interactionText;
+		var hudElement = this.hud.infoText;
 		// console.log( object );
 		var interact = object.userData.interact;
 
@@ -175,7 +188,7 @@ define([
 		} else if ( object.userData instanceof Item ) {
 
 			if ( isFunction( object.userData.interact ) ) {
-				object.userData.interact();
+				object.userData.interact( hudElement );
 				this.inventar.addItem( object.userData );
 			}
 

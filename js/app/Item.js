@@ -137,7 +137,7 @@ define([
 
 	function isFunction(v){if(v instanceof Function){return true;}};
 
-	Item.prototype.interact = function() {
+	Item.prototype.interact = function( hudElement ) {
 		// pickup Item - hide it
 		// console.log("pickup", this );
 
@@ -149,7 +149,12 @@ define([
 
 		this.mesh.visible = false;
 		if ( isFunction( this.mesh.userData.customAction ) ){
-			console.log("special action");
+
+			var text = " to toggle the <span class='highlight-item'>" + this.name + "</span>";
+			// hudElement.setText( text );
+			// hudElement.setHTML( text );
+			hudElement.show( true, text );
+
 			this.mesh.userData.customAction();
 		}
 		// hide raycast mesh

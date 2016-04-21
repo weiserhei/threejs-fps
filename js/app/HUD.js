@@ -32,6 +32,7 @@ define([
 
 		infoText.played = false;
 		infoText.autoFadeOut = false;
+		infoText.visible = false;
 
 		infoText.setText = function( text ) {
 			this.innerHTML = this.initial + " " + text;
@@ -46,7 +47,7 @@ define([
 			// if( this.played ) { return; }
 			this.played = true;
 
-			if( message ) {
+			if ( message ) {
 				
 				this.innerHTML = this.initial + " " + message;
 				
@@ -79,12 +80,14 @@ define([
 			// -> and re-adding the class
 			this.classList.add("animate");
 			this.autoFadeOut = false;
+			this.visible = true;
 
 			// clearTimeout(this.currentTimeout);
 
-			this.currentTimeout = setTimeout(function(){ 
-				// this.fadeOut( true ); 
-			}.bind( this ), 2000);
+			// this.currentTimeout = setTimeout(function(){ 
+			// 	this.fadeOut( true ); 
+			// }.bind( this ), 2000);
+
 		};
 
 		// fade out after 2s
@@ -100,6 +103,8 @@ define([
 				this.autoFadeOut = true;
 			}
 			clearTimeout(this.currentTimeout);
+
+			this.visible = false;
 
 			this.classList.remove("fadeIn");
 			this.classList.remove("fadeOut");

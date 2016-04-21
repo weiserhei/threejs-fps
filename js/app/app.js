@@ -49,8 +49,7 @@ define([
 	"initItems",
 	"Player",
 	"listener",
-	"particles",
-	"Item"
+	"particles"
 ], function ( 
 	THREE, 
 	TWEEN,
@@ -70,8 +69,7 @@ define([
 	initItems,
 	Player,
 	listener,
-	particles,
-	Item
+	particles
 ) {
 
 	'use strict';
@@ -80,8 +78,10 @@ define([
 
 	var hud = new HUD( container );
 	hud.interactionText = hud.box("Press <span class='highlight-actionkey'>[ e ]</span> to ");
-	
+	hud.infoText = hud.box("Press <span class='highlight-actionkey'>[ f ]</span> to ");
+	hud.infoText.style.bottom = "50px";
 	// var infoText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
+
 	var player = new Player( hud );
 
 	var particleGroup;
@@ -119,14 +119,8 @@ define([
 		// require(["sounds"]);
 
 		// ready, set, go
-		// wtf wtf man wtf
-		// camera.add( listener );
-		// controls.getControls().getObject().children[ 0 ].add( listener );
-		// console.log( listener );
-		// listener.context.listener.state = "running";
 		loadingScreen.complete();
 		animate();
-
 
 	};
 
@@ -139,8 +133,8 @@ define([
 		delta = clock.getDelta();
 
 		particleGroup.tick( delta );
-		player.raycast( objects );
 		physics.update( delta );
+		player.raycast( objects );
 		controls.update();
 
 		TWEEN.update();
