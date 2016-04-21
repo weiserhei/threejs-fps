@@ -18,21 +18,22 @@ define([
 	"physics",
 	"sounds",
 	"InteractionElement",
-	"InteractionBox"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox ) {
+	"InteractionBox",
+	"loadSicherungskasten"
+], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox, loadSicherungskasten ) {
 
 	'use strict';
 
-	var sicherungssound = sounds.positional.sicherungskasten;
 
-	function sicherungskasten( preloaded, constraint, constraint2, hudElement ) {
+	function sicherungskasten( constraint, constraint2, hudElement ) {
 		// console.log("constraint", constraint );
 		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
 		
 		var name = "Sicherungskasten";
 		var folder = debugGUI.getFolder( name );
 
-		var meshes = preloaded.meshes;
+		var sicherungssound = sounds.positional.sicherungskasten;
+		var meshes = loadSicherungskasten.meshes;
 		// var sicherung = meshes.sicherung;
 		var schalter = meshes.schalter;
 		var schrank = meshes.schrank;

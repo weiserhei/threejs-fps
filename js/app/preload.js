@@ -9,9 +9,7 @@ define([
     "three", 
     "loadingScreen", 
     "loadingManager", 
-    "loadSafemodels",
-    "loadSicherungskasten" 
-], function ( THREE, loadingScreen, loadingManager, safe, loadSicherungskasten ) {
+], function ( THREE, loadingScreen, loadingManager ) {
 
     'use strict';
 
@@ -21,9 +19,7 @@ define([
     var items = {};
     objects.items = items;
 
-    objects.safe = safe;
-    objects.sicherungskasten = loadSicherungskasten;
-
+    // objects.sicherungskasten = loadSicherungskasten;
 
     /*
     var textureLoader = new THREE.TextureLoader( loadingManager );

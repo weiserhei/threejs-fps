@@ -114,8 +114,6 @@ define([
 		// allow overlapping for multiple fast pickups
 		sounds.wusch.isPlaying = false; 
 		sounds.wusch.play();
-		// console.log("sounds", sounds.wusch );
-		// console.log("sounds", sounds.harfe );
 
 		this.pickedUp = true;
 

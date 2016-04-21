@@ -16,20 +16,21 @@ define([
 	"physics",
 	"sounds",
 	"InteractionElement",
-	"InteractionBox"
-], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox ) {
+	"InteractionBox",
+	"loadSafemodels"
+], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox, loadSafemodels ) {
 
 	'use strict';
 
-	var safesound = sounds.positional.safe;
-
-	function safe( preloaded, constraint, hudElement ) {
+	function safe( constraint, hudElement ) {
 		// console.log("constraint", constraint );
+		var safesound = sounds.positional.safe;
 		
 		var name = "Safe";
 		var folder = debugGUI.getFolder( name );
 
-		var meshes = preloaded.meshes;
+		// var meshes = preloaded.meshes;
+		var meshes = loadSafemodels.meshes;
 		var safewheel = meshes.safewheel;
 		var safegriff = meshes.safegriff;
 		var safedoor = meshes.safedoor;

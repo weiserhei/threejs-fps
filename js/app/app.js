@@ -12,6 +12,8 @@
   * register callbacks from iE in app.js
   * how to handle defered states that change the hud text?
   *
+  * flashlight
+  *
   * Physical Doors + constraints
   * Not movable but 
   * having a collision mesh
@@ -93,10 +95,10 @@ define([
     	// adding item meshes to raycaster objects-array
     	var items = initItems( preloaded.items, objects );
 
-    	var safe = initSafe( preloaded.safe, items.safeconstraint, hud.interactionText );
+    	var safe = initSafe( items.safeconstraint, hud.interactionText );
     	objects.push( safe.raycastMesh );
 
-    	var sicherungskasten = initSicherungskasten( preloaded.sicherungskasten, items.sicherungskastenconstraint, items.sicherungsslot, hud.interactionText );
+    	var sicherungskasten = initSicherungskasten( items.sicherungskastenconstraint, items.sicherungsslot, hud.interactionText );
     	objects.push( sicherungskasten.raycastMesh );
 
       particle = particles();
