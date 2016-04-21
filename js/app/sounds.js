@@ -4,11 +4,10 @@
 */
 
 define([
-	"three",
 	"listener",
 	"SoundLoader",
 	"loadingManager"
-], function ( THREE, listener, SoundLoader, loadingManager ) {
+], function ( listener, SoundLoader, loadingManager ) {
 
 	'use strict';
 

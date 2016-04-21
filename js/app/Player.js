@@ -3,6 +3,9 @@
 * can raycast to interact with objects
 * has Inventar
 *
+* Todo
+* oh god that flashlight - ECS Systen
+*
 */
 var spotLightHelper;
 define([
@@ -29,10 +32,13 @@ define([
 	var origin = new THREE.Vector3();
 	var direction = new THREE.Vector3();
 
-
 	function Player( hud ) {
 
+		this.tools = {};
+		this.tools.flashlight = {};
+
 		var playerMesh = controls.getControls().getObject();
+		this.playerMesh = playerMesh;
 
 		var flashlight = new THREE.SpotLight( 0xf1ffb1, 0 ); //0xFFFFFF //0x44ffaa mystic green 500, 4 0xCCFF88
 		flashlight.angle = 40 * Math.PI / 180;
@@ -40,7 +46,7 @@ define([
 		flashlight.penumbra = 0.5;
 		flashlight.decay = 1.5;
 		// flashlight.position.set( 0.1, -0.2, -0.2 );	
-		flashlight.position.set( 0.1, -0.1, 0.1 );	
+		flashlight.position.set( 0.1, -0.1, 0.1 );
 		flashlight.castShadow = true;
 
 		spotLightHelper = new THREE.SpotLightHelper( flashlight );
@@ -64,6 +70,8 @@ define([
 		var spt = flashlight;
 		var gui = debugGUI.getFolder("Flashlight");
 		buildGui();
+		playerMesh.updateMatrixWorld();
+		spotLightHelper.update();
 
 		function buildGui() {
 
@@ -80,15 +88,6 @@ define([
 			}
 
 		}
-
-		// scene.updateMatrixWorld();
-		// flashlight.updateMatrixWorld();
-		playerMesh.updateMatrixWorld();
-		// playerMesh.updateMatrix();
-		// flashlight.updateMatrix();
-		// scene.updateMatrix();
-		spotLightHelper.update();
-
 
 
 		this.target = undefined;
@@ -125,12 +124,15 @@ define([
 			}
 
 		} else if ( object.userData instanceof Itemslot ||
-		          	isFunction( object.userData.interact ) ) {
+		        
+		        isFunction( object.userData.interact ) ) {
 
 				object.userData.interact( this.inventar );
 
 		} else {
+
 			console.warn("Object has no interaction", object );
+
 		}
 
 	};

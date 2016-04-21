@@ -23,9 +23,9 @@ define([
 ], function ( THREE, StateMachine, TWEEN, scene, debugGUI, physics, sounds, InteractionElement, InteractionBox, loadSicherungskasten ) {
 
 	'use strict';
+console.log("wird nicht gerufen");
 
-
-	function sicherungskasten( constraint, constraint2, hudElement ) {
+	function sicherungskasten( constraint, hudElement ) {
 		// console.log("constraint", constraint );
 		// analyser1 = new THREE.AudioAnalyser( sound1, 32 );
 		
@@ -33,6 +33,7 @@ define([
 		var folder = debugGUI.getFolder( name );
 
 		var sicherungssound = sounds.positional.sicherungskasten;
+
 		var meshes = loadSicherungskasten.meshes;
 		// var sicherung = meshes.sicherung;
 		var schalter = meshes.schalter;
@@ -90,7 +91,7 @@ define([
 
 		// scene.updateMatrixWorld(); // !!
 		schalter.updateMatrixWorld();
-		var pos = constraint2.mesh.getWorldPosition();
+		var pos = constraint.mesh.getWorldPosition();
 		pos.z -= 0.1;
 		pos.x += 0.1;
 		// console.log( pos );
@@ -112,18 +113,18 @@ define([
 		// helper.update();
 		// scene.add(helper);
 
-		var tweens = setupTweens();
-		var fsm = setupFSM( tweens );
 
 		// raycast box
 		var bbox = new InteractionBox( schalter );
 		bbox.position.z = 0;
+		var tweens = setupTweens();
+		var fsm = setupFSM( tweens );
 		bbox.userData.fsm = fsm;
 
 		var iE = new InteractionElement( "schalter" );
 		// schalter.add ( bbox );
 		iE.addHighlightMaterial( schalter );
-		iE.addHighlightFunction( bbox, fsm, constraint2 );
+		iE.addHighlightFunction( bbox, fsm, constraint );
 
 		// flackern( pl );
 
@@ -204,7 +205,7 @@ define([
 					// constrain safe door to itemslot
 					onenterstate: function( event, from, to ) {
 
-						if ( constraint2.active ) {
+						if ( constraint.active ) {
 							return;
 						}
 						var action = this.transitions()[ 0 ];
@@ -237,12 +238,12 @@ define([
 						if ( sicherungssound.sicherung2.isPlaying ) {
 							sicherungssound.sicherung2.stop();
 						}
-						constraint2.mesh.material.emissive.setHex( 0x000000 );
+						constraint.mesh.material.emissive.setHex( 0x000000 );
 					},
 					ondown: function() {
 						pl.intensity = 1;
-						constraint2.mesh.material.emissive.setHex( 0x885533 );
-						if ( constraint2.active ) {
+						constraint.mesh.material.emissive.setHex( 0x885533 );
+						if ( constraint.active ) {
 							this.interact();
 							return false;
 						}

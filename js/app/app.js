@@ -12,8 +12,6 @@
 * register callbacks from iE in app.js
 * how to handle defered states that change the hud text?
 *
-* flashlight
-*
 * Physical Doors + constraints
 * Not movable but 
 * having a collision mesh
@@ -83,7 +81,6 @@ define([
 	'use strict';
 
 	var objects = []; // raycast meshes
-	var toggle = false; // toggle key down
 
 	var hud = new HUD( container );
 	hud.interactionText = hud.box("Press <span class='highlight-actionkey'>[ e ]</span> to ");
@@ -91,7 +88,7 @@ define([
 	// var infoText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
 	var player = new Player( hud );
 
-	var particle;
+	var particleGroup;
 
 	// Start program
 	var initialize = function ( preloaded ) {
@@ -106,19 +103,18 @@ define([
 		var safe = initSafe( items.safeconstraint, hud.interactionText );
 		objects.push( safe.raycastMesh );
 
-		var sicherungskasten = initSicherungskasten( items.sicherungskastenconstraint, items.sicherungsslot, hud.interactionText );
+		var sicherungskasten = initSicherungskasten( items.sicherungsslot, hud.interactionText );
 		objects.push( sicherungskasten.raycastMesh );
 
-		particle = particles();
-		scene.add( particle.mesh );
-		var pos = items.safeconstraint.mesh.position;
-		// particle.mesh.position.copy( pos );
+		particleGroup = particles();
+		scene.add( particleGroup.mesh );
+		// var pos = items.safeconstraint.mesh.position;
+		// particleGroup.mesh.position.copy( pos );
 		// console.log( particle );
-		// particle.maxParticleCount = 500;
+		// particleGroup.maxParticleCount = 500;
 
-		items.safeconstraint.effect = particle;
-		items.sicherungsslot.effect = particle;
-		// particle.mesh.position.set( 0, 1, -0.1 );
+		items.safeconstraint.effect = particleGroup;
+		items.sicherungsslot.effect = particleGroup;
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
@@ -130,9 +126,23 @@ define([
 		// require(["objects"]);
 		require(["lights"]);
 		require(["environment"]);
+		// require(["sounds"]);
 
-		document.addEventListener('keydown',onDocumentKeyDown,false);
-		document.addEventListener('keyup',onDocumentKeyUp,false);
+		// ready, set, go
+		// wtf wtf man wtf
+		// camera.add( listener );
+		// controls.getControls().getObject().children[ 0 ].add( listener );
+		// console.log( listener );
+		// listener.context.listener.state = "running";
+		loadingScreen.complete();
+		animate();
+
+
+
+		var toggle = false; // toggle key down
+
+		document.addEventListener('keydown', onDocumentKeyDown, false);
+		document.addEventListener('keyup', onDocumentKeyUp, false);
 
 		function onDocumentKeyDown(event){
 
@@ -152,9 +162,11 @@ define([
 					break;
 
 				case 70: //F
-					if( items.flashlight.pickedUp ) {
-						items.flashlight.toggle();
+				console.log( "toggle flashlight", player.tools.flashlight);
+					if( player.tools.flashlight.pickedUp ) {
+						player.tools.flashlight.toggle();
 					}
+					break;
 			}
 
 		}
@@ -173,18 +185,15 @@ define([
 
 		}
 
-		function handleMouseDown( event ) {
-			if ( event.button === 0 ) {
-
-			} else {
-
-			}
-		}
-
 		// document.body.addEventListener( "mousedown", handleMouseDown );
+		// function handleMouseDown( event ) {
+		// 	if ( event.button === 0 ) {
 
-		loadingScreen.complete();
-		animate();
+		// 	} else {
+
+		// 	}
+		// }
+
 	};
 
 	var clock = new THREE.Clock();
@@ -195,7 +204,7 @@ define([
 
 		delta = clock.getDelta();
 
-		particle.tick( delta );
+		particleGroup.tick( delta );
 		player.raycast( objects );
 		physics.update( delta );
 		controls.update();

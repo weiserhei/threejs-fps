@@ -74,9 +74,30 @@ define([
 		},
 	}
 	var dg = debugGUI.getFolder("Controls")
-	dg.add( options, "thirdPerson" ).name("Third Person Camera").onChange( thirdPerson );
+	dg.add( options, "thirdPerson" ).name("3rd Person View").onChange( thirdPerson );
 	dg.add( controls, "reset" ).name("Reset Player");
 	// dg.add( options, "reset" ).name("Reset Camera");
+
+	document.addEventListener('keydown',onDocumentKeyDown,false);
+
+	var toggle = true;
+
+	function onDocumentKeyDown(event){
+
+		event = event || window.event;
+		var keycode = event.keyCode;
+		// console.log( keycode );
+		// var character = String.fromCharCode( event.keyCode );
+
+		switch( keycode ) {
+			case 20: //E
+				thirdPerson( toggle );
+				toggle = !toggle;
+
+				break;
+		}
+
+	}
 
     return controls;
 });

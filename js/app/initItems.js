@@ -45,7 +45,6 @@ define([
 		// console.log("preloaded", preloaded );
 		var raycastMeshes = [];
 
-		/* ugh */
 		var mesh = preloaded.flashlight;
 		var flashlight = new Item( mesh );
 		flashlight.name = "flashlight"
@@ -54,6 +53,7 @@ define([
 		raycastMeshes.push( flashlight.getRaycastMesh() );
 		scene.add( mesh );
 
+		/* ugh */
 		flashlight.toggle = function() {
 
 			if ( this.active ) {
@@ -61,15 +61,26 @@ define([
 			} else {
 				player.flashlight.intensity = 0;
 			}
-
+			console.log("toggle");
 			sounds.lightswitch.play();
 			this.active = !this.active;
 
 		};
 
-		mesh.userData.customAction = function() {
-			this.active = true;
-			player.flashlight.intensity = 1;
+		flashlight.mesh.userData.customAction = function() {
+
+			// setup flashlight mesh 
+			// for in player-hand mode
+
+			flashlight.active = true;
+			flashlight.toggle();
+			flashlight.mesh.visible = true;
+			flashlight.mesh.castShadow = false;
+			flashlight.mesh.rotation.y = Math.PI;
+			flashlight.mesh.position.set( 0.1, -0.25, -0.1 );
+			player.playerMesh.add( flashlight.mesh );
+			player.tools.flashlight = flashlight;
+
 		};
 
 		// werenchkey
@@ -112,7 +123,6 @@ define([
 		var easing = TWEEN.Easing.Sinusoidal.InOut;
 
 		itemslot.tweenVector( source, target, time, easing );
-
 
 		// key
 		var mesh = preloaded.key.mesh;
@@ -164,7 +174,6 @@ define([
 		// var easing = TWEEN.Easing.Sinusoidal.InOut;
 
 		// sicherungsslot.tweenVector( source, target, time, easing );
-
 
 		// buch
 		var mesh = preloaded.buch.mesh;

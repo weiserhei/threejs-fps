@@ -5,11 +5,10 @@
 
 define([
 	"three",
-	"../libs/state-machine.min",
 	"physics",
 	"sounds",
 	"InteractionBox"
-], function ( THREE, StateMachine, physics, sounds, InteractionBox ) {
+], function ( THREE, physics, sounds, InteractionBox ) {
 
 	'use strict';
 
@@ -148,12 +147,11 @@ define([
 
 		this.pickedUp = true;
 
+		this.mesh.visible = false;
 		if ( isFunction( this.mesh.userData.customAction ) ){
-
+			console.log("special action");
 			this.mesh.userData.customAction();
 		}
-
-		this.mesh.visible = false;
 		// hide raycast mesh
 		// visible = false affecting children in terms of rendering
 		// but raycaster still intersects!

@@ -48,7 +48,6 @@ define([
 
     function start () {
 
-
         function onError( xhr ) {
             console.log( "error", xhr );
         }
@@ -58,7 +57,7 @@ define([
         }
 
 
-        // barrel_02
+        // flashlight
         var directoryPath = "assets/models/";
         var name = "flashlight";        
 
@@ -81,13 +80,14 @@ define([
                 
                 // console.log( object );
 
+                object = object.children[ 0 ];
+                object.scale.set( 0.8, 0.8, 0.8 ); 
                 items.flashlight = object;
                 // scene.add( object );
 
                 /*
                 var object = object.children[ 0 ];
                 var material = object.material;
-                // object.scale.set( 0.5,0.5,0.5 ); 
                 // console.log( "barrel", object );
 
                 // object.material.map.anisotropy = 8;

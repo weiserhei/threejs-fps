@@ -4,7 +4,7 @@
 */
 
 define([
-	"three",
+	"three"
 ], function ( THREE ) {
 
 	'use strict';

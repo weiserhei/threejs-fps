@@ -3,7 +3,7 @@
  * fit viewspace to model size
  */
 define([
-       "three", 
+       "three",
        "camera",
        "debugGUI"
 ], function ( THREE, camera, debugGUI ) {
