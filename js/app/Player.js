@@ -4,7 +4,7 @@
 * has Inventar
 *
 */
-
+var spotLightHelper;
 define([
 	"three",
 	"Item",
@@ -24,13 +24,72 @@ define([
 
 	var intersections = [];
 	var interactionDistance = 1.8;
-    var raycaster = new THREE.Raycaster();
+	var raycaster = new THREE.Raycaster();
 	// var vector = new THREE.Vector2(); // used for raycaster.setFromCamera
 	var origin = new THREE.Vector3();
 	var direction = new THREE.Vector3();
 
 
 	function Player( hud ) {
+
+		var playerMesh = controls.getControls().getObject();
+
+		var flashlight = new THREE.SpotLight( 0xf1ffb1, 0 ); //0xFFFFFF //0x44ffaa mystic green 500, 4 0xCCFF88
+		flashlight.angle = 40 * Math.PI / 180;
+		flashlight.distance = 15;
+		flashlight.penumbra = 0.5;
+		flashlight.decay = 1.5;
+		// flashlight.position.set( 0.1, -0.2, -0.2 );	
+		flashlight.position.set( 0.1, -0.1, 0.1 );	
+		flashlight.castShadow = true;
+
+		spotLightHelper = new THREE.SpotLightHelper( flashlight );
+		scene.add( spotLightHelper );
+		spotLightHelper.updateMatrixWorld();
+		spotLightHelper.visible = false;
+
+		// sun.shadowBias = 50;
+		// sun.shadowCameraFov = 60;
+		flashlight.shadow.camera.near = 0.01;
+		flashlight.shadow.camera.far = 30;
+		// sun.shadowMapWidth = sun.shadowMapHeight = 1024;
+		// flashlight.shadowDarkness = 0.5;
+
+		this.flashlight = flashlight;
+
+		playerMesh.add( flashlight );
+		flashlight.target.position.set( 0, 0, -10 );
+		playerMesh.add( flashlight.target );
+
+		var spt = flashlight;
+		var gui = debugGUI.getFolder("Flashlight");
+		buildGui();
+
+		function buildGui() {
+
+			gui.addThreeColor( flashlight, "color" );
+			gui.add( flashlight, "intensity" ).min( 0 ).max( 5 );
+			gui.add( flashlight, "distance" ).min( 0 ).max( 20 );
+			gui.add( flashlight, "angle" ).min( 0 ).max( Math.PI / 2 ).onChange( update );
+			gui.add( flashlight, "penumbra" ).min( 0 ).max( 1 );
+			gui.add( flashlight, "decay" ).min( 0 ).max( 100 );
+			gui.add( spotLightHelper, "visible" ).name("Helper visible");
+
+			function update() {
+				spotLightHelper.update();
+			}
+
+		}
+
+		// scene.updateMatrixWorld();
+		// flashlight.updateMatrixWorld();
+		playerMesh.updateMatrixWorld();
+		// playerMesh.updateMatrix();
+		// flashlight.updateMatrix();
+		// scene.updateMatrix();
+		spotLightHelper.update();
+
+
 
 		this.target = undefined;
 		this.hud = hud;
@@ -42,41 +101,37 @@ define([
 	Player.prototype.interact = function() {
 
 		var object = this.target;
-		var hudElement = this.hud.interactionText;
-
 		// dont do nuffin if no object is in target
 		if ( object === undefined ) {
-			return;
+			return false;
 		}
-        // console.log( object );
-        if ( object.userData.fsm !== undefined ) {
-            var fsm = object.userData.fsm;
 
-            if ( isFunction( fsm.interact ) ) {
-                fsm.interact();
-            }
+		var hudElement = this.hud.interactionText;
+		// console.log( object );
+		var interact = object.userData.interact;
 
-        }
-        else if ( isFunction( object.userData.interact ) ) {
+		if ( object.userData.fsm !== undefined ) {
+			var fsm = object.userData.fsm;
 
-            if( object.userData instanceof Item ) {
+			if ( isFunction( fsm.interact ) ) {
+				fsm.interact();
+			}
 
-                object.userData.interact();
+		} else if ( object.userData instanceof Item ) {
 
-                this.inventar.addItem( object.userData );
+			if ( isFunction( object.userData.interact ) ) {
+				object.userData.interact();
+				this.inventar.addItem( object.userData );
+			}
 
-            }
-            else if ( object.userData instanceof Itemslot ) {
-                // todo remove item from inventar on use!
-                object.userData.interact( this.inventar );
-            }
-            else {
-                console.warn("unknown interaction item");
-                if ( isFunction( object.userData.interact ) ) {
-                    object.userData.interact( this.inventar );
-                }
-            }
-        }
+		} else if ( object.userData instanceof Itemslot ||
+		          	isFunction( object.userData.interact ) ) {
+
+				object.userData.interact( this.inventar );
+
+		} else {
+			console.warn("Object has no interaction", object );
+		}
 
 	};
 
@@ -128,7 +183,7 @@ define([
 
 		 if ( object !== this.target ) {
 
-		 	this.resetActive();
+			this.resetActive();
 			// console.log("active", object );
 			// console.log( "userdata", object.userData.fsm );
 

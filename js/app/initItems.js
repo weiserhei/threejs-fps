@@ -9,8 +9,10 @@ define([
 	"debugGUI",
 	"physics",
 	"Item",
-	"Itemslot"
-], function ( THREE, scene, debugGUI, physics, Item, Itemslot ) {
+	"Itemslot",
+	"Player",
+	"sounds"
+], function ( THREE, scene, debugGUI, physics, Item, Itemslot, Player, sounds ) {
 
 	'use strict';
 
@@ -39,9 +41,36 @@ define([
 	physics.makeStaticBox( dimension, position );
 
 
-	function initItems( preloaded, raycastArray ) {
+	function initItems( preloaded, raycastArray, player ) {
 		// console.log("preloaded", preloaded );
 		var raycastMeshes = [];
+
+		/* ugh */
+		var mesh = preloaded.flashlight;
+		var flashlight = new Item( mesh );
+		flashlight.name = "flashlight"
+		flashlight.mesh.position.set( -3.2, 1.1, -0.2 );
+		flashlight.mesh.castShadow = true;
+		raycastMeshes.push( flashlight.getRaycastMesh() );
+		scene.add( mesh );
+
+		flashlight.toggle = function() {
+
+			if ( this.active ) {
+				player.flashlight.intensity = 1;
+			} else {
+				player.flashlight.intensity = 0;
+			}
+
+			sounds.lightswitch.play();
+			this.active = !this.active;
+
+		};
+
+		mesh.userData.customAction = function() {
+			this.active = true;
+			player.flashlight.intensity = 1;
+		};
 
 		// werenchkey
 		var mesh = preloaded.wrenchkey.mesh.clone();
@@ -200,6 +229,7 @@ define([
 		// }
 
 		return {
+			flashlight: flashlight,
 			safeconstraint: itemslot,
 			sicherungskastenconstraint: wrenchkey,
 			sicherungsslot: sicherungsslot

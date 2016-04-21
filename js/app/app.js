@@ -53,7 +53,8 @@ define([
 	"Player",
 	"listener",
 	"initSicherungskasten",
-	"particles"
+	"particles",
+	"Item"
 ], function ( 
 	THREE, 
 	TWEEN,
@@ -75,7 +76,8 @@ define([
 	Player,
 	listener,
 	initSicherungskasten,
-	particles
+	particles,
+	Item
 ) {
 
 	'use strict';
@@ -85,6 +87,7 @@ define([
 
 	var hud = new HUD( container );
 	hud.interactionText = hud.box("Press <span class='highlight-actionkey'>[ e ]</span> to ");
+	
 	// var infoText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
 	var player = new Player( hud );
 
@@ -98,7 +101,7 @@ define([
 		// and constraints to other game elemnts
 
 		// adding item meshes to raycaster objects-array
-		var items = initItems( preloaded.items, objects );
+		var items = initItems( preloaded.items, objects, player );
 
 		var safe = initSafe( items.safeconstraint, hud.interactionText );
 		objects.push( safe.raycastMesh );
@@ -135,17 +138,23 @@ define([
 
 			event = event || window.event;
 			var keycode = event.keyCode;
+			// console.log( keycode );
 			// var character = String.fromCharCode( event.keyCode );
 
 			switch( keycode ) {
-				case 69 : //E
-				// execute only once on keydown, until reset
-				if( toggle ) { return; }
-				toggle = !toggle;
+				case 69: //E
+					// execute only once on keydown, until reset
+					if( toggle ) { return; }
+					toggle = !toggle;
 
-				player.interact();
+					player.interact();
 
-				break;
+					break;
+
+				case 70: //F
+					if( items.flashlight.pickedUp ) {
+						items.flashlight.toggle();
+					}
 			}
 
 		}

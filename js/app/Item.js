@@ -87,8 +87,21 @@ define([
 			for ( var i = 0; i < material.materials.length; i ++ ) {
 				material.materials[ i ].emissive.setHex( 0xFF0000 );
 			}
-		} else {
+		} else if ( material instanceof THREE.Material ) {
 			material.emissive.setHex( 0xFF0000 );
+		} 
+		else if ( this.mesh.children.length > 0 ) {
+			for ( var i = 0; i < this.mesh.children.length; i ++ ) {
+				// this.mesh.children[ i ].material.emissive.setHex( 0xFF0000 );
+				// console.log( this.mesh.children );
+				var child = this.mesh.children[ i ];
+
+				if ( child.material instanceof THREE.MeshLambertMaterial ||
+						child.material instanceof THREE.MeshPhongMaterial ) {
+					child.material.emissive.setHex( 0xFF0000 );
+				}
+			}
+		// 	console.warn("Unknown Material", this.mesh.material );
 		}
 		// material.wireframe = true;
 	};
@@ -100,12 +113,30 @@ define([
 			for ( var i = 0; i < material.materials.length; i ++ ) {
 				material.materials[ i ].emissive.setHex( 0x000000 );
 			}
-		} else {
+		} else if ( material instanceof THREE.Material ) {
 			material.emissive.setHex( 0x000000 );
+		} 
+		else if ( this.mesh.children.length > 0 ) {
+			for ( var i = 0; i < this.mesh.children.length; i ++ ) {
+				// this.mesh.children[ i ].material.emissive.setHex( 0xFF0000 );
+				// console.log( this.mesh.children );
+				var child = this.mesh.children[ i ];
+
+				if ( child.material instanceof THREE.MeshLambertMaterial ||
+						child.material instanceof THREE.MeshPhongMaterial ) {
+					child.material.emissive.setHex( 0x000000 );
+				}
+			}
+		// 	console.warn("Unknown Material", this.mesh.material );
+		}
+		else {
+			console.warn("Unknown Material", this.mesh.material );
 		}
 		// material.wireframe = false;
 
 	};
+
+	function isFunction(v){if(v instanceof Function){return true;}};
 
 	Item.prototype.interact = function() {
 		// pickup Item - hide it
@@ -116,6 +147,11 @@ define([
 		sounds.wusch.play();
 
 		this.pickedUp = true;
+
+		if ( isFunction( this.mesh.userData.customAction ) ){
+
+			this.mesh.userData.customAction();
+		}
 
 		this.mesh.visible = false;
 		// hide raycast mesh

@@ -7,8 +7,9 @@
 
 define([ 
     "three", 
-    "loadingManager", 
-], function ( THREE, loadingManager ) {
+    "loadingManager",
+    "scene"
+], function ( THREE, loadingManager, scene ) {
 
     'use strict';
 
@@ -42,8 +43,79 @@ define([
 
     var heightImageUrl = "textures/planets/4k/heightmap_1440.jpg";
     */
+    
+    var textureLoader = new THREE.TextureLoader( loadingManager );
 
     function start () {
+
+
+        function onError( xhr ) {
+            console.log( "error", xhr );
+        }
+
+        function onProgress() {
+
+        }
+
+
+        // barrel_02
+        var directoryPath = "assets/models/";
+        var name = "flashlight";        
+
+        var mtlLoader = new THREE.MTLLoader( loadingManager );
+        var url = directoryPath + name + "/";
+        mtlLoader.setBaseUrl( url );
+        mtlLoader.setPath( url );
+
+        mtlLoader.load( name + ".mtl", function( materials ) {
+            var directoryPath = "assets/models/";
+            var name = "flashlight";
+            var url = directoryPath + name + "/";
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader( loadingManager );
+            objLoader.setMaterials( materials );
+            objLoader.setPath( url );
+            objLoader.load( name + ".obj", function ( object ) {
+                
+                // console.log( object );
+
+                items.flashlight = object;
+                // scene.add( object );
+
+                /*
+                var object = object.children[ 0 ];
+                var material = object.material;
+                // object.scale.set( 0.5,0.5,0.5 ); 
+                // console.log( "barrel", object );
+
+                // object.material.map.anisotropy = 8;
+                object.castShadow = true;
+
+                var url = directoryPath + name + "/" + name + "_N.jpg";
+                var normalMap = textureLoader.load( url );
+                material.normalMap = normalMap;
+                // material.normalScale.set ( 1, 1 );
+
+                scene.add( object );
+                
+                if ( physics !== undefined ) {
+                    var mesh = physics.getProxyMesh( object, "Cylinder" );
+                    mesh.position.set( 0, mesh.geometry.parameters.height / 2 + 1.5, 0 );
+                    // mesh.rotation.z = Math.PI / 1.5;
+                    physics.meshToBody( mesh, 2 );
+                    scene.add( mesh );
+                }
+
+                // this.sceneObjects.add( mesh );
+                // this.barrel_02 = mesh;
+                spawnObject = mesh.clone();
+                */
+
+            }, onProgress, onError );
+
+        });
 
         var url = "assets/models/buch/buch.js";
         jsonLoader.load( url, function callback(geometry, materials) {

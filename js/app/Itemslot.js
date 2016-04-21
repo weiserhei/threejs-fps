@@ -241,7 +241,7 @@ define([
 			// allow overlapping sound for multiple fast keypresses
 			sounds.lightswitch.isPlaying = false; 
 			sounds.lightswitch.play();		
-			return;
+			return false;
 		}
 
 		var size = this.mesh.geometry.boundingSphere.radius;
@@ -280,6 +280,7 @@ define([
 		// 	// hide compound mesh
 		// 	// this.mesh.parent.visible = false;
 		// }
+		return true;
 
 	};
 
