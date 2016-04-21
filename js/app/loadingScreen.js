@@ -12,23 +12,25 @@ define(["jquery"], function ($) {
 	// x.style = "-webkit-appearance: none; appearance: none; width:250px;	height:20px;";
 	container[0].appendChild( progress );
 
-	progress.max = 1;
+	// progress.max = 1;
 	progress.value = 0;
 
 	var label = document.createElement( "p" );
 	label.className = "progressText"
+	label.textContent = "0%";
 	container[0].appendChild( label );
 
 	var sub = document.createElement( "p" );
 	sub.className = "sub";
+	sub.textContent = "Processing"
 	container[0].appendChild( sub );
 
 	function setProgress( loaded, total ) {
 
 		progress.value = loaded / total;
 		// progress.value = 0.5;
-		label.innerHTML = Math.round( loaded / total * 100 ) + "%";
-		sub.innerHTML = loaded + "/" + total;
+		label.textContent = Math.round( loaded / total * 100 ) + "%";
+		sub.textContent = loaded + "/" + total;
 
 	}
 
