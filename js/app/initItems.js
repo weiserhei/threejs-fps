@@ -50,7 +50,7 @@ define([
 		var mesh = preloaded.flashlight;
 		var flashlight = new Item( mesh );
 		flashlight.name = "flashlight"
-		flashlight.mesh.position.set( -3.2, 1.1, -0.2 );
+		flashlight.mesh.position.set( -3.2, 1.05, -0.2 );
 		flashlight.mesh.castShadow = true;
 		raycastMeshes.push( flashlight.getRaycastMesh() );
 		scene.add( mesh );
