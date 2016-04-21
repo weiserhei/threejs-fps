@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Playground</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/hud.css">
+    <link rel="stylesheet" type="text/css" href="css/loadingScreen.css">
+
+    <meta name="og:type" content="website" />
+	<meta name="og:image" content="http://weiserhei.github.io/threejs-experiments/goblintest/ogimage.jpg"/>
+	<meta name="og:title" content="Physic playground" />
+	<meta name="og:description" content="Three.js + Goblin.js testbed" />
+	<meta name="og:url" content="http://weiserhei.github.io/threejs-experiments/goblintest/"/>
+
+</head>
+<body oncontextmenu="return false;">
+
+	<div id="loading-container">
+		
+		<progress id="prog" value="0.0" max = "1"></progress>
+		<p id="progressText" class="progressText">0%</p>
+		<p class="sub">12/22</p>		
+<!-- 
+		<progress id="" value="0.5"></progress>
+		<p class="progressText">50%</p>
+		<p class="sub">12/22</p> -->
+
+	</div>
+<script>
+var bar = document.getElementById("prog");
+var pT = document.getElementById("progressText");
+
+var percent = 0;
+
+setInterval( function() { 
+
+	if ( percent < 1 ) {
+		bar.value = percent; 
+		pT.textContent = Math.round( percent * 100 ) + "%";
+		percent += 0.1;
+
+	}
+}, 300 );
+
+</script>
+</body>
+</html>

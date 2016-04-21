@@ -1,5 +1,11 @@
 /**
  * Loading Screen
+ *
+ * http://www.hongkiat.com/blog/beautiful-progress-bars/ !!!!
+ *
+ * http://red-team-design.com/stylish-css3-progress-bars/
+ * https://css-tricks.com/html5-progress-element/
+ * http://www.htmlgoodies.com/html5/css/using-css-to-make-a-visually-consistent-cross-browser-html5-progress-bar.html
  * 
  */
 

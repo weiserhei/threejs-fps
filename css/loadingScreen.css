@@ -1,5 +1,56 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat:700);
 
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+
 div#loading-container.fade {
     opacity:0;
     /*background:#00ffaa;*/
@@ -14,10 +65,31 @@ div#loading-container.fade {
     height:100%;
     position:absolute;
 
-    background-color:#000;
+    /*background-color:#d9dbde;*/
     /*background-color:rgba(26,39,52,0.7);*/
     /*background-color:rgba( 0, 0, 0, 0 );*/
     z-index:999;
+
+
+      /*circle at top right,*/
+      /* sunny */
+      /*
+  background-image:
+    radial-gradient(
+      circle at top center,
+      yellow,
+      #f06d06
+    );  
+*/
+
+
+background-image:
+    radial-gradient(
+      circle at top center,
+      #555,
+      #222
+    );
+
 }
 
 .progressText {
@@ -31,7 +103,7 @@ div#loading-container.fade {
 
     text-align:center;
 
-    transform: translate(0, -100%);
+    transform: translate(0, -150%);
 
     /* text-border */
     text-shadow: 
@@ -46,9 +118,10 @@ div#loading-container.fade {
 
     width:25%;
     font-family: "Montserrat", sans-serif;
+    font-size:2em;
     /* bar outer glow */
     /*background:#ffaa00;*/
-    animation: animate-glow 1.5s ease-out infinite; 
+    /*animation: animate-glow 1.5s ease-out infinite; */
     
 }
 
@@ -62,7 +135,7 @@ div#loading-container.fade {
     width:25%;
     font-family: "Montserrat", sans-serif;
     text-align:center;
-    /*transform: translate(0, -100%);*/
+    transform: translate(0, -50%);
 }
 
 @keyframes animate-glow {
@@ -87,29 +160,65 @@ progress[value]    /* polyfill */
 	background-size: auto;
 
 	/* Dimensions */
-	width:25%;
-	height:20px;
+	width:50%;
+	height:8px;
 
 	position: relative;
     margin:0 auto;
     top: 50%;
     display:block;
 
-	background-color: #eee;
-	border-radius: 3px;
+	background-color: #333;
+	border-radius: 8px;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+
+    border-bottom: 1px solid #505055;
+    border-top: 1px solid #404040;
+    padding:3px 3px 2px;
 
 }
 
 /* chrome */
 progress[value]::-webkit-progress-bar {
-    background-color: #eee;
-    border-radius: 3px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.25) inset;
+    height: 12px;
+    padding: 0;
+    border-radius: 8px;
+    background-color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    border-bottom: 1px solid #505055;
+    padding:2px 0px 2px;
+    /*margin:2px 0 2px;*/
+    /*
+    padding:0;
     /*background-color: whiteSmoke;*/
 }
 
 /* Firefox provides a single pseudo class to style the progress element value and not for container. -moz-progress-bar */
+
+progress[value]::-webkit-progress-value  {
+    /* Gradient background with Stripes */
+    background-image:
+    -webkit-linear-gradient( 135deg,
+                                 transparent,
+                                 transparent 33%,
+                                 rgba(0,0,0,.1) 33%,
+                                 rgba(0,0,0,.1) 66%,
+                                 transparent 66%),
+    -webkit-linear-gradient( top,
+                                rgba(255, 255, 255, .25),
+                                rgba(0,0,0,.2)),
+     -webkit-linear-gradient( left, #AEE113, #01BBE0 );
+
+    background-size: 35px 20px, 100% 100%, 100% 100%;
+    border-radius:8px;
+    /*margin:10px;*/
+    border-top: 1px solid rgba( 255, 255, 255, 0.75 );
+    height: 8px;
+
+    /*padding:-4px 0 0;*/
+    margin:-2px 0 0; /* counter padding */
+
+}
 
 progress[value]::-moz-progress-bar {
     /* Gradient background with Stripes */
@@ -123,30 +232,38 @@ progress[value]::-moz-progress-bar {
     -moz-linear-gradient( top,
                             rgba(255, 255, 255, .25),
                             rgba(0,0,0,.2)),
-     -moz-linear-gradient( left, #09c, #f44 );
+     -moz-linear-gradient( left, #AEE113, #01BBE0 );
+     /*
+    AEE113 bright green
+    4C865A Dark green
+    01BBE0 bright blue
+    343539 dark blue
+
+     */
     
     background-size: 35px 20px, 100% 100%, 100% 100%;
-    border-radius:3px;
-    
-    /* Firefox doesn't support CSS3 keyframe animations on progress element. Hence, we did not include animate-stripes in this code block */
-}
+    border-radius:8px;
+    /*margin:10px;*/
+    border-top: 1px solid rgba( 255, 255, 255, 0.75);
+    /*border-blend-mode: multiply;*/
+    /*mix-blend-mode: screen; /* soft */
+    /*mix-blend-mode: overlay; /* dark */
+    /*mix-blend-mode: darken; /* nearly invisible */
+    /*mix-blend-mode: lighten;  no difference */
+    /*mix-blend-mode: color-dodge;  popping colors  */
+    /*mix-blend-mode: color-burn; /* black*/
+    /*mix-blend-mode: hard-light;  stronger, darker colors*/
+    /*mix-blend-mode: soft-light;  dark*/
+    /*mix-blend-mode: difference;  darker*/
+    /*mix-blend-mode: exclusion;  pale / pastell*/
+    /*mix-blend-mode: hue;  invisible*/
+    /*mix-blend-mode: saturation;  invisible*/
+    /*mix-blend-mode: color;  dark and stripes gone*/
+    /*mix-blend-mode: luminosity;   no saturation*/
 
-progress[value]::-webkit-progress-value  {
-    /* Gradient background with Stripes */
-    background-image:
-    -webkit-linear-gradient( 135deg,
-	                             transparent,
-	                             transparent 33%,
-	                             rgba(0,0,0,.1) 33%,
-	                             rgba(0,0,0,.1) 66%,
-	                             transparent 66%),
-    -webkit-linear-gradient( top,
-                                rgba(255, 255, 255, .25),
-                                rgba(0,0,0,.2)),
-     -webkit-linear-gradient( left, #09c, #f44);
-
-    background-size: 35px 20px, 100% 100%, 100% 100%;
-    border-radius:3px;
+    /*https://css-tricks.com/basics-css-blend-modes/ */
+    /* Firefox doesn't support CSS3 keyframe animations on progress element. Hence, we did not include animate-stripes in this code block 
+    */
 }
 
 /* Let's spice up things little bit by using pseudo elements. */
@@ -163,10 +280,6 @@ progress[value]::-webkit-progress-value:after {
     border-radius: 100%;
 }
 */
-
-/*https://css-tricks.com/html5-progress-element/*/
-/*http://www.htmlgoodies.com/html5/css/using-css-to-make-a-visually-consistent-cross-browser-html5-progress-bar.html*/
-
 
 .onepix-imgloader {
     position: absolute;

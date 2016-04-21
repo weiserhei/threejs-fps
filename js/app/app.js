@@ -26,6 +26,9 @@
 *
 * Schublade öffnen mit tastendruck
 * Leere Schubladen einstreuen
+*
+* Menue
+* GameState
 * 
 */
 
@@ -129,7 +132,7 @@ define([
 		document.addEventListener('keyup',onDocumentKeyUp,false);
 
 		function onDocumentKeyDown(event){
-			
+
 			event = event || window.event;
 			var keycode = event.keyCode;
 			// var character = String.fromCharCode( event.keyCode );

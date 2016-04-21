@@ -1,0 +1,180 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:700);
+
+div#loading-container.fade {
+    opacity:0;
+    /*background:#00ffaa;*/
+    /*visibility:hidden;*/
+}
+
+
+#loading-container {
+    opacity:1;
+    transition: opacity 1s; 
+    width:100%;
+    height:100%;
+    position:absolute;
+
+    background-color:#d9dbde;
+    /*background-color:rgba(26,39,52,0.7);*/
+    /*background-color:rgba( 0, 0, 0, 0 );*/
+    z-index:999;
+}
+
+.progressText {
+    color: white;
+    /*font-size: 2em;*/
+
+    position: relative;
+    margin:0 auto;
+    top: 50%;
+    display:block;
+
+    text-align:center;
+
+    transform: translate(0, -100%);
+
+    /* text-border */
+    text-shadow: 
+    -1px -1px 0px #000,
+     0px -1px 0px #000,
+     1px -1px 0px #000,
+    -1px  0px 0px #000,
+     1px  0px 0px #000,
+    -1px  1px 0px #000,
+     0px  1px 0px #000,
+     1px  1px 0px #000;
+
+    width:25%;
+    font-family: "Montserrat", sans-serif;
+    /* bar outer glow */
+    /*background:#ffaa00;*/
+    animation: animate-glow 1.5s ease-out infinite; 
+    
+}
+
+.sub {
+    color: white;
+    position: relative;
+    margin:0 auto;
+    top: 50%;
+    display:block;
+    /*background:#00ffaa;*/
+    width:25%;
+    font-family: "Montserrat", sans-serif;
+    text-align:center;
+    /*transform: translate(0, -100%);*/
+}
+
+@keyframes animate-glow {
+    0% { box-shadow: 0 5px 5px rgba(255, 255, 255, .3) inset, 0 -5px 5px rgba(255, 255, 255, .3) inset;} 
+    50% { box-shadow: 0 5px 5px rgba(255, 255, 255, .1) inset, 0 -5px 5px rgba(255, 255, 255, .1) inset;} 
+    100% { box-shadow: 0 5px 5px rgba(255, 255, 255, .3) inset, 0 -5px 5px rgba(255, 255, 255, .3) inset;}
+}
+
+progress,          /* All HTML5 progress enabled browsers */
+progress[value]    /* polyfill */
+{
+
+	/* Turns off styling - not usually needed, but good to know. */
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+
+	/* gets rid of default border in Firefox and Opera. */
+	border: none;
+
+	/* Needs to be in here for Safari polyfill so background images work as expected. */
+	background-size: auto;
+
+	/* Dimensions */
+	width:25%;
+	height:20px;
+
+	position: relative;
+    margin:0 auto;
+    top: 50%;
+    display:block;
+
+	background-color: #eee;
+	border-radius: 8px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+
+    border-bottom: 1px solid #f7f8f8;
+    border-top: 1px solid #666b75;
+
+}
+
+/* chrome */
+progress[value]::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25) inset;
+    /*background-color: whiteSmoke;*/
+}
+
+/* Firefox provides a single pseudo class to style the progress element value and not for container. -moz-progress-bar */
+
+progress[value]::-moz-progress-bar {
+    /* Gradient background with Stripes */
+    background-image:
+    -moz-linear-gradient( 135deg,
+	                         transparent,
+	                         transparent 33%,
+	                         rgba(0,0,0,.1) 33%,
+	                         rgba(0,0,0,.1) 66%,
+	                         transparent 66%),
+    -moz-linear-gradient( top,
+                            rgba(255, 255, 255, .25),
+                            rgba(0,0,0,.2)),
+     -moz-linear-gradient( left, #09c, #f44 );
+    
+    background-size: 35px 20px, 100% 100%, 100% 100%;
+    border-radius:8px;
+    
+    border-top: 1px solid rgba( 255, 255, 255, 0.5);
+    /* Firefox doesn't support CSS3 keyframe animations on progress element. Hence, we did not include animate-stripes in this code block */
+}
+
+progress[value]::-webkit-progress-value  {
+    /* Gradient background with Stripes */
+    background-image:
+    -webkit-linear-gradient( 135deg,
+	                             transparent,
+	                             transparent 33%,
+	                             rgba(0,0,0,.1) 33%,
+	                             rgba(0,0,0,.1) 66%,
+	                             transparent 66%),
+    -webkit-linear-gradient( top,
+                                rgba(255, 255, 255, .25),
+                                rgba(0,0,0,.2)),
+     -webkit-linear-gradient( left, #09c, #f44);
+
+    background-size: 35px 20px, 100% 100%, 100% 100%;
+    border-radius:3px;
+}
+
+/* Let's spice up things little bit by using pseudo elements. */
+/*
+progress[value]::-webkit-progress-value:after {
+    /* Only webkit/blink browsers understand pseudo elements on pseudo classes. A rare phenomenon! 
+    content: '';
+    position: absolute;
+    
+    width:5px; height:5px;
+    top:7px; right:7px;
+    
+    background-color: white;
+    border-radius: 100%;
+}
+*/
+
+.onepix-imgloader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    background-color: rgba(26,39,52,0.7);
+    border-radius: 5px;
+    padding:8px;
+    box-shadow: 0px 0px 5px #06090d;
+}
