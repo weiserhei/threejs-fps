@@ -44,14 +44,11 @@ define([
 	"controls",
 	"container",
 	"stats",
-	"debugGUI",
-	"tweenHelper",
 	"skycube",
 	"physics",
 	"classes/HUD",
 	"initItems",
 	"classes/Player",
-	"listener",
 	"particles"
 ], function ( 
 	THREE, 
@@ -63,14 +60,11 @@ define([
 	controls,
 	container,
 	stats, 
-	debugGUI, 
-	tweenHelper, 
 	skycube,
 	physics,
 	HUD,
 	initItems,
 	Player,
-	listener,
 	particles
 ) {
 
@@ -134,6 +128,9 @@ define([
 
 		delta = clock.getDelta();
 
+		// todo
+		// performance opt: only tick when triggered
+		// using setIntervall instead of in main loop
 		particleGroup.tick( delta );
 		physics.update( delta );
 		player.raycast( objects );

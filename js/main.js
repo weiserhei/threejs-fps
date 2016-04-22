@@ -22,7 +22,7 @@ require.config({
     },
     // Third party code lives in js/lib
     paths: {
-        'jquery': "http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min",
+        // 'jquery': "http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min",
         'dat': "../libs/dat.gui.min",
         'CanvasLoader': "../libs/heartcode-canvasloader-min",
         'TWEEN': "../libs/tween.min",
