@@ -25,7 +25,7 @@ define([
 		// infoText.style.opacity = "0";
 		// infoText.classList.add("hidden");
 
-		infoText.initial = message;
+		infoText.initial = message || "";
 		infoText.innerHTML = message;
 
 		this.container.appendChild( infoText );
@@ -35,7 +35,7 @@ define([
 		infoText.visible = false;
 
 		infoText.setText = function( text ) {
-			this.innerHTML = this.initial + " " + text;
+			this.textContent = this.initial + " " + text;
 		};
 		infoText.setHTML = function( text ) {
 			// console.log("setting html", text );
@@ -49,6 +49,7 @@ define([
 
 			if ( message ) {
 				
+				// this.textContent = this.initial + " " + message;
 				this.innerHTML = this.initial + " " + message;
 				
 			}

@@ -24,7 +24,9 @@ define([
 		// SAFE
 		{ id: "beep", url: "assets/sounds/beep.ogg", volume: 0.5  },
 		// GUN
-		{ id: "railgun", url: "assets/sounds/railgun.ogg", volume: 0.2  },
+		{ id: "railgun", url: "assets/sounds/railgun.ogg", volume: 0.1  },
+		{ id: "shellload", url: "assets/sounds/shell-load.ogg", volume: 0.2  },
+		{ id: "weaponclick", url: "assets/sounds/weaponclick.ogg", volume: 0.3  },
 	];
 
 	sounds = soundLoader.loadAudio( manifest );

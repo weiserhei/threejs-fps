@@ -16,10 +16,11 @@ define([
 	"controls",
 	"scene",
 	"classes/Inventar",
-	"camera",
+	"classes/Weapon",
 	"physics",
-	"sounds"
-], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, camera, physics, sounds ) {
+	"sounds",
+	"container"
+], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, Weapon, physics, sounds, container ) {
 
 	'use strict';
 
@@ -35,55 +36,49 @@ define([
 	var origin = new THREE.Vector3();
 	var direction = new THREE.Vector3();
 
-	function Player( hud ) {
 
-		this.tools = {};
-		this.tools.flashlight = {};
+	function createFlashlight( mesh ) {
 
-		var playerMesh = controls.getControls().getObject();
-		this.playerMesh = playerMesh;
+		//spotlight
+		var spotLight = new THREE.SpotLight( 0xf1ffb1, 0 ); //0xFFFFFF //0x44ffaa mystic green 500, 4 0xCCFF88
+		spotLight.angle = 40 * Math.PI / 180;
+		spotLight.distance = 15;
+		spotLight.penumbra = 0.5;
+		spotLight.decay = 1.5;
+		spotLight.position.set( 0.1, -0.1, 0.1 );
+		spotLight.castShadow = true;
+		// spotLight.shadowBias = 50;
+		// spotLight.shadowCameraFov = 60;
+		spotLight.shadow.camera.near = 0.01;
+		spotLight.shadow.camera.far = 30;
+		// spotLight.shadowMapWidth = spotLight.shadowMapHeight = 1024;
+		// spotLight.shadowDarkness = 0.5;
 
-		var flashlight = new THREE.SpotLight( 0xf1ffb1, 0 ); //0xFFFFFF //0x44ffaa mystic green 500, 4 0xCCFF88
-		flashlight.angle = 40 * Math.PI / 180;
-		flashlight.distance = 15;
-		flashlight.penumbra = 0.5;
-		flashlight.decay = 1.5;
-		// flashlight.position.set( 0.1, -0.2, -0.2 );	
-		flashlight.position.set( 0.1, -0.1, 0.1 );
-		flashlight.castShadow = true;
-
-		spotLightHelper = new THREE.SpotLightHelper( flashlight );
+		// light helper
+		spotLightHelper = new THREE.SpotLightHelper( spotLight );
 		scene.add( spotLightHelper );
 		spotLightHelper.updateMatrixWorld();
 		spotLightHelper.visible = false;
 
-		// sun.shadowBias = 50;
-		// sun.shadowCameraFov = 60;
-		flashlight.shadow.camera.near = 0.01;
-		flashlight.shadow.camera.far = 30;
-		// sun.shadowMapWidth = sun.shadowMapHeight = 1024;
-		// flashlight.shadowDarkness = 0.5;
-
-		this.flashlight = flashlight;
-
-		playerMesh.add( flashlight );
-		flashlight.target.position.set( 0, 0, -10 );
-		playerMesh.add( flashlight.target );
-
-		var spt = flashlight;
-		var gui = debugGUI.getFolder("Flashlight");
-		buildGui();
-		playerMesh.updateMatrixWorld();
+		mesh.add( spotLight );
+		spotLight.target.position.set( 0, 0, -10 );
+		mesh.add( spotLight.target );
+		mesh.updateMatrixWorld();
 		spotLightHelper.update();
 
-		function buildGui() {
+		// gui
+		var gui = debugGUI.getFolder("Flashlight");
+		
+		buildGui( spotLight );
 
-			gui.addThreeColor( flashlight, "color" );
-			gui.add( flashlight, "intensity" ).min( 0 ).max( 5 );
-			gui.add( flashlight, "distance" ).min( 0 ).max( 20 );
-			gui.add( flashlight, "angle" ).min( 0 ).max( Math.PI / 2 ).onChange( update );
-			gui.add( flashlight, "penumbra" ).min( 0 ).max( 1 );
-			gui.add( flashlight, "decay" ).min( 0 ).max( 100 );
+		function buildGui( light ) {
+
+			gui.addThreeColor( light, "color" );
+			gui.add( light, "intensity" ).min( 0 ).max( 5 );
+			gui.add( light, "distance" ).min( 0 ).max( 20 );
+			gui.add( light, "angle" ).min( 0 ).max( Math.PI / 2 ).onChange( update );
+			gui.add( light, "penumbra" ).min( 0 ).max( 1 );
+			gui.add( light, "decay" ).min( 0 ).max( 100 );
 			gui.add( spotLightHelper, "visible" ).name("Helper visible");
 
 			function update() {
@@ -92,107 +87,111 @@ define([
 
 		}
 
-		var options = {
-			energy: 50
-		};
-		var folder = debugGUI.getFolder("Shoot me Up");
-		folder.open();
-		folder.add( options, "energy" ).min( 1 ).max( 100 );
+		return spotLight;
+	}
+
+	Player.prototype.getPawn = function() {
+		return this._playerMesh;
+	};
 
 
-		function shoot( target ) {
 
-			console.log( target );
-			var normal = target.normal;
-			var body = target.object;
-			var point = target.point;
-
-			var pP = camera.getWorldPosition();
-			// var invertPos = new THREE.Vector3();
-			var vec = new THREE.Vector3( point.x, point.y, point.z );
-			var invertPos = vec.clone().sub( pP ).normalize();
-
-			// body.applyForceAtWorldPoint ( normal, point )
-			// body.applyForceAtLocalPoint( normal, point );
-			invertPos.multiplyScalar( options.energy );
-			body.applyImpulse( invertPos );
-
-			sounds.positional.bow.bow.play();
-
-		}
-
-		// hud.x = hud.box( "end: " );
-		// hud.x2 = hud.box( "start: " );
-		// hud.x2.style.bottom = "50px";
-		// hud.x2.show( true );
-		// hud.x.show( true );
+	// hud.x = hud.box( "end: " );
+	// hud.x2 = hud.box( "start: " );
+	// hud.x2.style.bottom = "50px";
+	// hud.x2.show( true );
+	// hud.x.show( true );
 
 
-		function gun() {
+	// var that = this;
+	// var hud = hud;
+ //    var weapons = {};
+
+	// weapons.portalgun = new Weapon( "portalgun", {
+	// 	maxCapacity: 0, 
+	// 	magazines: 0, 
+	// 	reloadTime: 0, 
+	// 	shootDelay: 0.5,
+	// 	shootSound: that.sounds.swosh1,
+	// 	altSound: that.sounds.swosh5,
+	// 	// reloadSound: that.sounds.sniperreload,
+	// 	// emitterPool: this.muzzleFlash,
+	// 	} );
+
+ //    weapons.sniper = new Weapon( "sniper", { 
+	// 	maxCapacity: 6, 
+	// 	magazines: 2, 
+	// 	reloadTime: 4, 
+	// 	shootDelay: 1,
+	// 	shootSound: that.sounds.sniperrifle,
+	// 	reloadSound: that.sounds.sniperreload,
+	// 	// emitterPool: this.muzzleFlash,
+	// 	} );
+
+	// for ( var key in weapons ) {
+	// 	weapons[key].emitterPool = this.muzzleFlash;
+	// 	weapons[key].emptySound = this.sounds.soundClick;
+	// 	weapons[key].restockSound = this.sounds.sound3;
+	// }	
 
 
-			if ( sounds.railgun.isPlaying ) {
-				// sounds.railgun.stop();
-			}
-			sounds.railgun.isPlaying = false;
-			// sounds.railgun.stop();
-			sounds.railgun.play();
+	function Player( hud, clock ) {
 
-			// var pP = controls.getControls().getObject().getWorldPosition();
-			var pP = camera.getWorldPosition();
-			var start = new Goblin.Vector3( pP.x, pP.y, pP.z );
+		this.tools = {};
+		this.tools.flashlight = {};
 
-			// var direction = new THREE.Vector3( 0, 0, 1 );
-			// direction = direction.applyMatrix4( camera.matrixWorld );
+		this.clock = clock;
 
-			// hud.x2.setText( direction.x + "/"+ direction.y + "/"+ direction.z );
+		var playerMesh = controls.getControls().getObject();
+		this._playerMesh = playerMesh;
 
-			var startPos = pP;
-			var direction = camera.getWorldDirection();
-			var distance = 20;
-
-			var newPos = new THREE.Vector3();
-			newPos.addVectors ( startPos, direction.multiplyScalar( distance ) );
-
-			// scene.remove( arrowHelper );
-			// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
-			// var arrowHelper = new THREE.ArrowHelper( direction, pP, 5, 0xFF0000 );
-			// scene.add( arrowHelper );
-
-			// var btRayToPoint = camera.getWorldPosition().clone().add( camera.getWorldDirection().clone().multiplyScalar( distance ) );
-			var btRayToPoint = newPos;
-
-			// var btRayToPoint = new THREE.Vector3( 0, 0, -distance ).applyMatrix4( controls.getControls().getObject().matrixWorld )
-			// hud.x.setText( btRayToPoint.x + " " + btRayToPoint.y + " "+ btRayToPoint.z );
-			// hud.x2.setText( start.x + " " + start.y + " "+ start.z );
-
-			var end = new Goblin.Vector3( btRayToPoint.x, btRayToPoint.y, btRayToPoint.z );
-
-			// var end = new Goblin.Vector3( 0, 0, 0 );
-			// console.log( start, end );
-			var intersections = physics.getWorld().rayIntersect( start, end );
-			// todo
-			// dont intersect with player cylinder -.-
-			if ( intersections.length > 1 ) {
-
-				var target = intersections[ 0 ];
-				shoot( target );
-			}
-			
-		}
+		this.flashlight = new createFlashlight( playerMesh );
 
 		this.target = undefined;
 		this.hud = hud;
 
 		this.inventar = new Inventar();
 
+		this.inHands;
+
+
+		var weapons = {};
+		var shotgun = new Weapon();
+		weapons.shotgun = shotgun;
+
+		this.inHands = shotgun;
+
+		hud.weaponText = hud.box();
+		// hud.weaponText.show( true, this.inHands );
+		hud.weaponText.setHTML = "";
+		hud.weaponText.style = "padding:4px; background:rgba( 0, 0, 0, 0.25 ); width: unset; text-align:right; right: 100px;";
+
+		function update() {
+			hud.weaponText.show( true, this.inHands );
+		}
+
+	    // register update hud on ammo change and reload
+		for ( var key in weapons ) {
+			weapons[key].setCallback( this, update );
+		}	
+
+		shotgun.name = "shotgun";
+		shotgun.maxCapacity = 8;
+		shotgun.currentCapacity = 2;
+		shotgun.magazines = 1;
+		shotgun.shootDelay = 0.1;
+		shotgun.shootSound = sounds.railgun;
+		shotgun.reloadSound = sounds.shellload;
+		// shotgun.reloadTime = "shotgun";
+		// shotgun.emitterPool = "shotgun";
 
 		var toggle = false; // toggle key down
 
 		document.addEventListener('keydown', onDocumentKeyDown.bind( this ), false);
 		document.addEventListener('keyup', onDocumentKeyUp, false);
 
-		function onDocumentKeyDown(event){
+
+		function onDocumentKeyDown( event ){
 
 			event = event || window.event;
 			var keycode = event.keyCode;
@@ -232,16 +231,36 @@ define([
 
 		}
 
-		document.body.addEventListener( "mousedown", handleMouseDown );
+		// if (document.mozFullScreen && document.webkitFullScreen) {
+		// 	console.log("fullscreen");
+		// }
+		// container.addEventListener( "mousedown", handleMouseDown );
+		document.body.addEventListener( "mousedown", handleMouseDown.bind( this ) );
 		function handleMouseDown( event ) {
+
+			// cheap way of blocking shooting while entering fullscreen
+			if ( !controls.getControls().enabled ) {
+				return;
+			}
+
 			if ( event.button === 0 ) {
-				gun();
+
+				if ( this.inHands instanceof Weapon ) {
+					this.LMB();
+				}
+
 			} else {
 
 			}
 		}
 
 	}
+
+	Player.prototype.LMB = function() {
+
+		this.inHands.shoot( this.clock );
+
+	};
 
 	Player.prototype.use = function() {
 

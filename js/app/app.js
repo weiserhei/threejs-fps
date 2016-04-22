@@ -78,7 +78,10 @@ define([
 	hud.infoText.style.bottom = "50px";
 	// var infoText = hud.box("Press <span class='highlight'>[ e ]</span> to ");
 
-	var player = new Player( hud );
+	var clock = new THREE.Clock();
+	var delta;
+
+	var player = new Player( hud, clock );
 
 	var particleGroup;
 
@@ -119,9 +122,6 @@ define([
 		animate();
 
 	};
-
-	var clock = new THREE.Clock();
-	var delta;
 
 	// MAIN LOOP
 	var animate = function () {

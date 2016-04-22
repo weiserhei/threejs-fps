@@ -80,7 +80,7 @@ define([
 			flashlight.mesh.castShadow = false;
 			flashlight.mesh.rotation.y = Math.PI;
 			flashlight.mesh.position.set( 0.1, -0.25, -0.1 );
-			player.playerMesh.add( flashlight.mesh );
+			player.getPawn().add( flashlight.mesh );
 			player.tools.flashlight = flashlight;
 
 		};
