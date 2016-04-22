@@ -15,8 +15,11 @@ define([
 	"debugGUI",
 	"controls",
 	"scene",
-	"classes/Inventar"
-], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar ) {
+	"classes/Inventar",
+	"camera",
+	"physics",
+	"sounds"
+], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, camera, physics, sounds ) {
 
 	'use strict';
 
@@ -89,6 +92,94 @@ define([
 
 		}
 
+		var options = {
+			energy: 50
+		};
+		var folder = debugGUI.getFolder("Shoot me Up");
+		folder.open();
+		folder.add( options, "energy" ).min( 1 ).max( 100 );
+
+
+		function shoot( target ) {
+
+			console.log( target );
+			var normal = target.normal;
+			var body = target.object;
+			var point = target.point;
+
+			var pP = camera.getWorldPosition();
+			// var invertPos = new THREE.Vector3();
+			var vec = new THREE.Vector3( point.x, point.y, point.z );
+			var invertPos = vec.clone().sub( pP ).normalize();
+
+			// body.applyForceAtWorldPoint ( normal, point )
+			// body.applyForceAtLocalPoint( normal, point );
+			invertPos.multiplyScalar( options.energy );
+			body.applyImpulse( invertPos );
+
+			sounds.positional.bow.bow.play();
+
+		}
+
+		// hud.x = hud.box( "end: " );
+		// hud.x2 = hud.box( "start: " );
+		// hud.x2.style.bottom = "50px";
+		// hud.x2.show( true );
+		// hud.x.show( true );
+
+
+		function gun() {
+
+
+			if ( sounds.railgun.isPlaying ) {
+				// sounds.railgun.stop();
+			}
+			sounds.railgun.isPlaying = false;
+			// sounds.railgun.stop();
+			sounds.railgun.play();
+
+			// var pP = controls.getControls().getObject().getWorldPosition();
+			var pP = camera.getWorldPosition();
+			var start = new Goblin.Vector3( pP.x, pP.y, pP.z );
+
+			// var direction = new THREE.Vector3( 0, 0, 1 );
+			// direction = direction.applyMatrix4( camera.matrixWorld );
+
+			// hud.x2.setText( direction.x + "/"+ direction.y + "/"+ direction.z );
+
+			var startPos = pP;
+			var direction = camera.getWorldDirection();
+			var distance = 20;
+
+			var newPos = new THREE.Vector3();
+			newPos.addVectors ( startPos, direction.multiplyScalar( distance ) );
+
+			// scene.remove( arrowHelper );
+			// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
+			// var arrowHelper = new THREE.ArrowHelper( direction, pP, 5, 0xFF0000 );
+			// scene.add( arrowHelper );
+
+			// var btRayToPoint = camera.getWorldPosition().clone().add( camera.getWorldDirection().clone().multiplyScalar( distance ) );
+			var btRayToPoint = newPos;
+
+			// var btRayToPoint = new THREE.Vector3( 0, 0, -distance ).applyMatrix4( controls.getControls().getObject().matrixWorld )
+			// hud.x.setText( btRayToPoint.x + " " + btRayToPoint.y + " "+ btRayToPoint.z );
+			// hud.x2.setText( start.x + " " + start.y + " "+ start.z );
+
+			var end = new Goblin.Vector3( btRayToPoint.x, btRayToPoint.y, btRayToPoint.z );
+
+			// var end = new Goblin.Vector3( 0, 0, 0 );
+			// console.log( start, end );
+			var intersections = physics.getWorld().rayIntersect( start, end );
+			// todo
+			// dont intersect with player cylinder -.-
+			if ( intersections.length > 1 ) {
+
+				var target = intersections[ 0 ];
+				shoot( target );
+			}
+			
+		}
 
 		this.target = undefined;
 		this.hud = hud;
@@ -141,14 +232,14 @@ define([
 
 		}
 
-		// document.body.addEventListener( "mousedown", handleMouseDown );
-		// function handleMouseDown( event ) {
-		// 	if ( event.button === 0 ) {
+		document.body.addEventListener( "mousedown", handleMouseDown );
+		function handleMouseDown( event ) {
+			if ( event.button === 0 ) {
+				gun();
+			} else {
 
-		// 	} else {
-
-		// 	}
-		// }
+			}
+		}
 
 	}
 

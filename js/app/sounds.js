@@ -23,6 +23,8 @@ define([
 		{ id: "schlag", url: "assets/sounds/schlag.ogg", volume: 0.2  },
 		// SAFE
 		{ id: "beep", url: "assets/sounds/beep.ogg", volume: 0.5  },
+		// GUN
+		{ id: "railgun", url: "assets/sounds/railgun.ogg", volume: 0.2  },
 	];
 
 	sounds = soundLoader.loadAudio( manifest );
@@ -31,6 +33,8 @@ define([
 	var positional = {};
 	positional.safe = {};
 	sounds.positional = positional;
+
+	sounds.positional.bow = soundLoader.loadPositionalAudio( [{ id: "bow", url: "assets/sounds/bow.ogg", volume: 0.5, setRefDistance: 8  }])
 
 	// SAFE
 	var manifest = [

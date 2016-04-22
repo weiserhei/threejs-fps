@@ -123,68 +123,8 @@ define([
 	var clock = new THREE.Clock();
 	var delta;
 
-	function shoot( target ) {
-
-		// console.log( target );
-		var normal = target.normal;
-		var body = target.object;
-		var point = target.point;
-
-		// body.applyForceAtWorldPoint ( normal, point )
-		// body.applyForceAtLocalPoint( normal, point );
-		body.applyImpulse( normal )
-
-	}
-
-	// hud.x = hud.box( "end: " );
-	// hud.x2 = hud.box( "start: " );
-	// hud.x2.style.bottom = "50px";
-	// hud.x2.show( true );
-	// hud.x.show( true );
-
 	// MAIN LOOP
 	var animate = function () {
-
-		// var pP = controls.getControls().getObject().getWorldPosition();
-		var pP = camera.getWorldPosition();
-		var start = new Goblin.Vector3( pP.x, pP.y, pP.z );
-
-		// var direction = new THREE.Vector3( 0, 0, 1 );
-		// direction = direction.applyMatrix4( camera.matrixWorld );
-
-		// hud.x2.setText( direction.x + "/"+ direction.y + "/"+ direction.z );
-
-		var startPos = pP;
-		var direction = camera.getWorldDirection();
-		var distance = 20;
-
-		var newPos = new THREE.Vector3();
-		newPos.addVectors ( startPos, direction.multiplyScalar( distance ) );
-
-		// scene.remove( arrowHelper );
-		// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
-		// var arrowHelper = new THREE.ArrowHelper( direction, pP, 5, 0xFF0000 );
-		// scene.add( arrowHelper );
-
-		// var btRayToPoint = camera.getWorldPosition().clone().add( camera.getWorldDirection().clone().multiplyScalar( distance ) );
-		var btRayToPoint = newPos;
-
-		// var btRayToPoint = new THREE.Vector3( 0, 0, -distance ).applyMatrix4( controls.getControls().getObject().matrixWorld )
-		// hud.x.setText( btRayToPoint.x + " " + btRayToPoint.y + " "+ btRayToPoint.z );
-		// hud.x2.setText( start.x + " " + start.y + " "+ start.z );
-
-		var end = new Goblin.Vector3( btRayToPoint.x, btRayToPoint.y, btRayToPoint.z );
-
-		// var end = new Goblin.Vector3( 0, 0, 0 );
-		// console.log( start, end );
-		var intersections = physics.getWorld().rayIntersect( start, end );
-		// todo
-		// dont intersect with player cylinder -.-
-		if ( intersections.length > 1 ) {
-
-			var target = intersections[ 0 ];
-			shoot( target );
-		}
 
 		delta = clock.getDelta();
 
