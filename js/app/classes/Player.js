@@ -166,12 +166,12 @@ define([
 		shotgun.maxCapacity = 8;
 		shotgun.currentCapacity = 2;
 		shotgun.magazines = 1;
-		shotgun.shootDelay = 0.1;
+		shotgun.shootDelay = 0.15;
 		shotgun.shootSound = sounds.railgun;
 		shotgun.reloadSound = sounds.shellload;
 		shotgun.reloadTime = 2;
 		// shotgun.emitterPool = "shotgun";
-		
+
 		hud.weaponText = hud.box();
 		hud.weaponText.show( true, this.inHands );
 		hud.weaponText.setHTML = "";

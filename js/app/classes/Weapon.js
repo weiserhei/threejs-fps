@@ -115,20 +115,6 @@ define([
 			],
 			callbacks: {
 
-				// [loaded]: fire -> checking
-
-				// [readyToFire]: fire -> [fireing] -> [readyToFire] | [emptyMag] | [outOfAmmo]
-
-				// [emptyMag]: fire -> reload -> [reloading]
-
-				// [outOfAmmo]: fire -> [emptyFire] -> ?
-
-				// [readyToFire] reload -> [realoading] -> [readyToFire]
-
-				// [emptyMag]: reload -> [reloading] -> [readyToFire]
-
-				// [fireing]: x -> emptyMag | readyToFire
-
 				onenterstate: function() {
 					console.log( "current state: ", this.current);
 				},
@@ -151,6 +137,21 @@ define([
 						scope.shootSound.isPlaying = false;
 						// // sounds.railgun.stop();
 						scope.shootSound.play();
+
+						var intersections = raycast();
+
+						if ( intersections.length > 0 ) {
+
+							var target = intersections[ 0 ];
+
+							if ( isFinite( target.object.mass ) ) {
+								// is not static object
+								// -> launch into space
+								applyImpulse( target );
+
+							}
+
+						}
 
 					}
 
@@ -209,11 +210,8 @@ define([
 					if ( missing > that.magazines * that.maxCapacity ) {
 						numberToReload = that.magazines * that.maxCapacity;
 					}
-					// instant mag reduce on reload
-					// or do it when finished reloading?
-					console.log("missing shots: ", missing );
+
 					// that.magazines = ( that.magazines * that.maxCapacity - missing ) / that.maxCapacity; 
-					console.log( "onreloading magazines", that.magazines );
 					// that.magazines--;
 
 					var intervalHandle = setIntervalX ( function ( x ) {
@@ -263,7 +261,7 @@ define([
 		this.maxCapacity = 30;
 		this.currentCapacity = this.maxCapacity;
 		this.magazines = 3;
-		this.shootDelay = 0;
+		this.shootDelay = 1;
 		this.shootSound;
 		this.reloadSound;
 		this.emptySound = sounds.weaponclick;
@@ -283,47 +281,14 @@ define([
 
 	Weapon.prototype.shoot = function( clock ) {
 
-		/*
-		if ( this.reloading === true ) return;
+		// if fsm.reloading dont count delay?
 
-		var delay = clock.elapsedTime - this.lastShotFired;
-		
+		var delay = clock.getElapsedTime() - this.lastShotFired;
 		// exit when fireing to fast
-		if ( delay < this.shootDelay ) { return; }
-		
-		this.lastShotFired = clock.elapsedTime;
-
-		if( this.currentCapacity <= 0 ) {
-			// play empty sound
-			this.reload();
-			return false;
-		}
-		*/
-
-		// fire emitter
-		// this.alterCapacity( -1 );
-
-		// this.shootSound.isPlaying = false;
-		// sounds.railgun.stop();
-		// this.shootSound.play();
+		if ( delay < this.shootDelay ) { return false; }
+		this.lastShotFired = clock.getElapsedTime();		
 
 		this.fsm.fire();
-
-		var intersections = raycast();
-
-		if ( intersections.length > 0 ) {
-
-			var target = intersections[ 0 ];
-
-			if ( isFinite( target.object.mass ) ) {
-				// is not static object
-				// -> launch into space
-				applyImpulse( target );
-
-			}
-
-		}
-
 
 	};
 
@@ -332,87 +297,6 @@ define([
 	};
 
 	Weapon.prototype.fireEffect = function( ammoPoint, ammoNormal, body ) {
-
-	};
-
-	Weapon.prototype.reload = function() {
-
-		/*
-		// dont reload if he is alreay reloading or the magazine is full
-		if ( this.reloading === true || this.maxCapacity === this.currentCapacity ) return;
-
-		if ( this.magazines === 0 ) {
-			
-			this.emptySound.play( 0.1 )
-			return;
-		}
-		
-		this.reloading = true;
-
-		// single shells reload
-		if( this.name === "shotgun" ) {
-			
-			var toggle = 2;
-			var time = 300;
-			var missing = this.maxCapacity - this.currentCapacity;
-			var that = this;
-
-			// instant mag reduce on reload
-			// or do it when finished reloading?
-			this.magazines--; 
-
-			var intervalHandle = setIntervalX ( function ( x ) {
-
-				// var origin = camera.getWorldPosition();
-				// origin.x += toggle;
-				// toggle *= -1;
-
-				// that.reloadSound.playAtWorldPosition( origin );
-				that.reloadSound.play();
-				
-				// that.currentCapacity ++;
-				that.alterCapacity( 1 );
-
-				if ( that.currentCapacity === that.maxCapacity ) {
-					that.reloading = false;
-				}
-				
-				that.onChanged();
-
-			}, time, missing );
-		} 
-		// magazines reload
-		else {
-
-			var that = this;
-
-			this.reloadSound.play( 0.4 );
-
-			setTimeout( function () { 
-				
-				that.magazines--;
-				that.reloading = false;
-				// that.currentCapacity = that.maxCapacity;
-				that.alterCapacity( that.maxCapacity );
-			
-			}, that.reloadTime * 1000 );
-
-		}
-		*/
-	};
-
-	Weapon.prototype.alterCapacity = function ( howMuch ) {
-
-		/*
-		this.currentCapacity += howMuch;
-
-		// this.capacity -= howMuch;
-		if( this.currentCapacity < 0 ) 
-		{
-			this.currentCapacity = 0;
-		}
-		this.onChanged();
-		*/
 
 	};
 
