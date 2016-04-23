@@ -161,8 +161,19 @@ define([
 
 		this.inHands = shotgun;
 
+
+		shotgun.name = "shotgun";
+		shotgun.maxCapacity = 8;
+		shotgun.currentCapacity = 2;
+		shotgun.magazines = 1;
+		shotgun.shootDelay = 0.1;
+		shotgun.shootSound = sounds.railgun;
+		shotgun.reloadSound = sounds.shellload;
+		shotgun.reloadTime = 2;
+		// shotgun.emitterPool = "shotgun";
+		
 		hud.weaponText = hud.box();
-		// hud.weaponText.show( true, this.inHands );
+		hud.weaponText.show( true, this.inHands );
 		hud.weaponText.setHTML = "";
 		hud.weaponText.style = "padding:4px; background:rgba( 0, 0, 0, 0.25 ); width: unset; text-align:right; right: 100px;";
 
@@ -174,16 +185,6 @@ define([
 		for ( var key in weapons ) {
 			weapons[key].setCallback( this, update );
 		}	
-
-		shotgun.name = "shotgun";
-		shotgun.maxCapacity = 8;
-		shotgun.currentCapacity = 2;
-		shotgun.magazines = 1;
-		shotgun.shootDelay = 0.1;
-		shotgun.shootSound = sounds.railgun;
-		shotgun.reloadSound = sounds.shellload;
-		// shotgun.reloadTime = "shotgun";
-		// shotgun.emitterPool = "shotgun";
 
 		var toggle = false; // toggle key down
 

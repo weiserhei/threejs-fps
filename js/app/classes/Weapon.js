@@ -10,8 +10,9 @@ define([
 	"physics",
 	"sounds",
 	"controls",
-	"camera"
-], function ( THREE, scene, debugGUI, physics, sounds, controls, camera ) {
+	"camera",
+	"../../libs/state-machine.min",
+], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, StateMachine ) {
 
 	'use strict';
 
@@ -93,6 +94,187 @@ define([
 
 	}
 
+	function setupFSM( scope ) {
+
+		// states: loaded, checking, reloading, emptyMag, outOfAmmo
+		// events: fire, readyToFire, reload, empty, emptyFire
+
+		var fsm = StateMachine.create({
+
+			initial: 'loaded',
+			events: [
+				// { name: 'reset', from: '*',  to: 'locked' },
+				{ name: 'fire', from: 'loaded', to: 'checking' },
+				{ name: 'readyToFire', from: ['checking','reloading'], to: 'loaded' },
+				{ name: 'fire', from: 'emptyMag', to: 'reloading' },
+				{ name: 'fire', from: 'outOfAmmo', to: 'emptyMag' },
+				{ name: 'reload', from: ['emptyMag','loaded'], to: 'reloading' },
+				{ name: 'empty', from: 'checking', to: 'emptyMag' },
+				{ name: 'emptyFire', from: ['emptyMag','outOfAmmo'], to: 'outOfAmmo' },
+				// { name: 'restock', from: '*', to: 'restocking' },
+			],
+			callbacks: {
+
+				// [loaded]: fire -> checking
+
+				// [readyToFire]: fire -> [fireing] -> [readyToFire] | [emptyMag] | [outOfAmmo]
+
+				// [emptyMag]: fire -> reload -> [reloading]
+
+				// [outOfAmmo]: fire -> [emptyFire] -> ?
+
+				// [readyToFire] reload -> [realoading] -> [readyToFire]
+
+				// [emptyMag]: reload -> [reloading] -> [readyToFire]
+
+				// [fireing]: x -> emptyMag | readyToFire
+
+				onenterstate: function() {
+					console.log( "current state: ", this.current);
+				},
+
+				onbeforefire: function() {
+
+					if( scope.currentCapacity > 0 ) {
+						scope.currentCapacity -= 1;
+					}
+
+					scope.onChanged();
+					
+				},
+
+				onfire: function( event, from, to ) {
+
+					if ( to === "checking" ) {
+
+						// fire emitter
+						scope.shootSound.isPlaying = false;
+						// // sounds.railgun.stop();
+						scope.shootSound.play();
+
+					}
+
+				},
+
+				onchecking: function() {
+
+					if( scope.currentCapacity === 0 ) {
+						fsm.empty();
+					} else {
+						fsm.readyToFire();
+					}
+
+
+				},
+
+				onemptyFire: function() {
+
+					// sound click
+					sounds.weaponclick.play();
+
+				},
+
+				onemptyMag: function() {
+
+					if ( scope.magazines <= 0 ) {
+
+						fsm.emptyFire();
+
+					}
+
+					// fsm.reload();
+
+				},
+
+				onreloading: function() {
+					// play animation
+					// play sound
+					// onEnded: transition
+
+					// scope.reloadSound.play();
+					fsm.readyToFire();
+
+				},
+
+				onbeforereload: function() {
+					// stop reloading without magazines left
+					console.log( scope.magazines );
+					if ( scope.magazines <= 0 ) {
+						return false;
+					}
+
+				},
+
+				onleavereloading: function() {
+					// reload is async
+					
+					var that = scope;
+					var sm = this;
+
+					// var toggle = 2;
+					var time = 300;
+					var missing = that.maxCapacity - that.currentCapacity;
+
+					// instant mag reduce on reload
+					// or do it when finished reloading?
+					that.magazines--; 
+
+					var intervalHandle = setIntervalX ( function ( x ) {
+
+						// var origin = camera.getWorldPosition();
+						// origin.x += toggle;
+						// toggle *= -1;
+
+						// that.reloadSound.playAtWorldPosition( origin );
+						that.reloadSound.play();
+
+						that.currentCapacity ++;
+						// that.alterCapacity( 1 );
+						// console.log( that.currentCapacity, that.maxCapacity );
+						if ( that.currentCapacity === that.maxCapacity ) {
+							// that.reloading = false;
+							sm.transition();
+						}
+
+						that.onChanged();
+
+					}, time, missing );
+
+					/*
+					setTimeout( function () { 
+						
+						that.magazines--;
+						that.currentCapacity = that.maxCapacity;
+						that.onChanged();
+
+						sm.transition();
+					
+					}, that.reloadTime * 1000 );
+					*/
+					// console.log( StateMachine );
+					return StateMachine.ASYNC;
+
+				},
+
+				onreload: function() {
+					// play sound
+					// set magazine capacity
+				},
+				
+			}
+
+		});
+
+		folder.open();
+
+		folder.add( fsm, "current" ).name("Current State").listen();
+		folder.add( fsm, "fire" ).name("fire");
+		folder.add( fsm, "reload" ).name("reload");
+
+		return fsm;
+
+	}
+
 	function Weapon() {
 
 		this.name = "";
@@ -107,6 +289,8 @@ define([
 		// fsm?
 		this.reloading = false;
 
+		this.fsm = setupFSM( this );
+
 	}
 
 	Weapon.prototype.toString = function() {
@@ -117,6 +301,7 @@ define([
 
 	Weapon.prototype.shoot = function( clock ) {
 
+		/*
 		if ( this.reloading === true ) return;
 
 		var delay = clock.elapsedTime - this.lastShotFired;
@@ -131,13 +316,16 @@ define([
 			this.reload();
 			return false;
 		}
+		*/
 
 		// fire emitter
-		this.alterCapacity( -1 );
+		// this.alterCapacity( -1 );
 
-		this.shootSound.isPlaying = false;
+		// this.shootSound.isPlaying = false;
 		// sounds.railgun.stop();
-		this.shootSound.play();
+		// this.shootSound.play();
+
+		this.fsm.fire();
 
 		var intersections = raycast();
 
@@ -167,6 +355,7 @@ define([
 
 	Weapon.prototype.reload = function() {
 
+		/*
 		// dont reload if he is alreay reloading or the magazine is full
 		if ( this.reloading === true || this.maxCapacity === this.currentCapacity ) return;
 
@@ -227,10 +416,12 @@ define([
 			}, that.reloadTime * 1000 );
 
 		}
+		*/
 	};
 
 	Weapon.prototype.alterCapacity = function ( howMuch ) {
 
+		/*
 		this.currentCapacity += howMuch;
 
 		// this.capacity -= howMuch;
@@ -239,6 +430,7 @@ define([
 			this.currentCapacity = 0;
 		}
 		this.onChanged();
+		*/
 
 	};
 
