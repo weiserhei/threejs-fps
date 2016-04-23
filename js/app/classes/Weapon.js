@@ -182,32 +182,22 @@ define([
 
 					}
 
-					// fsm.reload();
-
-				},
-
-				onreloading: function() {
-					// play animation
-					// play sound
-					// onEnded: transition
-
-					// scope.reloadSound.play();
-					fsm.readyToFire();
-
 				},
 
 				onbeforereload: function() {
 					// stop reloading without magazines left
-					console.log( scope.magazines );
-					if ( scope.magazines <= 0 ) {
+					// and if magazines full, stop too ofc -.-
+					var fullMagazines = scope.maxCapacity === scope.currentCapacity;
+					var noMagazinesLeft = scope.magazines <= 0;
+
+					if ( noMagazinesLeft || fullMagazines ) {
 						return false;
 					}
 
 				},
 
-				onleavereloading: function() {
-					// reload is async
-					
+				onreloading: function() {
+
 					var that = scope;
 					var sm = this;
 
@@ -215,9 +205,16 @@ define([
 					var time = 300;
 					var missing = that.maxCapacity - that.currentCapacity;
 
+					var numberToReload = missing;
+					if ( missing > that.magazines * that.maxCapacity ) {
+						numberToReload = that.magazines * that.maxCapacity;
+					}
 					// instant mag reduce on reload
 					// or do it when finished reloading?
-					that.magazines--; 
+					console.log("missing shots: ", missing );
+					// that.magazines = ( that.magazines * that.maxCapacity - missing ) / that.maxCapacity; 
+					console.log( "onreloading magazines", that.magazines );
+					// that.magazines--;
 
 					var intervalHandle = setIntervalX ( function ( x ) {
 
@@ -226,39 +223,24 @@ define([
 						// toggle *= -1;
 
 						// that.reloadSound.playAtWorldPosition( origin );
+						that.reloadSound.isPlaying = false;
 						that.reloadSound.play();
+						that.magazines -= ( 1 / that.maxCapacity );
 
 						that.currentCapacity ++;
 						// that.alterCapacity( 1 );
-						// console.log( that.currentCapacity, that.maxCapacity );
-						if ( that.currentCapacity === that.maxCapacity ) {
+
+						// if ( that.currentCapacity === that.maxCapacity ) {
+						// wat?
+						if ( that.currentCapacity - numberToReload === that.maxCapacity - missing ) {
 							// that.reloading = false;
-							sm.transition();
+							sm.readyToFire();
 						}
 
 						that.onChanged();
 
-					}, time, missing );
+					}, time, numberToReload );
 
-					/*
-					setTimeout( function () { 
-						
-						that.magazines--;
-						that.currentCapacity = that.maxCapacity;
-						that.onChanged();
-
-						sm.transition();
-					
-					}, that.reloadTime * 1000 );
-					*/
-					// console.log( StateMachine );
-					return StateMachine.ASYNC;
-
-				},
-
-				onreload: function() {
-					// play sound
-					// set magazine capacity
 				},
 				
 			}
