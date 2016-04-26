@@ -19,8 +19,9 @@ define([
 	"classes/Weapon",
 	"physics",
 	"sounds",
-	"container"
-], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, Weapon, physics, sounds, container ) {
+	"container",
+	"initWeapons"
+], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, Weapon, physics, sounds, container, initWeapons ) {
 
 	'use strict';
 
@@ -103,38 +104,6 @@ define([
 	// hud.x.show( true );
 
 
-	// var that = this;
-	// var hud = hud;
- //    var weapons = {};
-
-	// weapons.portalgun = new Weapon( "portalgun", {
-	// 	maxCapacity: 0, 
-	// 	magazines: 0, 
-	// 	reloadTime: 0, 
-	// 	shootDelay: 0.5,
-	// 	shootSound: that.sounds.swosh1,
-	// 	altSound: that.sounds.swosh5,
-	// 	// reloadSound: that.sounds.sniperreload,
-	// 	// emitterPool: this.muzzleFlash,
-	// 	} );
-
- //    weapons.sniper = new Weapon( "sniper", { 
-	// 	maxCapacity: 6, 
-	// 	magazines: 2, 
-	// 	reloadTime: 4, 
-	// 	shootDelay: 1,
-	// 	shootSound: that.sounds.sniperrifle,
-	// 	reloadSound: that.sounds.sniperreload,
-	// 	// emitterPool: this.muzzleFlash,
-	// 	} );
-
-	// for ( var key in weapons ) {
-	// 	weapons[key].emitterPool = this.muzzleFlash;
-	// 	weapons[key].emptySound = this.sounds.soundClick;
-	// 	weapons[key].restockSound = this.sounds.sound3;
-	// }	
-
-
 	function Player( hud, clock ) {
 
 		this.tools = {};
@@ -145,70 +114,6 @@ define([
 		var playerMesh = controls.getControls().getObject();
 		this._playerMesh = playerMesh;
 
-
-		var T_shotgun = new THREE.Texture();
-		var textureLoader = new THREE.ImageLoader(  );
-		textureLoader.load( 'assets/models/shotgun_l4d/twd_shotgun.png', function ( image ) {
-
-			T_shotgun.image = image;
-			T_shotgun.needsUpdate = true;
-
-		} );	
-		var loader = new THREE.OBJLoader(  );
-		loader.load( 'assets/models/shotgun_l4d/shotgun.obj', function ( object ) {
-			
-			/*		
-				object.traverse( function ( child ) {
-
-					if ( child instanceof THREE.Mesh ) {
-
-						child.material.map = T_shotgun;
-
-					}
-
-				} );
-			*/
-
-			object = object.children[0];
-
-			object.material.map = T_shotgun;
-
-			object.scale.set( 0.55,0.55,0.55 ); 
-			object.receiveShadow = true;
-			object.material.map.anisotropy = 8; //front barrel of the weapon gets blurry
-			object.material.color.setHSL( 0, 0, 1 );
-
-			object.rotation.y = -90 * Math.PI / 180;
-			object.rotation.x = -2 * Math.PI / 180;
-			
-			// http://stackoverflow.com/questions/12666570/how-to-change-the-zorder-of-object-with-threejs
-			
-			var pyramidPercentX = 56;
-			var pyramidPercentY = -28;
-			var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-			var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-			object.position.x = pyramidPositionX * camera.aspect;
-			object.position.y = pyramidPositionY;
-			object.position.z = -0.5;
-					
-			var pyramidPercentX = 58;
-			var pyramidPercentY = 35;
-			var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-			var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-				
-			object.emitterVector = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.35 );
-
-			// console.log( object );
-			
-			// weaponModels.shotgun = object;
-			// cameraChildrenGroup.add( object );
-
-			// object.position.y = -1;
-			playerMesh.add( object );
-
-		});
-
-
 		this.flashlight = new createFlashlight( playerMesh );
 
 		this.target = undefined;
@@ -218,23 +123,9 @@ define([
 
 		this.inHands;
 
+		var weapons = initWeapons( playerMesh );
 
-		var weapons = {};
-		var shotgun = new Weapon();
-		weapons.shotgun = shotgun;
-
-		this.inHands = shotgun;
-
-
-		shotgun.name = "shotgun";
-		shotgun.maxCapacity = 8;
-		shotgun.currentCapacity = 2;
-		shotgun.magazines = 1;
-		shotgun.shootDelay = 0.15;
-		shotgun.shootSound = sounds.railgun;
-		shotgun.reloadSound = sounds.shellload;
-		shotgun.reloadTime = 2;
-		// shotgun.emitterPool = "shotgun";
+		this.inHands = weapons.shotgun;
 
 		hud.weaponText = hud.box();
 		hud.weaponText.show( true, this.inHands );

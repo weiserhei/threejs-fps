@@ -80,14 +80,13 @@ define([
 
 	var clock = new THREE.Clock();
 	var delta;
-
-	var player = new Player( hud, clock );
-
+	var player;;
 	var particleGroup;
 
 	// Start program
 	var initialize = function ( preloaded ) {
 
+		player = new Player( hud, clock );
 		// todo
 		// abstract item initialization
 		// and constraints to other game elemnts

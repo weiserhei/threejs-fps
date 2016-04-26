@@ -94,7 +94,7 @@ define([
 
 	}
 
-	function setupFSM( scope ) {
+	function setupFSM( weapon ) {
 
 		// states: loaded, checking, reloading, emptyMag, outOfAmmo
 		// events: fire, readyToFire, reload, empty, emptyFire
@@ -116,16 +116,16 @@ define([
 			callbacks: {
 
 				onenterstate: function() {
-					console.log( "current state: ", this.current);
+					// console.log( "current state: ", this.current);
 				},
 
 				onbeforefire: function() {
 
-					if( scope.currentCapacity > 0 ) {
-						scope.currentCapacity -= 1;
+					if( weapon.currentCapacity > 0 ) {
+						weapon.currentCapacity -= 1;
 					}
 
-					scope.onChanged();
+					weapon.onChanged();
 					
 				},
 
@@ -134,9 +134,9 @@ define([
 					if ( to === "checking" ) {
 
 						// fire emitter
-						scope.shootSound.isPlaying = false;
+						weapon.shootSound.isPlaying = false;
 						// // sounds.railgun.stop();
-						scope.shootSound.play();
+						weapon.shootSound.play();
 
 						var intersections = raycast();
 
@@ -159,7 +159,7 @@ define([
 
 				onchecking: function() {
 
-					if( scope.currentCapacity === 0 ) {
+					if( weapon.currentCapacity === 0 ) {
 						fsm.empty();
 					} else {
 						fsm.readyToFire();
@@ -177,7 +177,7 @@ define([
 
 				onemptyMag: function() {
 
-					if ( scope.magazines <= 0 ) {
+					if ( weapon.magazines <= 0 ) {
 
 						fsm.emptyFire();
 
@@ -188,8 +188,8 @@ define([
 				onbeforereload: function() {
 					// stop reloading without magazines left
 					// and if magazines full, stop too ofc -.-
-					var fullMagazines = scope.maxCapacity === scope.currentCapacity;
-					var noMagazinesLeft = scope.magazines <= 0;
+					var fullMagazines = weapon.maxCapacity === weapon.currentCapacity;
+					var noMagazinesLeft = weapon.magazines <= 0;
 
 					if ( noMagazinesLeft || fullMagazines ) {
 						return false;
@@ -199,7 +199,7 @@ define([
 
 				onreloading: function() {
 
-					var that = scope;
+					var that = weapon;
 					var sm = this;
 
 					// var toggle = 2;
@@ -266,8 +266,7 @@ define([
 		this.reloadSound;
 		this.emptySound = sounds.weaponclick;
 
-		// fsm?
-		this.reloading = false;
+		this.mesh;
 
 		this.fsm = setupFSM( this );
 
