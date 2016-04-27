@@ -132,7 +132,7 @@ define([
 		var shotgun = new Weapon();
 		shotgun.name = "shotgun";
 		shotgun.maxCapacity = 8;
-		shotgun.currentCapacity = 20;
+		shotgun.currentCapacity = 8;
 		shotgun.magazines = 1;
 		shotgun.shootDelay = 0.15;
 		shotgun.shootSound = sounds.railgun;
