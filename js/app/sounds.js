@@ -27,6 +27,8 @@ define([
 		{ id: "railgun", url: "assets/sounds/railgun.ogg", volume: 0.1  },
 		{ id: "shellload", url: "assets/sounds/shell-load.ogg", volume: 0.2  },
 		{ id: "weaponclick", url: "assets/sounds/weaponclick.ogg", volume: 0.3  },
+		{ id: "sniperrifle", url: "assets/sounds/sniper.ogg", volume: 0.3  },
+		{ id: "sniperreload", url: "assets/sounds/reload.ogg", volume: 0.3  },
 	];
 
 	sounds = soundLoader.loadAudio( manifest );

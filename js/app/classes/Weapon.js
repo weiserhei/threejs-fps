@@ -12,7 +12,8 @@ define([
 	"controls",
 	"camera",
 	"../../libs/state-machine.min",
-], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, StateMachine ) {
+	"muzzleparticle"
+], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, StateMachine, muzzleparticle ) {
 
 	'use strict';
 
@@ -37,6 +38,9 @@ define([
 	folder.open();
 	folder.add( options, "energy" ).min( 1 ).max( 100 );
 
+	// var emitterHelper = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshLambertMaterial({ wireframe: true }));
+	// camera.add( emitterHelper );
+	// folder.add( emitterHelper.material, "visible" );
 
 	var endPoint = new Goblin.Vector3();
 	// var startPoint = new Goblin.Vector3();
@@ -110,13 +114,14 @@ define([
 				{ name: 'fire', from: 'outOfAmmo', to: 'emptyMag' },
 				{ name: 'reload', from: ['emptyMag','loaded'], to: 'reloading' },
 				{ name: 'empty', from: 'checking', to: 'emptyMag' },
-				{ name: 'emptyFire', from: ['emptyMag','outOfAmmo'], to: 'outOfAmmo' },
+				{ name: 'emptyFire', from: 'emptyMag', to: 'outOfAmmo' },
 				// { name: 'restock', from: '*', to: 'restocking' },
 			],
 			callbacks: {
 
-				onenterstate: function() {
+				onenterstate: function( event, from, to ) {
 					// console.log( "current state: ", this.current);
+					// console.log( event, from, to );
 				},
 
 				onbeforefire: function() {
@@ -137,6 +142,7 @@ define([
 						weapon.shootSound.isPlaying = false;
 						// // sounds.railgun.stop();
 						weapon.shootSound.play();
+						weapon.muzzleparticle.triggerPoolEmitter( 1 );
 
 						var intersections = raycast();
 
@@ -199,45 +205,7 @@ define([
 
 				onreloading: function() {
 
-					var that = weapon;
-					var sm = this;
-
-					// var toggle = 2;
-					var time = 300;
-					var missing = that.maxCapacity - that.currentCapacity;
-
-					var numberToReload = missing;
-					if ( missing > that.magazines * that.maxCapacity ) {
-						numberToReload = that.magazines * that.maxCapacity;
-					}
-
-					// that.magazines = ( that.magazines * that.maxCapacity - missing ) / that.maxCapacity; 
-					// that.magazines--;
-
-					var intervalHandle = setIntervalX ( function ( x ) {
-
-						// var origin = camera.getWorldPosition();
-						// origin.x += toggle;
-						// toggle *= -1;
-
-						// that.reloadSound.playAtWorldPosition( origin );
-						that.reloadSound.isPlaying = false;
-						that.reloadSound.play();
-						that.magazines -= ( 1 / that.maxCapacity );
-
-						that.currentCapacity ++;
-						// that.alterCapacity( 1 );
-
-						// if ( that.currentCapacity === that.maxCapacity ) {
-						// wat?
-						if ( that.currentCapacity - numberToReload === that.maxCapacity - missing ) {
-							// that.reloading = false;
-							sm.readyToFire();
-						}
-
-						that.onChanged();
-
-					}, time, numberToReload );
+					weapon.reload( fsm.readyToFire, fsm );
 
 				},
 				
@@ -268,6 +236,8 @@ define([
 
 		this.mesh;
 
+		this.muzzleparticle = muzzleparticle;
+
 		this.fsm = setupFSM( this );
 
 	}
@@ -275,6 +245,21 @@ define([
 	Weapon.prototype.toString = function() {
 
 		return this.name + ": " + this.currentCapacity + "/" + this.maxCapacity * this.magazines + " Ammo";
+
+	};
+
+
+	Weapon.prototype.activate = function() {
+		this.mesh.traverse( function ( object ) { object.visible = true; } );
+
+		if ( typeof this.muzzleparticle !== 'undefined' ) { 
+
+			this.muzzleparticle.mesh.position.copy( this.mesh.emitterVector );
+			// emitterHelper.position.copy( this.mesh.emitterVector );
+
+		}
+
+		this.onChanged();
 
 	};
 
@@ -288,6 +273,66 @@ define([
 		this.lastShotFired = clock.getElapsedTime();		
 
 		this.fsm.fire();
+
+	};
+
+	Weapon.prototype.reload = function( callback, scope ) {
+
+		var weapon = this;
+
+		if ( this.name === "shotgun" ) {
+
+			// var toggle = 2;
+			var missing = this.maxCapacity - this.currentCapacity;
+
+			var numberToReload = missing;
+			if ( missing > this.magazines * this.maxCapacity ) {
+				numberToReload = this.magazines * this.maxCapacity;
+			}
+
+			// that.magazines = ( that.magazines * that.maxCapacity - missing ) / that.maxCapacity; 
+			// that.magazines--;
+
+			var intervalHandle = setIntervalX ( function ( x ) {
+
+				// var origin = camera.getWorldPosition();
+				// origin.x += toggle;
+				// toggle *= -1;
+
+				// that.reloadSound.playAtWorldPosition( origin );
+				weapon.reloadSound.isPlaying = false;
+				weapon.reloadSound.play();
+				weapon.magazines -= ( 1 / weapon.maxCapacity );
+
+				weapon.currentCapacity ++;
+				// that.alterCapacity( 1 );
+
+				// if ( that.currentCapacity === that.maxCapacity ) {
+				// wat?
+				if ( weapon.currentCapacity - numberToReload === weapon.maxCapacity - missing ) {
+					weapon.fsm.readyToFire();
+				}
+
+				weapon.onChanged();
+
+			}, this.reloadTime * 1000, numberToReload );
+
+		} else {
+
+			this.reloadSound.play();
+
+			setTimeout( function () { 
+				
+				weapon.magazines--;
+				weapon.reloading = false;
+				weapon.currentCapacity = weapon.maxCapacity;
+				weapon.onChanged();
+				// that.alterCapacity( that.maxCapacity );
+				weapon.fsm.readyToFire();
+
+			}, weapon.reloadTime * 1000 );
+
+		}
 
 	};
 

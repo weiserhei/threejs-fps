@@ -9,7 +9,7 @@ define(["three","container","scene"], function (THREE, container, scene) {
     var screen_height = window.innerHeight;
 
     // RENDERER
-    var renderer = new THREE.WebGLRenderer( { antialias:true } );       
+    var renderer = new THREE.WebGLRenderer( { antialias:true } );
     // var renderer = new THREE.WebGLRenderer( { antialias:true, alpha: true, logarithmicDepthBuffer: false } );       
     renderer.setSize( screen_width, screen_height );
     // renderer.setClearColor( 0x778899, 1);
@@ -34,4 +34,5 @@ define(["three","container","scene"], function (THREE, container, scene) {
     container.appendChild( renderer.domElement );
 
     return renderer;
+
 });

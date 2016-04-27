@@ -38,71 +38,9 @@ define([
 	var origin = new THREE.Vector3();
 	var direction = new THREE.Vector3();
 
-
-	function createFlashlight( mesh ) {
-
-		//spotlight
-		var spotLight = new THREE.SpotLight( 0xf1ffb1, 0 ); //0xFFFFFF //0x44ffaa mystic green 500, 4 0xCCFF88
-		spotLight.angle = 40 * Math.PI / 180;
-		spotLight.distance = 15;
-		spotLight.penumbra = 0.5;
-		spotLight.decay = 1.5;
-		spotLight.position.set( 0.1, -0.1, 0.1 );
-		spotLight.castShadow = true;
-		// spotLight.shadowBias = 50;
-		// spotLight.shadowCameraFov = 60;
-		spotLight.shadow.camera.near = 0.01;
-		spotLight.shadow.camera.far = 30;
-		// spotLight.shadowMapWidth = spotLight.shadowMapHeight = 1024;
-		// spotLight.shadowDarkness = 0.5;
-
-		// light helper
-		spotLightHelper = new THREE.SpotLightHelper( spotLight );
-		scene.add( spotLightHelper );
-		spotLightHelper.updateMatrixWorld();
-		spotLightHelper.visible = false;
-
-		mesh.add( spotLight );
-		spotLight.target.position.set( 0, 0, -10 );
-		mesh.add( spotLight.target );
-		mesh.updateMatrixWorld();
-		spotLightHelper.update();
-
-		// gui
-		var gui = debugGUI.getFolder("Flashlight");
-		
-		buildGui( spotLight );
-
-		function buildGui( light ) {
-
-			gui.addThreeColor( light, "color" );
-			gui.add( light, "intensity" ).min( 0 ).max( 5 );
-			gui.add( light, "distance" ).min( 0 ).max( 20 );
-			gui.add( light, "angle" ).min( 0 ).max( Math.PI / 2 ).onChange( update );
-			gui.add( light, "penumbra" ).min( 0 ).max( 1 );
-			gui.add( light, "decay" ).min( 0 ).max( 100 );
-			gui.add( spotLightHelper, "visible" ).name("Helper visible");
-
-			function update() {
-				spotLightHelper.update();
-			}
-
-		}
-
-		return spotLight;
-	}
-
 	Player.prototype.getPawn = function() {
 		return this._playerMesh;
 	};
-
-
-	// hud.x = hud.box( "end: " );
-	// hud.x2 = hud.box( "start: " );
-	// hud.x2.style.bottom = "50px";
-	// hud.x2.show( true );
-	// hud.x.show( true );
-
 
 	function Player( hud, clock ) {
 
@@ -114,7 +52,7 @@ define([
 		var playerMesh = controls.getControls().getObject();
 		this._playerMesh = playerMesh;
 
-		this.flashlight = new createFlashlight( playerMesh );
+		// this.flashlight = new createFlashlight( playerMesh );
 
 		this.target = undefined;
 		this.hud = hud;
@@ -124,8 +62,11 @@ define([
 		this.inHands;
 
 		var weapons = initWeapons( playerMesh );
+		// this.weapons = weapons;
+		this.weapons = [];
 
 		this.inHands = weapons.shotgun;
+		weapons.shotgun.activate();
 
 		hud.weaponText = hud.box();
 		hud.weaponText.show( true, this.inHands );
@@ -139,6 +80,7 @@ define([
 	    // register update hud on ammo change and reload
 		for ( var key in weapons ) {
 			weapons[key].setCallback( this, update );
+			this.weapons.push( weapons[key] );
 		}	
 
 		var toggle = false; // toggle key down
@@ -210,7 +152,155 @@ define([
 			}
 		}
 
+		document.addEventListener("mousewheel", MouseWheelHandler.bind( this ), false);
+		// Firefox
+		document.addEventListener("DOMMouseScroll", MouseWheelHandler.bind( this ), false);
+		function MouseWheelHandler(e) {
+
+			// cross-browser wheel delta
+			var e = window.event || e; // old IE support
+			var delta = Math.max( -1, Math.min( 1, ( e.wheelDelta || -e.detail ) ) );
+			
+			// env.player.selectWeapon( delta );
+			this.selectWeapon( delta );
+
+			return false;
+		}
+
+
+
 	}
+
+	// mousewheel selection
+	Player.prototype.selectWeapon = function( delta ) {
+		
+		var currentIndex = this.weapons.indexOf( this.inHands );
+		var size = 0;
+		var select = currentIndex - delta;
+		
+		for ( var key in this.weapons ) {
+			if (this.weapons.hasOwnProperty(key)) size++;
+		}
+		
+		// select the first weapon after last weapon and vice versa
+		if ( select > size-1 ) { select = 0; } 
+		else if ( select < 0 ) { select = size-1; }
+
+		this.switchWeapon ( select );
+
+	};
+
+	Player.prototype.switchWeapon = function( number ) {
+
+		if ( ! this.inHands instanceof Weapon ) {
+			return false;
+		}
+
+		//dont switch weapons while reloading
+		// console.log( "current", this.inHands.fsm.current );
+		// console.log( "can", this.inHands.fsm.transitions() );
+		var fsm = this.inHands.fsm;
+		// if ( fsm.cannot( "fire" ) && fsm.cannot( "reload" ) ) {
+		if ( fsm.is( "reloading" ) ) {
+			return false;
+		}
+		
+		var newWeapon = number || 0;
+		// if ( this.inHands !== this.weapons[ newWeapon ] ) { this.onChanged(); }
+
+		// Hide all, then show new selected
+		// for ( var key in this.weapons ) {
+		// 	if (this.weapons.hasOwnProperty(key)) {
+
+		// 		this.weapons[ key ].mesh.traverseVisible ( function ( object ) { object.visible = false; } );
+		// 	}
+		// }
+
+		if ( this.inHands !== undefined ) {
+
+			this.inHands.mesh.traverseVisible ( function ( object ) { object.visible = false; } );
+		}
+
+		// this.weapons.traverseVisible ( function ( object ) { object.visible = false; } );
+		// this.weapons.visible = true;
+
+		this.inHands = this.weapons[ newWeapon ];
+
+		this.inHands.activate();
+
+		// this.currentWeapon.mesh.position.z = initposz;
+		// weapons.children[currentWeapon].position.z = initposz;
+		
+		// if( typeof this.flashlight !== "undefined" ) {
+		// 	this.flashlight.intensity = 0;
+		// }
+		// if( this.currentWeapon.modelname === "flashlight" ) {
+		// 	this.flashlight.intensity = 2.5;
+		// }
+		
+		/*
+		if ( this.currentWeapon.modelname === "shotgun" ) {
+			initposz = -0.5;
+			
+			if (typeof initParticles === 'function') {
+
+				var pyramidPercentX = 58;
+				var pyramidPercentY = 35;
+				var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
+				var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
+				tempVec = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.35 );
+
+			}
+			
+		} 
+		else if ( this.currentWeapon.modelname === "sniper" ) {
+			initposz = -0.5;
+			
+			// soundShotgunPump.play();
+			env.sounds.ShotgunPump.play();
+			
+			if (typeof initParticles === 'function') { 
+
+				var pyramidPercentX = 55;
+				var pyramidPercentY = 38;
+				var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
+				var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
+				tempVec = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.6 );
+				
+			}
+			
+		} 	
+		// else if ( currentWeapon === 2 ) {
+			// initposz = -0.4;
+		// } 
+		else if ( newWeapon === 2 ) {
+			initposz = -0.3;
+		}
+		*/
+
+		
+		// if ( typeof this.currentWeapon.emitterPool !== 'undefined' ) { 
+
+			// this.currentWeapon.emitterPool.particleGroup.mesh.position.copy( this.currentWeapon.mesh.emitterVector );
+			// muzzleFlash.particleGroup.mesh.position.copy( this.currentWeapon.mesh.emitterVector );
+
+			// emitterHelper.position.copy ( this.currentWeapon.mesh.emitterVector );
+		// }
+
+		// update hud to display the new weapon
+		// env.hud.update();
+
+		// var element = msDiv;
+		// element.classList.remove("animate");
+
+		// // https://css-tricks.com/restart-css-animation/
+		// // -> triggering reflow /* The actual magic */
+		// // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
+		// element.offsetWidth = element.offsetWidth;
+		// // -> and re-adding the class
+		// element.classList.add("animate");
+		
+	};
 
 	Player.prototype.LMB = function() {
 

@@ -49,7 +49,8 @@ define([
 	"classes/HUD",
 	"initItems",
 	"classes/Player",
-	"particles"
+	"particles",
+	"muzzleparticle"
 ], function ( 
 	THREE, 
 	TWEEN,
@@ -65,7 +66,8 @@ define([
 	HUD,
 	initItems,
 	Player,
-	particles
+	particles,
+	muzzleparticle
 ) {
 
 	'use strict';
@@ -82,6 +84,8 @@ define([
 	var delta;
 	var player;;
 	var particleGroup;
+	camera.add( muzzleparticle.mesh );
+	// muzzleparticle.mesh.position.set( 0, 1, 1 );
 
 	// Start program
 	var initialize = function ( preloaded ) {
@@ -131,6 +135,7 @@ define([
 		// performance opt: only tick when triggered
 		// using setIntervall instead of in main loop
 		particleGroup.tick( delta );
+		muzzleparticle.tick( delta );
 		physics.update( delta );
 		player.raycast( objects );
 		controls.update();

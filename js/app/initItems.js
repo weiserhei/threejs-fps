@@ -13,8 +13,9 @@ define([
 	"classes/Player",
 	"sounds",
 	"initSafe",
-	"initSicherungskasten"
-], function ( THREE, scene, debugGUI, physics, Item, Itemslot, Player, sounds, initSafe, initSicherungskasten ) {
+	"initSicherungskasten",
+	"initFlashlight"
+], function ( THREE, scene, debugGUI, physics, Item, Itemslot, Player, sounds, initSafe, initSicherungskasten, initFlashlight ) {
 
 	'use strict';
 
@@ -47,43 +48,8 @@ define([
 		// console.log("preloaded", preloaded );
 		var raycastMeshes = [];
 
-		var mesh = preloaded.flashlight;
-		var flashlight = new Item( mesh );
-		flashlight.name = "flashlight"
-		flashlight.mesh.position.set( -3.2, 1.05, -0.2 );
-		flashlight.mesh.castShadow = true;
+		var flashlight = initFlashlight( player );
 		raycastMeshes.push( flashlight.getRaycastMesh() );
-		scene.add( mesh );
-
-		/* ugh */
-		flashlight.toggle = function() {
-
-			if ( this.active ) {
-				player.flashlight.intensity = 1;
-			} else {
-				player.flashlight.intensity = 0;
-			}
-
-			sounds.lightswitch.play();
-			this.active = !this.active;
-
-		};
-
-		flashlight.mesh.userData.customAction = function() {
-
-			// setup flashlight mesh 
-			// for in player-hand mode
-
-			flashlight.active = true;
-			flashlight.toggle();
-			flashlight.mesh.visible = true;
-			flashlight.mesh.castShadow = false;
-			flashlight.mesh.rotation.y = Math.PI;
-			flashlight.mesh.position.set( 0.1, -0.25, -0.1 );
-			player.getPawn().add( flashlight.mesh );
-			player.tools.flashlight = flashlight;
-
-		};
 
 		// werenchkey
 		var mesh = preloaded.wrenchkey.mesh.clone();
