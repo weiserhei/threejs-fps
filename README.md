@@ -9,7 +9,11 @@ This is my prototype for a First Person Game.
 
 ##Game Features:
 - First Person Character Controller
-- Fancy looking Preloader
+- Player Weapons
 - Collectable Items
+- Simple HTML HUD
+- Preloader
 
-##[Run demo](https://weiserhei.github.io/threejs-fps/)
+##Demo
+The demo is also the current development branch, so what you will see may not be representative.
+###[Run demo](https://weiserhei.github.io/threejs-fps/)
