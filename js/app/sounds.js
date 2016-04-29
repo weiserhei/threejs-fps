@@ -30,6 +30,8 @@ define([
 		{ id: "sniperrifle", url: "assets/sounds/sniper.ogg", volume: 0.2  },
 		{ id: "sniperreload", url: "assets/sounds/reload.ogg", volume: 0.3  },
 		{ id: "cling", url: "assets/sounds/ding.ogg", volume: 0.3  },
+		{ id: "rifleshot", url: "assets/sounds/163460__lemudcrab__sniper-shot.wav", volume: 0.2  },
+		{ id: "g36reload", url: "assets/sounds/276960__gfl7__g36c-reload-sound.mp3", volume: 0.2  },
 	];
 
 	sounds = soundLoader.loadAudio( manifest );

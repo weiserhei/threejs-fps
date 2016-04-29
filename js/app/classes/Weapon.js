@@ -17,47 +17,9 @@ define([
 	"camera",
 	"muzzleparticle",
 	"weaponStateMachine",
-	"../../libs/state-machine.min",
-], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, muzzleparticle, weaponStateMachine, StateMachine ) {
+], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, muzzleparticle, weaponStateMachine ) {
 
 	'use strict';
-
-	function aimFSM( weapon ) {
-
-		var fsm = StateMachine.create({
-
-			initial: 'idle',
-			events: [
-				// { name: 'reset', from: '*',  to: 'locked' },
-				{ name: 'aim', from: 'aiming', to: 'idle' },
-				{ name: 'aim', from: 'idle', to: 'aiming' },
-			],
-			callbacks: {
-
-				onleaveaiming: function( event, from, to, message ) {
-
-					var time = message;
-					weapon.leaveIronSights( time );
-					setTimeout( fsm.transition, time );
-
-					return StateMachine.ASYNC;
-
-				},
-
-				onleaveidle: function( event, from, to, message ) {
-
-					var time = message;
-					weapon.enterIronSights( time );
-					setTimeout( fsm.transition, time );
-
-					return StateMachine.ASYNC;
-				}
-			}
-		});
-
-		return fsm;
-
-	}
 
 	function setIntervalX(callback, delay, repetitions) {
 	    var x = 0;
@@ -70,14 +32,6 @@ define([
 	       }
 	    }, delay);
 	}
-
-	var options = {
-		energy: 50
-	};
-
-	var folder = debugGUI.getFolder("Shoot me Up");
-	folder.open();
-	folder.add( options, "energy" ).min( 1 ).max( 100 );
 
 	var endPoint = new Goblin.Vector3();
 	// var startPoint = new Goblin.Vector3();
@@ -107,7 +61,7 @@ define([
 	}
 
 	var invertNormalGoblin = new Goblin.Vector3();
-	function applyImpulse( target ) {
+	function applyImpulse( target, force ) {
 
 		// console.log( target );
 		sounds.positional.bow.bow.play();
@@ -127,7 +81,7 @@ define([
 		// no obvious errors
 		invertNormalGoblin.subtractVectors( point, pP );
 		invertNormalGoblin.normalize();
-		invertNormalGoblin.scale( options.energy );
+		invertNormalGoblin.scale( force );
 		
 		// body.applyImpulse( invertNormalGoblin );
 		// body.applyForceAtLocalPoint( invertNormalGoblin, point );
@@ -139,20 +93,27 @@ define([
 	// scene.add( emitterHelper );
 	// folder.add( emitterHelper.material, "visible" );
 
+	var folder = debugGUI.getFolder("Shoot me Up");
+	folder.open();
+
 	function Weapon( mesh ) {
 
+		// gun attributes
 		this.name = "";
 		this.maxCapacity = 30;
 		this.currentCapacity = this.maxCapacity;
 		this.magazines = 3;
 		this.shootDelay = 1;
+
+		// sounds
 		this.shootSound;
 		this.reloadSound;
 		this.emptySound = sounds.weaponclick;
 
+		// weapon state
 		this.fsm = weaponStateMachine( this );
-		this.aimfsm = aimFSM( this );
 		
+		// model
 		this.mesh = mesh;
 		// mesh.updateMatrix();
 		// var position = new THREE.Vector3().setFromMatrixPosition( mesh.matrix );
@@ -161,9 +122,16 @@ define([
 		this.ironSightPosition = new THREE.Vector3( 0, 0, 0 );
 		this.ironSightRotation = new THREE.Vector3( 0, 0, 0 );
 
-		this.omatrix = mesh.matrix.clone();
+		// iron sights
+		this.aiming = false;
 
+		// physical
+		this.power = 50;
+
+		// particles
 		this.muzzleparticle = muzzleparticle;
+
+		folder.add( this, "power" ).min( 1 ).max( 100 ).listen();
 
 	}
 
@@ -190,7 +158,7 @@ define([
 			if ( isFinite( target.object.mass ) ) {
 				// is not static object
 				// -> launch into space
-				applyImpulse( target );
+				applyImpulse( target, this.power );
 
 			}
 
@@ -276,7 +244,8 @@ define([
 		var velocity = controls.getVelocity();
 		var swayPosition = sway( velocity, this.originPos );
 
-		if ( this.aimfsm.current === "idle" ) {
+		// only sway when not in iron sights
+		if ( this.aiming === false ) {
 			this.mesh.position.copy( swayPosition );
 		}
 
@@ -298,6 +267,8 @@ define([
 	}
 
 	Weapon.prototype.enterIronSights = function( time ) {
+
+		setTimeout( function(){ this.aiming = !this.aiming; }.bind( this ), time );
 
 		var source = this.mesh.position;
 		var target = this.ironSightPosition;
@@ -334,6 +305,8 @@ define([
 
 	Weapon.prototype.leaveIronSights = function( time ) {
 
+		setTimeout( function(){ this.aiming = !this.aiming; }.bind( this ), time );
+
 		var source = this.mesh.position;
 		var target = this.originPos;
 		tweenVector( source, target, time );
@@ -367,30 +340,21 @@ define([
 
 	};
 
-	Weapon.prototype.aim = function() {
+	Weapon.prototype.aim = function( time ) {
 
-		// dont allow weapon switch while aimed
 		// sway -> only vertical when aimed
 
-		var that = this;
-		var time = 600;
+		var time = time || 600;
 
-		if ( ! this.ironSights ) {
+		if ( ! this.aiming ) {
 			// zoom In
-
-			this.aimfsm.aim( time );
-			// this.fsm.aim( time );
-			// this.enterIronSights( time );
+			this.enterIronSights( time );
 
 		} else {
 			// zoom Out
-			
-			// this.fsm.aim( time );
-			this.aimfsm.aim( time );
-			// this.leaveIronSights( time );
+			this.leaveIronSights( time );
 
 		}
-		// this.ironSights = !this.ironSights;
 
 	};
 

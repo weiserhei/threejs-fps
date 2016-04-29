@@ -215,8 +215,9 @@ define([
 		}
 
 		// transition back from aiming
-		if ( aimfsm.is( "aiming" ) ) {
+		if ( this.inHands.aiming === true ) {
 			this.inHands.aim();
+			// this.inHands.leaveIronSights( 300 );
 		}
 		
 		var newWeapon = number || 0;

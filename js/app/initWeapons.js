@@ -78,6 +78,7 @@ define([
 		shotgun.reloadSound = sounds.shellload;
 		shotgun.reloadTime = 0.3;
 		shotgun.mesh = shotgunMesh;
+		shotgun.power = 20;
 		// shotgun.emitterPool = "shotgun";
 		shotgun.ironSightPosition = new THREE.Vector3( 0.000, -0.14, shotgunMesh.position.z );
 		weapons.add( shotgunMesh );
@@ -89,6 +90,7 @@ define([
 		sniper.magazines = 2; 
 		sniper.reloadTime = 4; 
 		sniper.shootDelay = 1;
+		sniper.power = 100;
 		sniper.shootSound = sounds.sniperrifle;
 		sniper.reloadSound = sounds.sniperreload;
 		sniper.emptySound = sounds.cling;
@@ -102,12 +104,13 @@ define([
 		var rifle = new Weapon( rifleMesh );
 		rifle.name = "G36C"
 		rifle.maxCapacity = 30;
-		rifle.currentCapacity = 30;
+		rifle.currentCapacity = 2;
 		rifle.magazines = 2; 
-		rifle.reloadTime = 2; 
+		rifle.reloadTime = 3.1; 
 		rifle.shootDelay = 0.1;
-		rifle.shootSound = sounds.sniperrifle;
-		rifle.reloadSound = sounds.sniperreload;
+		rifle.power = 50;
+		rifle.shootSound = sounds.rifleshot;
+		rifle.reloadSound = sounds.g36reload;
 		// rifle.mesh = rifleMesh;
 		rifle.ironSightPosition = new THREE.Vector3( 0.000, -0.27, rifleMesh.position.z );
 
