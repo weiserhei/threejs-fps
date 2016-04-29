@@ -20,7 +20,8 @@ define([
 	    var material = new THREE.LineBasicMaterial({
 	        // color: 0xffffff
 	        // color: 0xAAAAff //hellblau
-	        color: 0xAAFFAA
+	        color: 0x55FF55
+	        // color: 0xAAFFAA
 	        // color: 0xFF0000
 	    });
 

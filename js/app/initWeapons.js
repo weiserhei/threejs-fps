@@ -79,6 +79,7 @@ define([
 		shotgun.reloadTime = 0.3;
 		shotgun.mesh = shotgunMesh;
 		// shotgun.emitterPool = "shotgun";
+		shotgun.ironSightPosition = new THREE.Vector3( 0.000, -0.14, shotgunMesh.position.z );
 		weapons.add( shotgunMesh );
 
 		var sniper = new Weapon( sniperMesh );
@@ -94,6 +95,9 @@ define([
 		// emitterPool: this.muzzleFlash,
 		weapons.add( sniperMesh );
 
+		sniper.ironSightPosition = new THREE.Vector3( 0.006, -0.125, sniperMesh.position.z );
+		sniper.ironSightRotation = new THREE.Vector3( 0, 0.0 * Math.PI / 180, 0 );
+
 		var rifle = new Weapon( rifleMesh );
 		rifle.name = "G36C"
 		rifle.maxCapacity = 30;
@@ -104,6 +108,10 @@ define([
 		rifle.shootSound = sounds.sniperrifle;
 		rifle.reloadSound = sounds.sniperreload;
 		// rifle.mesh = rifleMesh;
+		rifle.ironSightPosition = new THREE.Vector3( 0.000, -0.27, rifleMesh.position.z );
+
+		// debugGUI.add( rifle.mesh.position, "y", -2.0, 2.0 ).step( 0.01 ).listen();
+		// console.log( rifle.mesh );
 
 		weapons.add( rifleMesh );
 

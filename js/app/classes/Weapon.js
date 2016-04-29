@@ -243,6 +243,11 @@ define([
 		// mesh.updateMatrix();
 		// var position = new THREE.Vector3().setFromMatrixPosition( mesh.matrix );
 		this.originPos = mesh.position.clone();
+		this.originRot = mesh.rotation.clone();
+		this.ironSightPosition = new THREE.Vector3( 0, 0, 0 );
+		this.ironSightRotation = new THREE.Vector3( 0, 0, 0 );
+
+		this.omatrix = mesh.matrix.clone();
 
 		this.muzzleparticle = muzzleparticle;
 
@@ -259,6 +264,8 @@ define([
 		// reposition muzzle particle
 		// and add to weapon mesh
 		// so its position is updated automatically on move
+
+		console.log( this.muzzleparticle );
 
 		if ( typeof this.muzzleparticle !== 'undefined' ) { 
 
@@ -297,21 +304,6 @@ define([
 		this.fsm.fire();
 
 	};
-
-	function tweenVector ( source, target, time ) {
-
-		var time = time || 800;
-		// TWEEN.removeAll();
-		return new TWEEN.Tween( source ).to( {
-			x: target.x,
-			y: target.y,
-			z: target.z }, time )
-			.easing( TWEEN.Easing.Sinusoidal.InOut )
-			// .easing( TWEEN.Easing.Quadratic.InOut)
-			// .easing( TWEEN.Easing.Elastic.Out)
-			.start();
-	}
-
 
 	// var x = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 1.5 ), new THREE.MeshNormalMaterial() );
 	// controls.getControls().getObject().add( x );
@@ -353,12 +345,52 @@ define([
 
 	};
 
+
+	function tweenVector ( source, target, time ) {
+
+		var time = time || 800;
+		// TWEEN.removeAll();
+		return new TWEEN.Tween( source ).to( {
+			x: target.x,
+			y: target.y,
+			z: target.z }, time )
+			.easing( TWEEN.Easing.Sinusoidal.InOut )
+			// .easing( TWEEN.Easing.Quadratic.InOut)
+			// .easing( TWEEN.Easing.Elastic.Out)
+			.start();
+	}
+
+	Weapon.prototype.enterIronSights = function( time ) {
+
+		var source = this.mesh.position;
+		var target = this.ironSightPosition;
+		tweenVector( source, target, time );
+
+		var source = this.mesh.rotation;
+		var target = this.ironSightRotation;
+		tweenVector( source, target, time );
+			
+	};
+
+	Weapon.prototype.leaveIronSights = function( time ) {
+
+		var source = this.mesh.position;
+		var target = this.originPos;
+		tweenVector( source, target, time );
+
+		var source = this.mesh.rotation;
+		var target = this.originRot;
+		tweenVector( source, target, time );
+
+	};
+
 	Weapon.prototype.aim = function() {
 
 		// dont allow weapon switch while aimed
 		// sway -> only vertical when aimed
 
 		var that = this;
+		var time = 600;
 
 		function toggle() {
 			that.ironSights = ! that.ironSights;
@@ -368,16 +400,8 @@ define([
 		if ( ! this.ironSights ) {
 			// zoom In
 
-			var source = this.mesh.position;
-			var target = new THREE.Vector3( 0.006, -0.125, source.z );
-			tweenVector( source, target, 600 );
+			this.enterIronSights( time );
 
-			var source = this.mesh.rotation;
-			var target = new THREE.Vector3( 0, 0.0 * Math.PI / 180, 0 );
-			tweenVector( source, target, 600 );
-
-
-			var time = 600;
 			new TWEEN.Tween( controls.crosshair.material ).to( { opacity: 0 }, time ).start();
 
 			new TWEEN.Tween( camera ).to( { fov: 40 }, time )
@@ -391,17 +415,9 @@ define([
 
 		} else {
 			// zoom Out
+			
+			this.leaveIronSights( time );
 
-			var source = this.mesh.position;
-			// var target = new THREE.Vector3( this.originPos.x, source.y, source.z );
-			var target = this.originPos;
-			tweenVector( source, target, 600 );
-
-			var source = this.mesh.rotation;
-			var target = new THREE.Vector3( - 3 * Math.PI / 180, 0, 0 );
-			tweenVector( source, target, 600 );
-
-			var time = 600;
 			new TWEEN.Tween( controls.crosshair.material ).to( { opacity: 1 }, time ).start();
 
 			new TWEEN.Tween( camera ).to( { fov: 60 }, time )
