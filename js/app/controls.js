@@ -90,7 +90,7 @@ define([
 		// var character = String.fromCharCode( event.keyCode );
 
 		switch( keycode ) {
-			case 20: //E
+			case 81: //Q
 				thirdPerson( toggle );
 				toggle = !toggle;
 

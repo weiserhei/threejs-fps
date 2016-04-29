@@ -52,8 +52,6 @@ define([
 		var playerMesh = controls.getControls().getObject();
 		this._playerMesh = playerMesh;
 
-		// this.flashlight = new createFlashlight( playerMesh );
-
 		this.target = undefined;
 		this.hud = hud;
 
@@ -61,12 +59,10 @@ define([
 
 		this.inHands;
 
-		var weapons = initWeapons( playerMesh );
-		// this.weapons = weapons;
+		var weapons = initWeapons();
 		this.weapons = [];
 
 		this.inHands = weapons.shotgun;
-		weapons.shotgun.activate();
 
 		hud.weaponText = hud.box();
 		hud.weaponText.show( true, this.inHands );
@@ -79,9 +75,22 @@ define([
 
 	    // register update hud on ammo change and reload
 		for ( var key in weapons ) {
+
+			// set HUD callback
 			weapons[key].setCallback( this, update );
+
+			// fill players inventar
 			this.weapons.push( weapons[key] );
-		}	
+
+			// add weapon models to the scene
+			playerMesh.add( weapons[ key ].mesh );
+
+			// hide all weapon models
+			weapons[key].mesh.traverseVisible ( function ( object ) { object.visible = false; } );
+
+		}
+
+		this.switchWeapon( 1 );
 
 		var toggle = false; // toggle key down
 
@@ -368,6 +377,12 @@ define([
 	// 		console.log("loop");
 	// 	};
 	// })();
+
+	Player.prototype.update = function( objects ) {
+		this.raycast( objects );
+		// move weapon
+		this.inHands.update();
+	};
 
 	Player.prototype.raycast = function( objects ) {
 

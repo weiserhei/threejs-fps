@@ -4,9 +4,7 @@
 */
 
 /*
-	TODO: add muzleflash emitter to gun
-	so position fixed to gun position
-	TODO: add weapon bop
+	TODO weapon always on top?
 */
 
 define([
@@ -15,13 +13,14 @@ define([
 	"debugGUI",
 	"physics",
 	"sounds",
-	"controls",
 	"camera",
 	"classes/Weapon",
 	"loadingManager"
-], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, Weapon, loadingManager ) {
+], function ( THREE, scene, debugGUI, physics, sounds, camera, Weapon, loadingManager ) {
 
 	'use strict';
+
+	// http://stackoverflow.com/questions/12666570/how-to-change-the-zorder-of-object-with-threejs
 
 	// weapons.portalgun = new Weapon( "portalgun", {
 	// 	maxCapacity: 0, 
@@ -40,11 +39,90 @@ define([
 	// 	weapons[key].restockSound = this.sounds.sound3;
 	// }
 
+	function gunHelper( mesh, offset ) {
+
+		var test = mesh.clone();
+		scene.add( test );
+		test.position.set( 0, 1.2, 0 );
+
+		var x = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshNormalMaterial({wireframe:true}) );
+		test.add( x );
+		x.position.copy( offset );
+
+	}
+
+	function screenPosition( percentX, percentY, posz ) {
+
+		var position = new THREE.Vector3();
+		
+		var pyramidPositionX = (percentX / 100) * 2 - 1;
+		var pyramidPositionY = (percentY / 100) * 2 - 1;
+
+		position.set( pyramidPositionX * camera.aspect, pyramidPositionY, posz );
+
+		return position;
+
+	}
+
+	function init() {
+
+		var weapons = new THREE.Group();
+
+		var shotgun = new Weapon( shotgunMesh );
+		shotgun.name = "shotgun";
+		shotgun.maxCapacity = 8;
+		shotgun.currentCapacity = 8;
+		shotgun.magazines = 1;
+		shotgun.shootDelay = 0.15;
+		shotgun.shootSound = sounds.railgun;
+		shotgun.reloadSound = sounds.shellload;
+		shotgun.reloadTime = 0.3;
+		shotgun.mesh = shotgunMesh;
+		// shotgun.emitterPool = "shotgun";
+		weapons.add( shotgunMesh );
+
+		var sniper = new Weapon( sniperMesh );
+		sniper.name = "Sniper"
+		sniper.maxCapacity = 6;
+		sniper.currentCapacity = 6;
+		sniper.magazines = 2; 
+		sniper.reloadTime = 4; 
+		sniper.shootDelay = 1;
+		sniper.shootSound = sounds.sniperrifle;
+		sniper.reloadSound = sounds.sniperreload;
+		// sniper.mesh = sniperMesh;
+		// emitterPool: this.muzzleFlash,
+		weapons.add( sniperMesh );
+
+		var rifle = new Weapon( rifleMesh );
+		rifle.name = "G36C"
+		rifle.maxCapacity = 30;
+		rifle.currentCapacity = 30;
+		rifle.magazines = 2; 
+		rifle.reloadTime = 2; 
+		rifle.shootDelay = 0.1;
+		rifle.shootSound = sounds.sniperrifle;
+		rifle.reloadSound = sounds.sniperreload;
+		// rifle.mesh = rifleMesh;
+
+		weapons.add( rifleMesh );
+
+		// playerMesh.add( weapons );
+
+		return {
+			shotgun: shotgun,
+			sniper: sniper,
+			rifle: rifle,
+		};
+
+	}
+
+	// MODELS AND TEXTURES
 
 	var textureLoader = new THREE.TextureLoader( loadingManager );
-	var t_shotgun = textureLoader.load( 'assets/models/shotgun_l4d/twd_shotgun.png' );
-
 	var loader = new THREE.OBJLoader( loadingManager );
+
+	var t_shotgun = textureLoader.load( 'assets/models/shotgun_l4d/twd_shotgun.png' );
 	var shotgunMesh;
 	loader.load( 'assets/models/shotgun_l4d/shotgun.obj', function ( object ) {
 
@@ -58,38 +136,34 @@ define([
 
 		object = object.children[0];
 
-		object.scale.set( 0.55,0.55,0.55 ); 
+		var s = 0.55;
+		object.geometry.scale( s, s, s );
+		object.geometry.center();
+		object.geometry.applyMatrix( new THREE.Matrix4().makeRotationY( -90 * Math.PI / 180 ) );
+
+		var bbox = new THREE.BoundingBoxHelper( object );
+		bbox.update();
+		var boundingBoxSize = bbox.box.max.sub( bbox.box.min );
+
+		var offset = new THREE.Vector3( 0, boundingBoxSize.y / 3.5, - ( boundingBoxSize.z / 2 + 0.05 ) );
+		object.userData.emitterVector = offset;
+
+		// gunHelper( object, offset );
+
 		object.receiveShadow = true;
 
 		object.material.color.setHSL( 0, 0, 1 );
 		object.material.map = t_shotgun;
 		object.material.map.anisotropy = 8; //front barrel of the weapon gets blurry
 
-		object.rotation.y = -90 * Math.PI / 180;
-		object.rotation.x = -2 * Math.PI / 180;
+		// object.rotation.y = -90 * Math.PI / 180;
+		// object.rotation.x = -2 * Math.PI / 180;
 		
 		// http://stackoverflow.com/questions/12666570/how-to-change-the-zorder-of-object-with-threejs
 		
-		/* wtf */
-		
-		var pyramidPercentX = 56;
-		var pyramidPercentY = -28;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-		object.position.x = pyramidPositionX * camera.aspect;
-		object.position.y = pyramidPositionY;
-		object.position.z = -0.5;
+		var position = screenPosition( 54, 37, -0.5 );
+		object.position.copy( position );
 
-		var pyramidPercentX = 58;
-		var pyramidPercentY = 35;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-			
-		object.emitterVector = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.35 );
-
-		// console.log( object );
-
-		// object.position.y = -1;
 		shotgunMesh = object;
 
 	});
@@ -117,17 +191,13 @@ define([
 		// http://stackoverflow.com/questions/12666570/how-to-change-the-zorder-of-object-with-threejs
 
 		var pyramidPercentX = 55;
-		var pyramidPercentY = -79;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-		object.position.x = pyramidPositionX * camera.aspect;
-		object.position.y = pyramidPositionY;
-		object.position.z = -0.5;
-
-		var pyramidPercentX = 55;
 		var pyramidPercentY = 38;
 		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
 		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
+
+
+		var position = screenPosition( 55, -79, -0.5 );
+		object.position.copy( position );
 			
 		object.emitterVector = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.6 );
 
@@ -143,13 +213,20 @@ define([
 	var sniperMesh;
 	loader.load( 'assets/models/mk14/MK14-2.obj', function ( object ) {
 
-		var parent = object;
 		var object = object.children[0];
-		object.traverseVisible ( function ( object ) { object.visible = false; } );
 
-		object.scale.set( 0.003, 0.003, 0.003 );
-		object.position.set( 0, 0.2, 0 );
-		console.log( object );
+		var s = 0.003;
+		object.geometry.center();
+		object.geometry.scale( s, s, s );
+
+		var bbox = new THREE.BoundingBoxHelper( object );
+		bbox.update();
+		var boundingBoxSize = bbox.box.max.sub( bbox.box.min );
+		
+		var offset = new THREE.Vector3( 0, boundingBoxSize.y / 3.5, - ( boundingBoxSize.z / 2 + 0.05 ) );
+		object.userData.emitterVector = offset;
+
+		// console.log( object );
 		// object.receiveShadow = true;
 
 		// object.material.color.setHSL( 0, 0, 1 );
@@ -166,29 +243,11 @@ define([
 		// function xasd() { material.normalScale.set( somevalue.scale, somevalue.scale ); }
 		// debugGUI.add( somevalue, "scale" ).min( -2 ).max( 2 ).onChange( xasd );
 
-		// // object.position.set( 40,-15,-10 );
-		// object.rotation.y = - 1 * Math.PI / 180;
-		// object.rotation.x = -2 * Math.PI / 180; // + positiv = weiter nach unten
-		object.rotation.x = - 4 * Math.PI / 180; // + positiv = weiter nach unten
-		// // scene.add( object );
-		
-		// // http://stackoverflow.com/questions/12666570/how-to-change-the-zorder-of-object-with-threejs
+		// object.rotation.y = - 1 * Math.PI / 180; // + rotation nach links
+		object.rotation.x = - 3 * Math.PI / 180; // - positiv = weiter nach unten
 
-		var pyramidPercentX = 53;
-		var pyramidPercentY = 39;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-		object.position.x = pyramidPositionX * camera.aspect;
-		object.position.y = pyramidPositionY;
-		object.position.z = - 0.6;
-
-		
-		var pyramidPercentX = 53.5;
-		// var pyramidPercentY = 39;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-			
-		object.emitterVector = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.4 );
+		var position = screenPosition( 53, 39, -0.5 );
+		object.position.copy( position );
 		
 		// var test = object.clone();
 		// scene.add( test );
@@ -239,21 +298,8 @@ define([
 
 		debugGUI.add( somevalue, "scale" ).min( -2 ).max( 2 ).onChange( xasd );
 
-		// // object.position.set( 40,-15,-10 );
-		// object.rotation.y = 90 * Math.PI / 180;
-		// object.rotation.x = -2 * Math.PI / 180; // + positiv = weiter nach unten
-		// object.rotation.x = - 4 * Math.PI / 180; // + positiv = weiter nach unten
-		// // scene.add( object );
-		
-		// // http://stackoverflow.com/questions/12666570/how-to-change-the-zorder-of-object-with-threejs
-
-		var pyramidPercentX = 53;
-		var pyramidPercentY = 35;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-		object.position.x = pyramidPositionX * camera.aspect;
-		object.position.y = pyramidPositionY;
-		object.position.z = - 0.4;
+		var position = screenPosition( 53, 35, -0.4 );
+		object.position.copy( position );
 
 		var pyramidPercentX = 53;
 		var pyramidPercentY = 41;
@@ -279,28 +325,31 @@ define([
 	var rifleMesh;
 	loader.load( 'assets/models/g36c/g36c_arby26.obj', function ( object ) {
 
-		var parent = object;
-		// var object = object.children[3]; 
-		// 0 = eotech
-		// 1 = main body
-		// 2 = mag + muzzle + upper guard
-		// 3 = glass
-		// object.traverseVisible ( function ( object ) { object.visible = false; } );
-		object.traverseVisible ( function ( object ) { object.visible = false; } );
-		object.scale.set( 0.05, 0.05, 0.05 );
-		object.position.set( 0, 0.2, 0 );
-		console.log( object );
+		var object = object.children[ 0 ];
+
+		var s = 0.05;
+		object.geometry.center();
+		object.geometry.scale( s, s, s );
+
+		var bbox = new THREE.BoundingBoxHelper( object );
+		bbox.update();
+		var boundingBoxSize = bbox.box.max.sub( bbox.box.min );
+
+		var offset = new THREE.Vector3( 0, boundingBoxSize.y / 5, - ( boundingBoxSize.z / 2 + 0.05 ) );
+		object.userData.emitterVector = offset;
+
+		// console.log( object );
 		// object.receiveShadow = true;
 
 		// object.material.color.setHSL( 0, 0, 1 );
-		var material = object.children[ 0 ].material;
+		var material = object.material;
 		material.map = t_rifle;
 		material.normalMap = t_rifle_n;
 		material.normalScale.set( -1, -1 );
 		material.specularMap = t_rifle_s;
 		material.aoMap = t_rifle_ao;
-		console.log( material );
 		// material.lightMap = t_rifle_l;
+		// console.log( material );
 
 		// material.specular.setHex( 0x444444 );
 		// material.shininess = 30;
@@ -310,91 +359,15 @@ define([
 		// function xasd() { material.normalScale.set( somevalue.scale, somevalue.scale ); }
 		// debugGUI.add( somevalue, "scale" ).min( -2 ).max( 2 ).onChange( xasd );
 
-		// // object.position.set( 40,-15,-10 );
 		// object.rotation.y = 90 * Math.PI / 180;
-		// object.rotation.x = -2 * Math.PI / 180; // + positiv = weiter nach unten
-		object.rotation.x = - 6 * Math.PI / 180; // + positiv = weiter nach unten
-		// // scene.add( object );
-		
-		// // http://stackoverflow.com/questions/12666570/how-to-change-the-zorder-of-object-with-threejs
+		object.rotation.x = - 3 * Math.PI / 180; // + positiv = weiter nach unten
 
-		var pyramidPercentX = 54;
-		var pyramidPercentY = 33;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-		object.position.x = pyramidPositionX * camera.aspect;
-		object.position.y = pyramidPositionY;
-		object.position.z = - 0.4;
+		var position = screenPosition( 54, 31, -0.5 );
+		object.position.copy( position );
 
-		var pyramidPercentX = 54;
-		var pyramidPercentY = 34;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-			
-		object.emitterVector = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.3 );
-		
-		var test = object.clone();
-		scene.add( test );
-		test.position.set( 0, 1.2, 0 );
-		// scene.add( object );
 		rifleMesh = object;
 
 	} );
-	
-	function init( playerMesh ) {
-
-		var shotgun = new Weapon();
-		shotgun.name = "shotgun";
-		shotgun.maxCapacity = 8;
-		shotgun.currentCapacity = 8;
-		shotgun.magazines = 1;
-		shotgun.shootDelay = 0.15;
-		shotgun.shootSound = sounds.railgun;
-		shotgun.reloadSound = sounds.shellload;
-		shotgun.reloadTime = 0.3;
-		shotgun.mesh = shotgunMesh;
-		// shotgun.emitterPool = "shotgun";
-
-		playerMesh.add( shotgunMesh );
-
-		var sniper = new Weapon();
-		sniper.name = "Sniper"
-		sniper.maxCapacity = 6;
-		sniper.currentCapacity = 6;
-		sniper.magazines = 2; 
-		sniper.reloadTime = 4; 
-		sniper.shootDelay = 1;
-		sniper.shootSound = sounds.sniperrifle;
-		sniper.reloadSound = sounds.sniperreload;
-		sniper.mesh = sniperMesh;
-		// emitterPool: this.muzzleFlash,
-
-		// playerMesh.add( sniperMesh );
-		// camera.add( sniperMesh );
-		// scene.updateMatrixWorld();
-		// controls.getControls().getObject().updateMatrixWorld();
-		controls.getControls().getObject().add( sniperMesh );
-
-		var rifle = new Weapon();
-		rifle.name = "G36C"
-		rifle.maxCapacity = 30;
-		rifle.currentCapacity = 30;
-		rifle.magazines = 2; 
-		rifle.reloadTime = 2; 
-		rifle.shootDelay = 0.1;
-		rifle.shootSound = sounds.sniperrifle;
-		rifle.reloadSound = sounds.sniperreload;
-		rifle.mesh = rifleMesh;
-
-		controls.getControls().getObject().add( rifleMesh );
-
-		return {
-			shotgun: shotgun,
-			sniper: sniper,
-			rifle: rifle,
-		};
-
-	}
 
 	return init;
 

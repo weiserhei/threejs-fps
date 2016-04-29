@@ -11,7 +11,7 @@ define([
     'use strict';
 
 	var listener = new THREE.AudioListener();
-	listener.setMasterVolume( 0.5 );
+	listener.setMasterVolume( 0.1 );
 
     // Do we have a saved value for this controller?
     // if (type != 'function' &&

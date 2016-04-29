@@ -209,21 +209,20 @@ define([
 
 		});
 
-		folder.open();
-
-		folder.add( fsm, "current" ).name("Current State").listen();
-		folder.add( fsm, "fire" ).name("fire");
-		folder.add( fsm, "reload" ).name("reload");
+		// folder.open();
+		// folder.add( fsm, "current" ).name("Current State").listen();
+		// folder.add( fsm, "fire" ).name("fire");
+		// folder.add( fsm, "reload" ).name("reload");
 
 		return fsm;
 
 	}
 	
-	// var emitterHelper = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshLambertMaterial({ wireframe: true }));
-	// camera.add( emitterHelper );
+	// var emitterHelper = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshNormalMaterial({ wireframe: true }));
+	// scene.add( emitterHelper );
 	// folder.add( emitterHelper.material, "visible" );
 
-	function Weapon() {
+	function Weapon( mesh ) {
 
 		this.name = "";
 		this.maxCapacity = 30;
@@ -234,13 +233,52 @@ define([
 		this.reloadSound;
 		this.emptySound = sounds.weaponclick;
 
-		this.mesh;
+		this.fsm = setupFSM( this );
+		
+		this.mesh = mesh;
+		// mesh.updateMatrix();
+		// var position = new THREE.Vector3().setFromMatrixPosition( mesh.matrix );
+		this.originPos = mesh.position.clone();
 
 		this.muzzleparticle = muzzleparticle;
 
-		this.fsm = setupFSM( this );
+	}
+
+	// var x = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 1.5 ), new THREE.MeshNormalMaterial() );
+	// controls.getControls().getObject().add( x );
+	// x.position.set( 0.1, -0.2, 0 );
+	var swayFactor = 0;
+	var swayPosition = new THREE.Vector3();
+
+	function sway( velocity, oldPos, elapsedTime ) {
+
+		// weapon sway logic by makc
+		// holy shit that genius
+		// https://github.com/makc/fps-three.js/blob/gh-pages/scripts/modules/systems/handleShotgun.js#L10-L15
+
+		// sway the weapon as you go
+		var t = 5e-3 * (Date.now() % 6283); // = elapsedTime, resets at 30s
+		// console.log( t );
+		// var a = motion.airborne ? 0 : motion.velocity.length(), b;
+		var a = velocity.length(), b;
+		swayFactor *= 0.8; // how fast reposition to zero
+		swayFactor += 0.001 * a;  //how much swing x-axis
+		a = swayFactor; 
+		b = 0.2 * a; // how much swing y-axis
+
+		swayPosition.set( oldPos.x + a * Math.cos( t ), oldPos.y + b * ( Math.cos( t * 2 ) - 1 ) , oldPos.z );
+
+		return swayPosition;
 
 	}
+
+	Weapon.prototype.update = function() {
+
+		var velocity = controls.getVelocity();
+		var swayPosition = sway( velocity, this.originPos );
+		this.mesh.position.copy( swayPosition );
+
+	};
 
 	Weapon.prototype.toString = function() {
 
@@ -248,16 +286,29 @@ define([
 
 	};
 
-
 	Weapon.prototype.activate = function() {
-		this.mesh.traverse( function ( object ) { object.visible = true; } );
+		
+		// reposition muzzle particle
+		// and add to weapon mesh
+		// so its position is updated automatically on move
 
 		if ( typeof this.muzzleparticle !== 'undefined' ) { 
 
-			this.muzzleparticle.mesh.position.copy( this.mesh.emitterVector );
+			if ( this.mesh.userData.emitterVector !== undefined ) {
+
+				this.mesh.add( this.muzzleparticle.mesh );
+				// performance
+				// this.muzzleparticle.mesh.matrixAutoUpdate = false;
+				this.muzzleparticle.mesh.position.copy( this.mesh.userData.emitterVector );
+
+				// this.mesh.add( emitterHelper );
+				// emitterHelper.position.copy( this.mesh.userData.emitterVector );
+			}
 			// emitterHelper.position.copy( this.mesh.emitterVector );
 
 		}
+
+		this.mesh.traverse( function ( object ) { object.visible = true; } );
 
 		this.onChanged();
 
@@ -270,7 +321,10 @@ define([
 		var delay = clock.getElapsedTime() - this.lastShotFired;
 		// exit when fireing to fast
 		if ( delay < this.shootDelay ) { return false; }
-		this.lastShotFired = clock.getElapsedTime();		
+		this.lastShotFired = clock.getElapsedTime();
+		
+		// performance: set matrixAutoUpdate = false;
+		//this.muzzleparticle.mesh.updateMatrix();
 
 		this.fsm.fire();
 

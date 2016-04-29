@@ -4,8 +4,9 @@
 
 define([
        "three",
-       "scene"
-       ], function (THREE,scene){
+       "scene",
+       "TWEEN"
+       ], function ( THREE, scene, TWEEN ){
 
 	'use strict';
  
@@ -19,6 +20,58 @@ define([
 
 		var pitchObject = new THREE.Object3D();
 		pitchObject.add( camera );
+
+		/*
+		var x = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 1.5 ), new THREE.MeshNormalMaterial() );
+		// pitchObject.add( x );
+		x.position.set( 0.1, -0.2, 0 );
+
+		var xSway = 0.1;
+		var ySway = 0.05;
+		var maxSwayX = 0.25;
+		var maxSwayY = 0.1;
+		var smooth = 3.0;
+
+		var weaponPos = x.getWorldPosition();
+
+		function sway( movementX, movementY ) {
+			// https://www.youtube.com/watch?v=mwPIN8Nx3-U
+			// http://s27.postimg.org/sj060nag3/Weapon_Sway_C.png
+			// https://developer.valvesoftware.com/wiki/Camera_Bob
+
+			var fX = -movementX * xSway;
+			var fY = -movementY * ySway;
+
+			if ( fX > maxSwayX ) 
+				fX = maxSwayX;
+			if ( fX < -maxSwayX )
+				fX = maxSwayX;
+
+			if ( fY > maxSwayY ) 
+				fY = maxSwayY;
+			if ( fY < -maxSwayY )
+				fY = maxSwayY;
+
+			// console.log( movementX, movementY );
+
+			var detection = new THREE.Vector3( weaponPos.x + fX, weaponPos.y + fY, weaponPos.z );
+			var lerp = detection.lerp( weaponPos, 0 );
+
+			// console.log( detection );
+
+			// x.position.copy( new THREE.Vector3().lerpVectors( detection, weaponPos, (1/60) * smooth ) );
+
+			new TWEEN.Tween( x.position ).to( {
+			        x: lerp.x,
+			        y: lerp.y,
+			        z: lerp.z}, (1/60) * smooth )
+			    .start();
+
+			// console.log( lerp );
+			// x.position.copy ( lerp );
+
+		}
+		*/
 
 		// Y-Rotation is set to the player mesh which the pitchObject is added to
 		// var yawObject = new THREE.Object3D();
@@ -46,6 +99,7 @@ define([
 			var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 			var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
+			// sway( movementX, movementY );
 			// yawObject.rotation.y -= movementX * 0.002;
 			yRotation -= movementX * 0.002;
 

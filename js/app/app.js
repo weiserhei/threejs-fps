@@ -84,7 +84,8 @@ define([
 	var delta;
 	var player;;
 	var particleGroup;
-	camera.add( muzzleparticle.mesh );
+	// camera.add( muzzleparticle.mesh );
+	scene.add( muzzleparticle.mesh );
 	// muzzleparticle.mesh.position.set( 0, 1, 1 );
 
 	// Start program
@@ -137,7 +138,7 @@ define([
 		particleGroup.tick( delta );
 		muzzleparticle.tick( delta );
 		physics.update( delta );
-		player.raycast( objects );
+		player.update( objects );
 		controls.update();
 
 		TWEEN.update();

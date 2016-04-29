@@ -33,6 +33,7 @@ define([
 			this.body.position.set( 0, height / 2 + 0.5, 2 );
 		}
 
+
 		this.movementSpeed = 4; //4
 		this.jumpImpulse = 100;
 		this.sprintSpeedMultiplier = 4;
@@ -52,6 +53,9 @@ define([
 		var goblinMeshRight = new Goblin.Vector3( 0, 0, 0 );
 		var goblinZeroVector = new Goblin.Vector3( 0, 0, 0 );
 
+		this.getVelocity = function() {
+			return velV;
+		};
 		
 		function createCapsuleGeometry ( radius, height ) 
 		{
@@ -227,7 +231,6 @@ define([
 		} )();
 
 		// ---------------------------------------------------------------------------
-
 
 		this.update = function() 
 		{
