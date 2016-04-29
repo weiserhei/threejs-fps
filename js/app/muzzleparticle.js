@@ -32,10 +32,11 @@ define([
 	            value: 0.05
 	        },
 	        position: {
-	            // radius: 0.01, // attributes..emitters[0].position._radius
+	            radius: 0.00, // attributes..emitters[0].position._radius
 	            value: new THREE.Vector3( 0, 0, 0 ),
-	            spread: new THREE.Vector3( 0.05, 0.05, 0.05 ),
-	            distribution: SPE.distributions.BOX
+	            spread: new THREE.Vector3( 0.05, 0.05, 0.02 ),
+	            // distribution: SPE.distributions.BOX
+	            distribution: SPE.distributions.SPHERE
 	            // spread: new THREE.Vector3( 0.8, 0.8, 0.8 ),
 	            // clamp: 0.2,
 	            // randomise: true
@@ -43,11 +44,13 @@ define([
 
 			size: {
 				value: [ 0.1, 0.1, 0.02 ],
+				// value: [ 0.4, 0.4, 0.08 ],
 				spread: [ 0.1, 0, 0 ]
 			},
 
 	        velocity: {
-	            value: new THREE.Vector3( 0.4, 0, -10 ),
+	            // value: new THREE.Vector3( 0.4, 0, -10 ),
+	            value: new THREE.Vector3( 0.0, 0, -10 ),
 	            spread: new THREE.Vector3( 1, 0, 10.5 ),
 	            // distribution: SPE.distributions.DISC
 	            distribution: SPE.distributions.BOX
@@ -56,8 +59,8 @@ define([
 
 	        acceleration: {
 	            // value: new THREE.Vector3( 0.1, 0.05, -0.3 ),
-	            // value: new THREE.Vector3( 0.1, 0.1, 0.1 ),
-	            // distribution: SPE.distributions.SPHERE
+	            distribution: SPE.distributions.SPHERE,
+	            value: new THREE.Vector3( 5, 5, 2 ),
 	        },
 
 	        drag: {

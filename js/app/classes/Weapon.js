@@ -126,7 +126,7 @@ define([
 
 				onbeforefire: function() {
 
-					if( weapon.currentCapacity > 0 ) {
+					if ( weapon.currentCapacity > 0 ) {
 						weapon.currentCapacity -= 1;
 					}
 
@@ -188,6 +188,8 @@ define([
 						fsm.emptyFire();
 
 					}
+
+					weapon.emptySound.play();
 
 				},
 
@@ -265,7 +267,6 @@ define([
 		// and add to weapon mesh
 		// so its position is updated automatically on move
 
-		console.log( this.muzzleparticle );
 
 		if ( typeof this.muzzleparticle !== 'undefined' ) { 
 
@@ -369,6 +370,18 @@ define([
 		var source = this.mesh.rotation;
 		var target = this.ironSightRotation;
 		tweenVector( source, target, time );
+
+		// size up particle emitters
+		// to show up behind weapon
+		var particleGroup = this.muzzleparticle;
+		for ( var i = 0; i < particleGroup.emitters.length; i ++ ) {
+            particleGroup.emitters[ i ].size.value = [ 0.3, 0.3, 0.1 ];
+            // particleGroup.emitters[ i ].position.value = new THREE.Vector3( 0, 0.5, 0 );
+            // particleGroup.emitters[ i ].velocity.value = new THREE.Vector3( 0, 1, -10 );
+            particleGroup.emitters[ i ].position.spread = new THREE.Vector3( 0.2, 0.2, 0.1 );
+            particleGroup.emitters[ i ].acceleration.value = new THREE.Vector3( 10, 10, 2 );
+        }
+
 			
 	};
 
@@ -381,6 +394,18 @@ define([
 		var source = this.mesh.rotation;
 		var target = this.originRot;
 		tweenVector( source, target, time );
+
+		// console.log( this.muzzleparticle );
+
+		// reset emitter to default values
+		var particleGroup = this.muzzleparticle;
+		for ( var i = 0; i < particleGroup.emitters.length; i ++ ) {
+            particleGroup.emitters[ i ].size.value = [ 0.1, 0.1, 0.02 ];
+            // particleGroup.emitters[ i ].position.value = new THREE.Vector3( 0, 0.5, 0 );
+            // particleGroup.emitters[ i ].velocity.value = new THREE.Vector3( 0, 1, -10 );
+            particleGroup.emitters[ i ].position.spread = new THREE.Vector3( 0.05, 0.05, 0.02 );
+            particleGroup.emitters[ i ].acceleration.value = new THREE.Vector3( 5, 5, 2 );
+        }
 
 	};
 

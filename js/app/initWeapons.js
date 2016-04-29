@@ -91,6 +91,7 @@ define([
 		sniper.shootDelay = 1;
 		sniper.shootSound = sounds.sniperrifle;
 		sniper.reloadSound = sounds.sniperreload;
+		sniper.emptySound = sounds.cling;
 		// sniper.mesh = sniperMesh;
 		// emitterPool: this.muzzleFlash,
 		weapons.add( sniperMesh );
