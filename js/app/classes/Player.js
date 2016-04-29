@@ -152,12 +152,11 @@ define([
 
 			if ( event.button === 0 ) {
 
-				if ( this.inHands instanceof Weapon ) {
-					this.LMB();
-				}
+				this.LMB();
 
 			} else {
 
+				this.RMB();
 			}
 		}
 
@@ -313,7 +312,17 @@ define([
 
 	Player.prototype.LMB = function() {
 
-		this.inHands.shoot( this.clock );
+		if ( this.inHands instanceof Weapon ) {
+			this.inHands.shoot( this.clock );
+		}
+
+	};
+
+	Player.prototype.RMB = function() {
+
+		if ( this.inHands instanceof Weapon ) {
+			this.inHands.aim();
+		}
 
 	};
 

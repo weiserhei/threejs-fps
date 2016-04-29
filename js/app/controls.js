@@ -51,8 +51,9 @@ define([
 
 	var controls = new FPSMover( camera, container );
 	// controls.getControls().enabled = true;
-
 	var crosshair = new Crosshair( 0.003, 0.002, camera );
+	crosshair.material.transparent = true;
+	controls.crosshair = crosshair;
 
 	function thirdPerson( value ) {
 		if( value ) {

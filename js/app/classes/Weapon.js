@@ -3,6 +3,10 @@
 * 
 */
 
+/*
+	TODO: decals, hit effects
+*/
+
 define([
 	"three",
 	"scene",
@@ -244,42 +248,6 @@ define([
 
 	}
 
-	// var x = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 1.5 ), new THREE.MeshNormalMaterial() );
-	// controls.getControls().getObject().add( x );
-	// x.position.set( 0.1, -0.2, 0 );
-	var swayFactor = 0;
-	var swayPosition = new THREE.Vector3();
-
-	function sway( velocity, oldPos, elapsedTime ) {
-
-		// weapon sway logic by makc
-		// holy shit that genius
-		// https://github.com/makc/fps-three.js/blob/gh-pages/scripts/modules/systems/handleShotgun.js#L10-L15
-
-		// sway the weapon as you go
-		var t = 5e-3 * (Date.now() % 6283); // = elapsedTime, resets at 30s
-		// console.log( t );
-		// var a = motion.airborne ? 0 : motion.velocity.length(), b;
-		var a = velocity.length(), b;
-		swayFactor *= 0.8; // how fast reposition to zero
-		swayFactor += 0.001 * a;  //how much swing x-axis
-		a = swayFactor; 
-		b = 0.2 * a; // how much swing y-axis
-
-		swayPosition.set( oldPos.x + a * Math.cos( t ), oldPos.y + b * ( Math.cos( t * 2 ) - 1 ) , oldPos.z );
-
-		return swayPosition;
-
-	}
-
-	Weapon.prototype.update = function() {
-
-		var velocity = controls.getVelocity();
-		var swayPosition = sway( velocity, this.originPos );
-		this.mesh.position.copy( swayPosition );
-
-	};
-
 	Weapon.prototype.toString = function() {
 
 		return this.name + ": " + this.currentCapacity + "/" + this.maxCapacity * this.magazines + " Ammo";
@@ -327,6 +295,127 @@ define([
 		//this.muzzleparticle.mesh.updateMatrix();
 
 		this.fsm.fire();
+
+	};
+
+	function tweenVector ( source, target, time ) {
+
+		var time = time || 800;
+		// TWEEN.removeAll();
+		return new TWEEN.Tween( source ).to( {
+			x: target.x,
+			y: target.y,
+			z: target.z }, time )
+			.easing( TWEEN.Easing.Sinusoidal.InOut )
+			// .easing( TWEEN.Easing.Quadratic.InOut)
+			// .easing( TWEEN.Easing.Elastic.Out)
+			.start();
+	}
+
+
+	// var x = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 1.5 ), new THREE.MeshNormalMaterial() );
+	// controls.getControls().getObject().add( x );
+	// x.position.set( 0.1, -0.2, 0 );
+	var swayFactor = 0;
+	var swayPosition = new THREE.Vector3();
+
+	function sway( velocity, oldPos, elapsedTime ) {
+
+		// weapon sway logic by makc
+		// holy shit that genius
+		// https://github.com/makc/fps-three.js/blob/gh-pages/scripts/modules/systems/handleShotgun.js#L10-L15
+
+		// sway the weapon as you go
+		var t = 5e-3 * (Date.now() % 6283); // = elapsedTime, resets at 30s
+		// console.log( t );
+		// var a = motion.airborne ? 0 : motion.velocity.length(), b;
+		var a = velocity.length(), b;
+		swayFactor *= 0.8; // how fast reposition to zero
+		swayFactor += 0.001 * a;  //how much swing x-axis
+		a = swayFactor; 
+		b = 0.2 * a; // how much swing y-axis
+
+		swayPosition.set( oldPos.x + a * Math.cos( t ), oldPos.y + b * ( Math.cos( t * 2 ) - 1 ) , oldPos.z );
+
+		return swayPosition;
+
+	}
+
+	Weapon.prototype.update = function() {
+
+		var velocity = controls.getVelocity();
+		var swayPosition = sway( velocity, this.originPos );
+		if ( ! this.ironSights ) {
+
+			this.mesh.position.copy( swayPosition );
+
+		}
+
+	};
+
+	Weapon.prototype.aim = function() {
+
+		// dont allow weapon switch while aimed
+		// sway -> only vertical when aimed
+
+		var that = this;
+
+		function toggle() {
+			that.ironSights = ! that.ironSights;
+			// controls.crosshair.visible = ! controls.crosshair.visible;
+		}
+
+		if ( ! this.ironSights ) {
+			// zoom In
+
+			var source = this.mesh.position;
+			var target = new THREE.Vector3( 0.006, -0.125, source.z );
+			tweenVector( source, target, 600 );
+
+			var source = this.mesh.rotation;
+			var target = new THREE.Vector3( 0, 0.0 * Math.PI / 180, 0 );
+			tweenVector( source, target, 600 );
+
+
+			var time = 600;
+			new TWEEN.Tween( controls.crosshair.material ).to( { opacity: 0 }, time ).start();
+
+			new TWEEN.Tween( camera ).to( { fov: 40 }, time )
+				// .easing( TWEEN.Easing.Sinusoidal.InOut )
+				.easing( TWEEN.Easing.Quartic.InOut )
+				.onUpdate( camera.updateProjectionMatrix )
+				.onComplete( toggle )
+				// .easing( TWEEN.Easing.Quadratic.InOut)
+				// .easing( TWEEN.Easing.Elastic.Out)
+				.start();
+
+		} else {
+			// zoom Out
+
+			var source = this.mesh.position;
+			// var target = new THREE.Vector3( this.originPos.x, source.y, source.z );
+			var target = this.originPos;
+			tweenVector( source, target, 600 );
+
+			var source = this.mesh.rotation;
+			var target = new THREE.Vector3( - 3 * Math.PI / 180, 0, 0 );
+			tweenVector( source, target, 600 );
+
+			var time = 600;
+			new TWEEN.Tween( controls.crosshair.material ).to( { opacity: 1 }, time ).start();
+
+			new TWEEN.Tween( camera ).to( { fov: 60 }, time )
+				// .easing( TWEEN.Easing.Sinusoidal.InOut )
+				// .easing( TWEEN.Easing.Quartic.InOut )
+				.easing( TWEEN.Easing.Cubic.InOut )
+				.onUpdate( camera.updateProjectionMatrix )
+				.onComplete( toggle )
+				// .easing( TWEEN.Easing.Quadratic.InOut)
+				// .easing( TWEEN.Easing.Elastic.Out)
+				.start();
+
+		}
+		// this.ironSights = !this.ironSights;
 
 	};
 
