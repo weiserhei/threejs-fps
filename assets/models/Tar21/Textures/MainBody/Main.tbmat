@@ -1,0 +1,40 @@
+@Sub SRSurface = SRSurfaceNormalMap
+    Normal Map = @Tex file "Texture_N.tga" srgb 0 filter 1 mip 1 aniso 4 wrap 1 @EndTex
+    Scale & Bias = 1
+    Flip X = 0
+    Flip Y = 1
+    Flip Z = 0
+    Object Space = 0
+@End
+
+@Sub SRMicrosurface = SRMicrosurfaceGlossMap
+    Gloss Map = @Tex file "Texture_G.tga" srgb 0 filter 1 mip 1 aniso 4 wrap 1 @EndTex
+    Channel = 0
+    Gloss = 1
+    Invert = 0
+@End
+
+@Sub SRAlbedo = SRAlbedoMap
+    Albedo Map = @Tex file "Texture_D.tga" srgb 1 filter 1 mip 1 aniso 4 wrap 1 @EndTex
+    Color = 1 1 1
+@End
+
+@Sub SRDiffusion = SRDiffusionLambertian
+@End
+
+@Sub SRReflectivity = SRReflectivitySpecularMap
+    Specular Map = @Tex file "Texture_S.tga" srgb 0 filter 1 mip 1 aniso 4 wrap 1 @EndTex
+    Intensity = 0.255848
+    Color = 1 1 1
+    Fresnel = 1
+    Fresnel Color = 1 1 1
+    Conserve Energy = 1
+@End
+
+@Sub SRReflection = SRReflectionBlinnPhong
+    Horizon Occlusion = 1
+@End
+
+@Sub SRMerge = SRMerge
+@End
+

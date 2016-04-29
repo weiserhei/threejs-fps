@@ -38,10 +38,6 @@ define([
 	folder.open();
 	folder.add( options, "energy" ).min( 1 ).max( 100 );
 
-	// var emitterHelper = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshLambertMaterial({ wireframe: true }));
-	// camera.add( emitterHelper );
-	// folder.add( emitterHelper.material, "visible" );
-
 	var endPoint = new Goblin.Vector3();
 	// var startPoint = new Goblin.Vector3();
 	var startPoint = new THREE.Vector3();
@@ -222,6 +218,10 @@ define([
 		return fsm;
 
 	}
+	
+	// var emitterHelper = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshLambertMaterial({ wireframe: true }));
+	// camera.add( emitterHelper );
+	// folder.add( emitterHelper.material, "visible" );
 
 	function Weapon() {
 

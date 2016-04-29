@@ -47,7 +47,7 @@ define([
 	"skycube",
 	"physics",
 	"classes/HUD",
-	"initItems",
+	// "initItems",
 	"classes/Player",
 	"particles",
 	"muzzleparticle"
@@ -64,7 +64,7 @@ define([
 	skycube,
 	physics,
 	HUD,
-	initItems,
+	// initItems,
 	Player,
 	particles,
 	muzzleparticle
@@ -96,7 +96,7 @@ define([
 		// and constraints to other game elemnts
 
 		// adding item meshes to raycaster objects-array
-		var items = initItems( preloaded.items, objects, player, hud.interactionText );
+		// var items = initItems( preloaded.items, objects, player, hud.interactionText );
 
 		particleGroup = particles();
 		scene.add( particleGroup.mesh );
@@ -105,8 +105,8 @@ define([
 		// console.log( particle );
 		// particleGroup.maxParticleCount = 500;
 
-		items.safeconstraint.effect = particleGroup;
-		items.sicherungsslot.effect = particleGroup;
+		// items.safeconstraint.effect = particleGroup;
+		// items.sicherungsslot.effect = particleGroup;
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 

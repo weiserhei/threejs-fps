@@ -1,0 +1,8 @@
+Working textures are:
+
+diffuse/color - g36c_d_final.tga
+specular intensity - g36c_spec.tga
+specular blurriness - g36c_gloss.tga
+normal map - g36c_n_final.tga
+
+Multiply 180 hardness/glossiness by g36c_gloss.tga
