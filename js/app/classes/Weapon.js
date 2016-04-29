@@ -15,14 +15,51 @@ define([
 	"sounds",
 	"controls",
 	"camera",
+	"muzzleparticle",
+	"weaponStateMachine",
 	"../../libs/state-machine.min",
-	"muzzleparticle"
-], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, StateMachine, muzzleparticle ) {
+], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, muzzleparticle, weaponStateMachine, StateMachine ) {
 
 	'use strict';
 
-	function setIntervalX(callback, delay, repetitions) 
-	{
+	function aimFSM( weapon ) {
+
+		var fsm = StateMachine.create({
+
+			initial: 'idle',
+			events: [
+				// { name: 'reset', from: '*',  to: 'locked' },
+				{ name: 'aim', from: 'aiming', to: 'idle' },
+				{ name: 'aim', from: 'idle', to: 'aiming' },
+			],
+			callbacks: {
+
+				onleaveaiming: function( event, from, to, message ) {
+
+					var time = message;
+					weapon.leaveIronSights( time );
+					setTimeout( fsm.transition, time );
+
+					return StateMachine.ASYNC;
+
+				},
+
+				onleaveidle: function( event, from, to, message ) {
+
+					var time = message;
+					weapon.enterIronSights( time );
+					setTimeout( fsm.transition, time );
+
+					return StateMachine.ASYNC;
+				}
+			}
+		});
+
+		return fsm;
+
+	}
+
+	function setIntervalX(callback, delay, repetitions) {
 	    var x = 0;
 	    var intervalID = window.setInterval(function () {
 
@@ -44,7 +81,7 @@ define([
 
 	var endPoint = new Goblin.Vector3();
 	// var startPoint = new Goblin.Vector3();
-	var startPoint = new THREE.Vector3();
+	// var startPoint = new THREE.Vector3();
 
 	function raycast() {
 
@@ -98,132 +135,6 @@ define([
 
 	}
 
-	function setupFSM( weapon ) {
-
-		// states: loaded, checking, reloading, emptyMag, outOfAmmo
-		// events: fire, readyToFire, reload, empty, emptyFire
-
-		var fsm = StateMachine.create({
-
-			initial: 'loaded',
-			events: [
-				// { name: 'reset', from: '*',  to: 'locked' },
-				{ name: 'fire', from: 'loaded', to: 'checking' },
-				{ name: 'readyToFire', from: ['checking','reloading'], to: 'loaded' },
-				{ name: 'fire', from: 'emptyMag', to: 'reloading' },
-				{ name: 'fire', from: 'outOfAmmo', to: 'emptyMag' },
-				{ name: 'reload', from: ['emptyMag','loaded'], to: 'reloading' },
-				{ name: 'empty', from: 'checking', to: 'emptyMag' },
-				{ name: 'emptyFire', from: 'emptyMag', to: 'outOfAmmo' },
-				// { name: 'restock', from: '*', to: 'restocking' },
-			],
-			callbacks: {
-
-				onenterstate: function( event, from, to ) {
-					// console.log( "current state: ", this.current);
-					// console.log( event, from, to );
-				},
-
-				onbeforefire: function() {
-
-					if ( weapon.currentCapacity > 0 ) {
-						weapon.currentCapacity -= 1;
-					}
-
-					weapon.onChanged();
-					
-				},
-
-				onfire: function( event, from, to ) {
-
-					if ( to === "checking" ) {
-
-						// fire emitter
-						weapon.shootSound.isPlaying = false;
-						// // sounds.railgun.stop();
-						weapon.shootSound.play();
-						weapon.muzzleparticle.triggerPoolEmitter( 1 );
-
-						var intersections = raycast();
-
-						if ( intersections.length > 0 ) {
-
-							var target = intersections[ 0 ];
-
-							if ( isFinite( target.object.mass ) ) {
-								// is not static object
-								// -> launch into space
-								applyImpulse( target );
-
-							}
-
-						}
-
-					}
-
-				},
-
-				onchecking: function() {
-
-					if( weapon.currentCapacity === 0 ) {
-						fsm.empty();
-					} else {
-						fsm.readyToFire();
-					}
-
-
-				},
-
-				onemptyFire: function() {
-
-					// sound click
-					sounds.weaponclick.play();
-
-				},
-
-				onemptyMag: function() {
-
-					if ( weapon.magazines <= 0 ) {
-
-						fsm.emptyFire();
-
-					}
-
-					weapon.emptySound.play();
-
-				},
-
-				onbeforereload: function() {
-					// stop reloading without magazines left
-					// and if magazines full, stop too ofc -.-
-					var fullMagazines = weapon.maxCapacity === weapon.currentCapacity;
-					var noMagazinesLeft = weapon.magazines <= 0;
-
-					if ( noMagazinesLeft || fullMagazines ) {
-						return false;
-					}
-
-				},
-
-				onreloading: function() {
-
-					weapon.reload( fsm.readyToFire, fsm );
-
-				},
-				
-			}
-
-		});
-
-		// folder.open();
-		// folder.add( fsm, "current" ).name("Current State").listen();
-		// folder.add( fsm, "fire" ).name("fire");
-		// folder.add( fsm, "reload" ).name("reload");
-
-		return fsm;
-
-	}
-	
 	// var emitterHelper = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshNormalMaterial({ wireframe: true }));
 	// scene.add( emitterHelper );
 	// folder.add( emitterHelper.material, "visible" );
@@ -239,7 +150,8 @@ define([
 		this.reloadSound;
 		this.emptySound = sounds.weaponclick;
 
-		this.fsm = setupFSM( this );
+		this.fsm = weaponStateMachine( this );
+		this.aimfsm = aimFSM( this );
 		
 		this.mesh = mesh;
 		// mesh.updateMatrix();
@@ -258,6 +170,31 @@ define([
 	Weapon.prototype.toString = function() {
 
 		return this.name + ": " + this.currentCapacity + "/" + this.maxCapacity * this.magazines + " Ammo";
+
+	};
+
+	Weapon.prototype.fire = function() {
+
+		// fire emitter
+		this.shootSound.isPlaying = false;
+		// sounds.shootSound.stop();
+		this.shootSound.play();
+		this.muzzleparticle.triggerPoolEmitter( 1 );
+
+		var intersections = raycast();
+
+		if ( intersections.length > 0 ) {
+
+			var target = intersections[ 0 ];
+
+			if ( isFinite( target.object.mass ) ) {
+				// is not static object
+				// -> launch into space
+				applyImpulse( target );
+
+			}
+
+		}
 
 	};
 
@@ -338,10 +275,9 @@ define([
 
 		var velocity = controls.getVelocity();
 		var swayPosition = sway( velocity, this.originPos );
-		if ( ! this.ironSights ) {
 
+		if ( this.aimfsm.current === "idle" ) {
 			this.mesh.position.copy( swayPosition );
-
 		}
 
 	};
@@ -371,6 +307,17 @@ define([
 		var target = this.ironSightRotation;
 		tweenVector( source, target, time );
 
+		new TWEEN.Tween( controls.crosshair.material ).to( { opacity: 0 }, time ).start();
+
+		new TWEEN.Tween( camera ).to( { fov: 40 }, time )
+			// .easing( TWEEN.Easing.Sinusoidal.InOut )
+			.easing( TWEEN.Easing.Quartic.InOut )
+			.onUpdate( camera.updateProjectionMatrix )
+			// .onComplete( fsm.transition )
+			// .easing( TWEEN.Easing.Quadratic.InOut)
+			// .easing( TWEEN.Easing.Elastic.Out)
+			.start();
+
 		// size up particle emitters
 		// to show up behind weapon
 		var particleGroup = this.muzzleparticle;
@@ -394,9 +341,20 @@ define([
 		var source = this.mesh.rotation;
 		var target = this.originRot;
 		tweenVector( source, target, time );
+		
+		new TWEEN.Tween( controls.crosshair.material ).to( { opacity: 1 }, time ).start();
+
+		new TWEEN.Tween( camera ).to( { fov: 60 }, time )
+			// .easing( TWEEN.Easing.Sinusoidal.InOut )
+			// .easing( TWEEN.Easing.Quartic.InOut )
+			.easing( TWEEN.Easing.Cubic.InOut )
+			.onUpdate( camera.updateProjectionMatrix )
+			// .onComplete( fsm.transition )
+			// .easing( TWEEN.Easing.Quadratic.InOut)
+			// .easing( TWEEN.Easing.Elastic.Out)
+			.start();
 
 		// console.log( this.muzzleparticle );
-
 		// reset emitter to default values
 		var particleGroup = this.muzzleparticle;
 		for ( var i = 0; i < particleGroup.emitters.length; i ++ ) {
@@ -417,43 +375,19 @@ define([
 		var that = this;
 		var time = 600;
 
-		function toggle() {
-			that.ironSights = ! that.ironSights;
-			// controls.crosshair.visible = ! controls.crosshair.visible;
-		}
-
 		if ( ! this.ironSights ) {
 			// zoom In
 
-			this.enterIronSights( time );
-
-			new TWEEN.Tween( controls.crosshair.material ).to( { opacity: 0 }, time ).start();
-
-			new TWEEN.Tween( camera ).to( { fov: 40 }, time )
-				// .easing( TWEEN.Easing.Sinusoidal.InOut )
-				.easing( TWEEN.Easing.Quartic.InOut )
-				.onUpdate( camera.updateProjectionMatrix )
-				.onComplete( toggle )
-				// .easing( TWEEN.Easing.Quadratic.InOut)
-				// .easing( TWEEN.Easing.Elastic.Out)
-				.start();
+			this.aimfsm.aim( time );
+			// this.fsm.aim( time );
+			// this.enterIronSights( time );
 
 		} else {
 			// zoom Out
 			
-			this.leaveIronSights( time );
-
-			new TWEEN.Tween( controls.crosshair.material ).to( { opacity: 1 }, time ).start();
-
-			new TWEEN.Tween( camera ).to( { fov: 60 }, time )
-				// .easing( TWEEN.Easing.Sinusoidal.InOut )
-				// .easing( TWEEN.Easing.Quartic.InOut )
-				.easing( TWEEN.Easing.Cubic.InOut )
-				.onUpdate( camera.updateProjectionMatrix )
-				.onComplete( toggle )
-				// .easing( TWEEN.Easing.Quadratic.InOut)
-				// .easing( TWEEN.Easing.Elastic.Out)
-				.start();
+			// this.fsm.aim( time );
+			this.aimfsm.aim( time );
+			// this.leaveIronSights( time );
 
 		}
 		// this.ironSights = !this.ironSights;

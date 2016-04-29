@@ -208,9 +208,15 @@ define([
 		// console.log( "current", this.inHands.fsm.current );
 		// console.log( "can", this.inHands.fsm.transitions() );
 		var fsm = this.inHands.fsm;
+		var aimfsm = this.inHands.aimfsm;
 		// if ( fsm.cannot( "fire" ) && fsm.cannot( "reload" ) ) {
 		if ( fsm.is( "reloading" ) ) {
 			return false;
+		}
+
+		// transition back from aiming
+		if ( aimfsm.is( "aiming" ) ) {
+			this.inHands.aim();
 		}
 		
 		var newWeapon = number || 0;
