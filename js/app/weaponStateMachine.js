@@ -15,7 +15,7 @@ define([
 
 	function weaponStateMachine( weapon ) {
 
-		// states: loaded, checking, reloading, emptyMag, outOfAmmo
+		// states: ready, fireing, reloading, emptyMag, outOfAmmo
 		// events: fire, readyToFire, reload, empty, emptyFire
 
 		var fsm = StateMachine.create({
