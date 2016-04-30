@@ -19,9 +19,11 @@ The demo is also the current development branch, so what you will see may not be
 ###[Run demo](https://weiserhei.github.io/threejs-fps/)
 
 ##ToDo
-- Weapon damage handling
+- Weapon damage handling (distance)
 - Weapon recoil and feedback
 - Automatic weapon fire
+- Weapon onHit particle effects
+
 - Add Doors
 - Add Jukebox
 - Add moonphysics switch
