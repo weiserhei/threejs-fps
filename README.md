@@ -10,7 +10,7 @@ This is my prototype for a First Person Game.
 - [JS FSM](https://github.com/jakesgordon/javascript-state-machine)
 
 ##Game Features:
-- First Person Character Controller
+- First+Third Person Character Controller
 - Player Weapons
 - Collectable Items
 - Simple HTML HUD
@@ -25,7 +25,6 @@ The demo is also the current development branch, so what you will see may not be
 - Weapon recoil and feedback
 - Automatic weapon fire
 - Weapon onHit particle effects
-
 - Add Doors
 - Add Jukebox
 - Add moonphysics switch
