@@ -20,6 +20,8 @@ The demo is also the current development branch, so what you will see may not be
 
 ##ToDo
 - Weapon damage handling
+- Weapon recoil and feedback
+- Automatic weapon fire
 - Add Doors
 - Add Jukebox
 - Add moonphysics switch
