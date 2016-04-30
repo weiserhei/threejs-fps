@@ -64,12 +64,12 @@ define([
 
 	}
 
-	function init() {
+	function init( hud ) {
 
 		var weapons = new THREE.Group();
 
 		var shotgun = new Weapon( shotgunMesh );
-		shotgun.name = "shotgun";
+		shotgun.name = "Shotgun";
 		shotgun.maxCapacity = 8;
 		shotgun.currentCapacity = 8;
 		shotgun.magazines = 1;
@@ -84,12 +84,12 @@ define([
 		weapons.add( shotgunMesh );
 
 		var sniper = new Weapon( sniperMesh );
-		sniper.name = "Sniper"
+		sniper.name = "MK 14"
 		sniper.maxCapacity = 6;
-		sniper.currentCapacity = 6;
+		sniper.currentCapacity = 1;
 		sniper.magazines = 2; 
 		sniper.reloadTime = 4; 
-		sniper.shootDelay = 1;
+		sniper.shootDelay = 0.8;
 		sniper.power = 100;
 		sniper.shootSound = sounds.sniperrifle;
 		sniper.reloadSound = sounds.sniperreload;

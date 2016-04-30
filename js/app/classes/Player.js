@@ -59,7 +59,9 @@ define([
 
 		this.inHands;
 
-		var weapons = initWeapons();
+		// hud.weaponStatusText.style = "padding:4px; background:rgba( 0, 0, 0, 0.25 ); width: unset; text-align:right; right: 100px;";
+
+		var weapons = initWeapons( hud );
 		this.weapons = [];
 
 		this.inHands = weapons.shotgun;
@@ -93,6 +95,7 @@ define([
 		this.switchWeapon( 1 );
 
 		var toggle = false; // toggle key down
+		var toggle2 = false; // toggle key down
 
 		document.addEventListener('keydown', onDocumentKeyDown.bind( this ), false);
 		document.addEventListener('keyup', onDocumentKeyUp, false);
@@ -120,6 +123,18 @@ define([
 					this.use();
 
 					break;
+
+				case 82: //R
+
+					if( toggle2 ) { return; }
+					toggle2 = !toggle2;
+
+					if ( this.inHands instanceof Weapon ) {
+						this.inHands.fsm.reload();
+					}
+
+					break;
+
 			}
 
 		}
@@ -131,9 +146,14 @@ define([
 
 			switch( keycode ) {
 				case 69 : //E
-				// execute only once on keydown, until reset
-				toggle = false;
-				break;
+					// execute only once on keydown, until reset
+					toggle = false;
+					break;
+				
+				case 82 : //R
+					// execute only once on keydown, until reset
+					toggle2 = false;
+					break;
 			}
 
 		}
@@ -231,10 +251,9 @@ define([
 		// 	}
 		// }
 
-		if ( this.inHands !== undefined ) {
-
+		// if ( this.inHands !== undefined ) {
 			this.inHands.mesh.traverseVisible ( function ( object ) { object.visible = false; } );
-		}
+		// }
 
 		// this.weapons.traverseVisible ( function ( object ) { object.visible = false; } );
 		// this.weapons.visible = true;

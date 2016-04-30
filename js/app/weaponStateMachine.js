@@ -20,15 +20,14 @@ define([
 
 		var fsm = StateMachine.create({
 
-			initial: 'loaded',
+			initial: 'ready',
 			events: [
 				// { name: 'reset', from: '*',  to: 'locked' },
-				{ name: 'fire', from: 'loaded', to: 'checking' },
-				{ name: 'readyToFire', from: ['checking','reloading'], to: 'loaded' },
+				{ name: 'readyToFire', from: ['fireing','reloading'], to: 'ready' },
+				{ name: 'fire', from: ['ready','outOfAmmo'], to: 'fireing' },
 				{ name: 'fire', from: 'emptyMag', to: 'reloading' },
-				{ name: 'fire', from: 'outOfAmmo', to: 'emptyMag' },
-				{ name: 'reload', from: ['emptyMag','loaded'], to: 'reloading' },
-				{ name: 'empty', from: 'checking', to: 'emptyMag' },
+				{ name: 'reload', from: ['emptyMag','ready'], to: 'reloading' },
+				{ name: 'empty', from: 'fireing', to: 'emptyMag' },
 				{ name: 'emptyFire', from: 'emptyMag', to: 'outOfAmmo' },
 				// { name: 'restock', from: '*', to: 'restocking' },
 			],
@@ -40,33 +39,33 @@ define([
 				},
 
 				onbeforefire: function() {
-
-					if ( weapon.currentCapacity > 0 ) {
-						weapon.currentCapacity -= 1;
-					}
-
-					weapon.onChanged();
 					
 				},
 
 				onfire: function( event, from, to ) {
 
-					if ( to === "checking" ) {
-
-						weapon.fire();
-
-					}
-
 				},
 
-				onchecking: function() {
+				onfireing: function() {
 
-					if( weapon.currentCapacity === 0 ) {
-						fsm.empty();
-					} else {
-						fsm.readyToFire();
+					if ( weapon.currentCapacity > 0 ) {
+
+						weapon.fire();
+						weapon.currentCapacity -= 1;
+						weapon.onChanged();
+						
 					}
 
+					// ready to fire another?
+					if ( weapon.currentCapacity > 0 ) {
+						// yes, lets go
+						fsm.readyToFire();
+
+					} else {
+						
+						fsm.empty();
+
+					}
 
 				},
 
@@ -83,9 +82,13 @@ define([
 
 						fsm.emptyFire();
 
-					}
+					// } else {
 
-					weapon.emptySound.play();
+						// weapon.statusText.show( true, "press <span class='highlight-actionkey'>[ R ]</span> to reload " + weapon.name );
+						
+					} else if ( weapon.magazines > 0 && weapon.emptySound instanceof THREE.Audio ) {
+						weapon.emptySound.play();
+					}
 
 				},
 

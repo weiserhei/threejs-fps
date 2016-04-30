@@ -96,7 +96,9 @@ define([
 	var folder = debugGUI.getFolder("Shoot me Up");
 	folder.open();
 
-	function Weapon( mesh ) {
+	function Weapon( mesh, statusText ) {
+
+		this.statusText = statusText;
 
 		// gun attributes
 		this.name = "";
@@ -108,7 +110,7 @@ define([
 		// sounds
 		this.shootSound;
 		this.reloadSound;
-		this.emptySound = sounds.weaponclick;
+		this.emptySound;
 
 		// weapon state
 		this.fsm = weaponStateMachine( this );
@@ -362,7 +364,7 @@ define([
 
 		var weapon = this;
 
-		if ( this.name === "shotgun" ) {
+		if ( this.name === "Shotgun" ) {
 
 			// var toggle = 2;
 			var missing = this.maxCapacity - this.currentCapacity;
