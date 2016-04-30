@@ -7,6 +7,15 @@ define([
 	"loadingManager" 
 ], function ( THREE, loadingManager ) {
 
+
+	function onProgress( xhr ) {
+		// console.log("on progress", xhr );
+	}
+
+	function onError( xhr ) {
+		console.error( "error", xhr );
+	}
+
 	var jsonLoader = new THREE.JSONLoader( loadingManager );
 
 	// safe
@@ -32,7 +41,7 @@ define([
 	// 	// mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
 	// 	sicherungskasten.meshes.sicherung = mesh;
 
-	// } );
+	// }, onProgress, onError );
 
 	// sicherung schalter
 	var url = "assets/models/sicherungskasten/sicherung_schalter.js";
@@ -49,7 +58,7 @@ define([
 
 		sicherungskasten.meshes.schalter = mesh;
 
-	});
+	}, onProgress, onError );
 
 	// sicherungskasten
 	var url = "assets/models/sicherungskasten/sicherung_schrank.js";
@@ -63,7 +72,7 @@ define([
 
 		sicherungskasten.meshes.schrank = mesh;
 
-	} ); 
+	}, onProgress, onError ); 
 
 	// kasten türe
 	var url = "assets/models/sicherungskasten/sicherung_tür.js";
@@ -85,7 +94,7 @@ define([
 
 		sicherungskasten.meshes.tuere = mesh;
 
-	});
+	}, onProgress, onError );
 
 	return sicherungskasten;
 

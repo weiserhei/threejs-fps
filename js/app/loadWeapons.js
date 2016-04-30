@@ -14,6 +14,14 @@ define([
 
 	'use strict';
 
+	function onProgress( xhr ) {
+		// console.log("on progress", xhr );
+	}
+
+	function onError( xhr ) {
+		console.error( "error", xhr );
+	}
+
 	function gunHelper( mesh, offset ) {
 
 		var test = mesh.clone();
@@ -108,7 +116,7 @@ define([
 
 		group.shotgun = object;
 
-	});
+	}, onProgress, onError );
 
 	/*
 	var t_sniper = textureLoader.load( 'assets/models/scoped_rifle/twd_riflescoped.png' );
@@ -199,7 +207,7 @@ define([
 
 		group.sniper = object;
 
-	} );
+	}, onProgress, onError );
 
 	var t_rifle = textureLoader.load( 'assets/models/g36c/mat/g36c_d_fin.jpg' );
 	var t_rifle_n = textureLoader.load( 'assets/models/g36c/mat/g36c_n_fin.jpg' );
@@ -252,7 +260,7 @@ define([
 		// rifleMesh = object;
 		group.rifle = object;
 
-	} );
+	}, onProgress, onError );
 
 
 	return group;

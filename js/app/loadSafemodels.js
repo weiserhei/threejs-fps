@@ -7,6 +7,16 @@ define([
 	"loadingManager" 
 ], function ( THREE, loadingManager ) {
 
+	'use strict';
+
+	function onProgress( xhr ) {
+		// console.log("on progress", xhr );
+	}
+
+	function onError( xhr ) {
+		console.error( "error", xhr );
+	}
+
 	var jsonLoader = new THREE.JSONLoader( loadingManager );
 
 	// safe
@@ -38,7 +48,7 @@ define([
 		mesh.position.set( 0, boundingBoxSize.y / 2, 0 );
 		safe.meshes.safebase = mesh;
 
-	} );
+	}, onProgress, onError );
 
 	// // safe middle door
 	// var url = "assets/models/safe/safe_middle_door.js";
@@ -70,7 +80,7 @@ define([
 
 		safe.meshes.safedoor = mesh;
 
-	});
+	}, onProgress, onError );
 
 	// big wheel
 	var url = "assets/models/safe/safe_wheel.js";
@@ -83,7 +93,7 @@ define([
 
 		safe.meshes.safewheel = mesh;
 
-	} ); 
+	}, onProgress, onError ); 
 
 	// griff
 	var url = "assets/models/safe/safe_griff.js";
@@ -95,7 +105,7 @@ define([
 
 		safe.meshes.safegriff = mesh;
 
-	});
+	}, onProgress, onError );
 
 	return safe;
 

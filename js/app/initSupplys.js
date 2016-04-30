@@ -7,21 +7,20 @@ define([
 	"three",
 	"scene",
 	"debugGUI",
-	"sounds",
 	"loadingManager",
-	"classes/Item",
-	"physics"
-], function ( THREE, scene, debugGUI, sounds, loadingManager, Item, physics ) {
+	"physics",
+	"classes/Weapon"
+], function ( THREE, scene, debugGUI, loadingManager, physics, Weapon ) {
 
 	'use strict';
 
 
 	function onError( xhr ) {
-		console.log( "error", xhr );
+		console.error( "error", xhr );
 	}
 
-	function onProgress() {
-
+	function onProgress( xhr ) {
+		// console.warn("on progress", xhr );
 	}
 
 	// supply model
@@ -71,41 +70,13 @@ define([
 
 		}, onProgress, onError );
 
-	});
+	}, onProgress, onError );
 
 
-	function initSupplys( player ) {
+	function supplyGhostBody( supplyMesh, boundingBoxSize, player ) {
 
-		// var clone = object.clone();
-		// CALCULATE BOUNDING BOX BEFORE ROTATION!
+		showGhost( boundingBoxSize, supplyMesh );
 
-		var helper = new THREE.BoundingBoxHelper( supplyMesh, 0xff0000 );
-		helper.update();
-		var boundingBoxSize = helper.box.max.sub( helper.box.min );
-		
-		supplyMesh.position.set( 3.8, 0, 4.1 );
-		// object.rotation.y = 170 * Math.PI / 180;
-		
-		// clone.position.set( 4.3, 0, 3.3 );
-		// clone.rotation.y = -90 * Math.PI / 180;
-		
-		scene.add( supplyMesh );
-		// room.add( clone );
-
-		// makeStaticBox( boundingBoxSize.clone(), clone.position, clone.rotation );		
-		// makeStaticBox( new THREE.Vector3(1.3,1.8,1.1), new THREE.Vector3( -3.7, 0, -4.6 ), undefined , staticGeometry );
-		// makeStaticBox( new THREE.Vector3(1.1,1.8,1.3), new THREE.Vector3( -2.9, 0, -3.3 ), undefined, staticGeometry );
-
-		// scene.add( object );
-
-		var size = boundingBoxSize.clone().multiplyScalar( 2 );
-		var mesh = new THREE.Mesh( new THREE.BoxGeometry( size.x, size.y, size.z ), new THREE.MeshLambertMaterial({ transparent:true, opacity: 0.1 } ) );
-		console.log( size, mesh );
-		scene.add( mesh );
-		mesh.position.copy( supplyMesh.position );
-		mesh.rotation.copy( supplyMesh.rotation );
-
-		physics.makeStaticBox( boundingBoxSize.clone(), supplyMesh.position, supplyMesh.rotation );
 		var ghost_body = physics.ghostBody( boundingBoxSize.clone().multiplyScalar( 2 ), supplyMesh.position, supplyMesh.rotation );
 
 		// Set masks to only collide with player body
@@ -114,6 +85,8 @@ define([
 		    GROUP_PLAYER = 2;
 
 		ghost_body.collision_mask = INCLUSIVE_MASK | GROUP_PLAYER;
+
+		// callbacks
 
 		// ghost_body.addListener(
 		// 				'contactStart',
@@ -125,6 +98,7 @@ define([
 		var lastUpdate = 0;
 		function contactContinue() {
 			// console.log("contactContinue");
+			// todo: show restock zone icon
 
 			// var t = 5e-3 * (Date.now() % 6283);
 			var seconds = new Date() / 1000;
@@ -132,9 +106,15 @@ define([
 
 			if ( seconds > lastUpdate + 2 ) {
 				lastUpdate = seconds;
-				player.inHands.restock( 1 );
+
+				if ( player.inHands instanceof Weapon ) {
+
+					player.inHands.restock( 1 );
+
+				}
 			}
 
+			// alternative
 			// if ( this._onTrigger2 === false ) {
 
 			// 	player.inHands.restock( 1 );
@@ -145,15 +125,62 @@ define([
 
 		}
 
-		ghost_body.addListener( 'contactContinue', contactContinue );				
+		ghost_body.addListener( 'contactContinue', contactContinue );
 
 		// ghost_body.addListener(
+		                // todo: hide restock zone icon
 		// 				'contactEnd',
 		// 				function() {
 		// 					// console.log("contactEnd");
 		// 				}
 		// 			);
+
+		return ghost_body;
+
+	}
+
+	function showGhost( boundingBoxSize, object ) {
+
+		var size = boundingBoxSize.clone().multiplyScalar( 2 );
+		var mesh = new THREE.Mesh( new THREE.BoxGeometry( size.x, size.y, size.z ), new THREE.MeshLambertMaterial({ transparent:true, opacity: 0.1 } ) );
+		scene.add( mesh );
+		mesh.position.copy( object.position );
+		mesh.rotation.copy( object.rotation );
+		mesh.matrixAutoUpdate = false;
+		mesh.updateMatrix();
+
+		return mesh;
+
+	}
+
+	function initSupplys( player ) {
+
+		var object = supplyMesh;
+
+		// CALCULATE BOUNDING BOX BEFORE ROTATION!
+		var helper = new THREE.BoundingBoxHelper( object, 0xff0000 );
+		helper.update();
+		var boundingBoxSize = helper.box.max.sub( helper.box.min );
+		
+		object.position.set( 3.8, 0, 4.1 );
+		// object.rotation.y = 170 * Math.PI / 180;
+		object.matrixAutoUpdate = false;
+		object.updateMatrix();
+		scene.add( object );
+
+		physics.makeStaticBox( boundingBoxSize.clone(), object.position, object.rotation );
+		supplyGhostBody( object, boundingBoxSize, player );
+		
+		// var clone = object.clone();
+		// clone.position.set( 4.3, 0, 3.3 );
+		// clone.rotation.y = -90 * Math.PI / 180;
+		// physics.makeStaticBox( boundingBoxSize.clone(), clone.position, clone.rotation );		
+		// supplyGhostBody( clone, boundingBoxSize, player );
+		// scene.add( clone );
+
+
 		/*
+		// b2.addEventListener("collide", function(e){ console.log("sphere collided"); } );
 		// dynamic_body.addListener( "speculativeContact", function(e){ console.log("wtf"); } );
 		dynamic_body.addListener(
 						'speculativeContact',
@@ -168,9 +195,8 @@ define([
 						}
 					);
 		*/
-		// b2.addEventListener("collide", function(e){ console.log("sphere collided"); } );
 
-		return supplyMesh;
+		return object;
 
 	}
 
