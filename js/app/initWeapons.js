@@ -80,7 +80,8 @@ define([
 		shotgun.mesh = shotgunMesh;
 		shotgun.power = 20;
 		// shotgun.emitterPool = "shotgun";
-		shotgun.ironSightPosition = new THREE.Vector3( 0.000, -0.14, shotgunMesh.position.z );
+		// shotgun.ironSightPosition = new THREE.Vector3( 0.000, -0.14, shotgunMesh.position.z );
+		shotgun.ironSightPosition = new THREE.Vector3( 0.014, -0.03, shotgunMesh.position.z + 0.15 );
 		weapons.add( shotgunMesh );
 
 		var sniper = new Weapon( sniperMesh );
@@ -131,12 +132,21 @@ define([
 
 	// MODELS AND TEXTURES
 
+	//1912
+	// scale 0.11, y+z* 0.15
+
 	var textureLoader = new THREE.TextureLoader( loadingManager );
 	var loader = new THREE.OBJLoader( loadingManager );
 
-	var t_shotgun = textureLoader.load( 'assets/models/shotgun_l4d/twd_shotgun.png' );
+	var t_shotgun = textureLoader.load( 'assets/models/ithaca/M37_diffuse.jpg' );
+	var t_shotgun_n = textureLoader.load( 'assets/models/ithaca/M37_normal.jpg' );
+	var t_shells = textureLoader.load( 'assets/models/ithaca/Shells_diffuse.jpg' );
+	var t_shells_n = textureLoader.load( 'assets/models/ithaca/Shells_normal.jpg' );
+	var t_shotgun_s = textureLoader.load( 'assets/models/ithaca/M37_specular.jpg' );
 	var shotgunMesh;
-	loader.load( 'assets/models/shotgun_l4d/shotgun.obj', function ( object ) {
+	// loader.load( 'assets/models/shotgun_l4d/shotgun.obj', function ( object ) {
+	// loader.load( 'assets/models/shotgun_m1014/shotgun_m1014.obj', function ( object ) {
+	loader.load( 'assets/models/ithaca/m37 tris.obj', function ( object ) {
 
 		/*		
 		object.traverse( function ( child ) {
@@ -146,34 +156,49 @@ define([
 		} );
 		*/
 
-		object = object.children[0];
-
-		var s = 0.55;
-		object.geometry.scale( s, s, s );
-		object.geometry.center();
-		object.geometry.applyMatrix( new THREE.Matrix4().makeRotationY( -90 * Math.PI / 180 ) );
+		// object = object.children[0];
+		console.log( object );
+		var s = 0.003;
+		// object.scale.set( s, s, s );
+		// object.rotation.y = 180 * Math.PI / 180;
+		for ( var i = 0; i < object.children.length; i ++ ) {
+			var obj = object.children[ i ];
+			console.log( obj );
+			obj.geometry.scale( s, s, s );
+			// obj.geometry.center();
+			obj.geometry.applyMatrix( new THREE.Matrix4().makeRotationY( 180 * Math.PI / 180 ) );
+		}
 
 		var bbox = new THREE.BoundingBoxHelper( object );
 		bbox.update();
 		var boundingBoxSize = bbox.box.max.sub( bbox.box.min );
 
-		var offset = new THREE.Vector3( 0, boundingBoxSize.y / 3.5, - ( boundingBoxSize.z / 2 + 0.05 ) );
+		var offset = new THREE.Vector3( -0.02, 0, - ( boundingBoxSize.z / 2 + 0.05 ) );
 		object.userData.emitterVector = offset;
 
 		// gunHelper( object, offset );
 
 		object.receiveShadow = true;
+		var material = object.children[0].material;
+		material.color.setHSL( 0, 0, 2 );
+		material.map = t_shotgun;
+		material.normalMap = t_shotgun_n;
+		material.specularMap = t_shotgun_s;
+		material.specular.setHex( 0xFFFFFF );
+		material.map.anisotropy = 8; //front barrel of the weapon gets blurry
 
-		object.material.color.setHSL( 0, 0, 1 );
-		object.material.map = t_shotgun;
-		object.material.map.anisotropy = 8; //front barrel of the weapon gets blurry
+		var material2 = object.children[2].material.clone();
+		material2.map = t_shells;
+		material2.normalMap = t_shells_n;
+		object.children[2].material = material2;
 
-		// object.rotation.y = -90 * Math.PI / 180;
-		// object.rotation.x = -2 * Math.PI / 180;
+		// var test = object.clone();
+		// scene.add( test );
+		// test.position.set( 0, 1.2, 0 );
+		// scene.add( object );
 		
-		// http://stackoverflow.com/questions/12666570/how-to-change-the-zorder-of-object-with-threejs
-		
-		var position = screenPosition( 54, 37, -0.5 );
+		// var position = screenPosition( 54, 37, -0.5 );
+		var position = screenPosition( 54, 42, -0.5 );
 		object.position.copy( position );
 
 		shotgunMesh = object;

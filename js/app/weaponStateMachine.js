@@ -115,7 +115,7 @@ define([
 		});
 
 		var folder = debugGUI.getFolder("Shoot me Up");
-		folder.open();
+		// folder.open();
 		folder.add( fsm, "current" ).name("Current State").listen();
 		folder.add( fsm, "fire" ).name("fire");
 		folder.add( fsm, "reload" ).name("reload");

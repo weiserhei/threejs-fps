@@ -94,7 +94,7 @@ define([
 	// folder.add( emitterHelper.material, "visible" );
 
 	var folder = debugGUI.getFolder("Shoot me Up");
-	folder.open();
+	// folder.open();
 
 	function Weapon( mesh, statusText ) {
 
@@ -126,6 +126,7 @@ define([
 
 		// iron sights
 		this.aiming = false;
+		this.transition = false;
 
 		// physical
 		this.power = 50;
@@ -270,7 +271,10 @@ define([
 
 	Weapon.prototype.enterIronSights = function( time ) {
 
-		setTimeout( function(){ this.aiming = !this.aiming; }.bind( this ), time );
+		setTimeout( function(){ 
+			this.aiming = !this.aiming;
+			this.transition = false;
+		}.bind( this ), time );
 
 		var source = this.mesh.position;
 		var target = this.ironSightPosition;
@@ -307,7 +311,10 @@ define([
 
 	Weapon.prototype.leaveIronSights = function( time ) {
 
-		setTimeout( function(){ this.aiming = !this.aiming; }.bind( this ), time );
+		setTimeout( function(){ 
+			this.aiming = !this.aiming;
+			this.transition = false;
+		}.bind( this ), time );
 
 		var source = this.mesh.position;
 		var target = this.originPos;
@@ -346,8 +353,13 @@ define([
 
 		// sway -> only vertical when aimed
 
-		var time = time || 600;
+		// prevent trigger multiple tweens
+		if ( this.transition === true ) {
+			return false;
+		}
 
+		var time = time || 500;
+		this.transition = true;
 		if ( ! this.aiming ) {
 			// zoom In
 			this.enterIronSights( time );
