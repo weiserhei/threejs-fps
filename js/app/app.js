@@ -50,7 +50,8 @@ define([
 	"initItems",
 	"classes/Player",
 	"particles",
-	"muzzleparticle"
+	"muzzleparticle",
+	"puffParticles"
 ], function ( 
 	THREE, 
 	TWEEN,
@@ -67,7 +68,8 @@ define([
 	initItems,
 	Player,
 	particles,
-	muzzleparticle
+	muzzleparticle,
+	puffParticles
 ) {
 
 	'use strict';
@@ -82,10 +84,11 @@ define([
 
 	var clock = new THREE.Clock();
 	var delta;
-	var player;;
+	var player;
 	var particleGroup;
 	// camera.add( muzzleparticle.mesh );
 	scene.add( muzzleparticle.mesh );
+	scene.add( puffParticles.mesh );
 	// muzzleparticle.mesh.position.set( 0, 1, 1 );
 
 	// Start program
@@ -136,6 +139,7 @@ define([
 		// using setIntervall instead of in main loop
 		particleGroup.tick( delta );
 		muzzleparticle.tick( delta );
+		puffParticles.tick( delta );
 		physics.update( delta );
 		player.update( objects );
 		controls.update();

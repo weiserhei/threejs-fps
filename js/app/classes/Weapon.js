@@ -17,7 +17,8 @@ define([
 	"camera",
 	"muzzleparticle",
 	"weaponStateMachine",
-], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, muzzleparticle, weaponStateMachine ) {
+	"puffParticles"
+], function ( THREE, scene, debugGUI, physics, sounds, controls, camera, muzzleparticle, weaponStateMachine, puffParticles ) {
 
 	'use strict';
 
@@ -157,6 +158,14 @@ define([
 		if ( intersections.length > 0 ) {
 
 			var target = intersections[ 0 ];
+
+			// console.log( target );
+			puffParticles.mesh.position.copy( target.point );
+			var x = target.normal.x;
+			var y = target.normal.y;
+			var z = target.normal.z;
+			puffParticles.setNormal( x, y, z );
+			puffParticles.triggerPoolEmitter( 1 );
 
 			if ( isFinite( target.object.mass ) ) {
 				// is not static object
@@ -299,14 +308,14 @@ define([
 		// to show up behind weapon
 		var particleGroup = this.muzzleparticle;
 		for ( var i = 0; i < particleGroup.emitters.length; i ++ ) {
-            particleGroup.emitters[ i ].size.value = [ 0.3, 0.3, 0.1 ];
-            // particleGroup.emitters[ i ].position.value = new THREE.Vector3( 0, 0.5, 0 );
-            // particleGroup.emitters[ i ].velocity.value = new THREE.Vector3( 0, 1, -10 );
-            particleGroup.emitters[ i ].position.spread = new THREE.Vector3( 0.2, 0.2, 0.1 );
-            particleGroup.emitters[ i ].acceleration.value = new THREE.Vector3( 10, 10, 2 );
-        }
+			particleGroup.emitters[ i ].size.value = [ 0.3, 0.3, 0.1 ];
+			// particleGroup.emitters[ i ].position.value = new THREE.Vector3( 0, 0.5, 0 );
+			// particleGroup.emitters[ i ].velocity.value = new THREE.Vector3( 0, 1, -10 );
+			particleGroup.emitters[ i ].position.spread = new THREE.Vector3( 0.2, 0.2, 0.1 );
+			particleGroup.emitters[ i ].acceleration.value = new THREE.Vector3( 10, 10, 2 );
+		}
 
-			
+
 	};
 
 	Weapon.prototype.leaveIronSights = function( time ) {

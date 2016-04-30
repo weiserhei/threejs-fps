@@ -26,7 +26,7 @@ define([
 				{ name: 'readyToFire', from: ['fireing','reloading'], to: 'ready' },
 				{ name: 'fire', from: ['ready','outOfAmmo'], to: 'fireing' },
 				{ name: 'fire', from: 'emptyMag', to: 'reloading' },
-				{ name: 'reload', from: ['emptyMag','ready'], to: 'reloading' },
+				{ name: 'reload', from: ['emptyMag','ready','outOfAmmo'], to: 'reloading' },
 				{ name: 'empty', from: 'fireing', to: 'emptyMag' },
 				{ name: 'emptyFire', from: 'emptyMag', to: 'outOfAmmo' },
 				// { name: 'restock', from: '*', to: 'restocking' },

@@ -5,11 +5,12 @@
 define([ 
 	"three",
 	"ShaderParticleEngine",
-	"debugGUI" 
-], function ( THREE, SPE, debugGUI ) {
+	"debugGUI",
+    "loadingManager"
+], function ( THREE, SPE, debugGUI, loadingManager ) {
 
 	// Create particle group and emitter
-    var loader = new THREE.TextureLoader();
+    var loader = new THREE.TextureLoader( loadingManager );
     // var texture = loader.load('assets/textures/img/smokeparticle.png');
     var texture = loader.load('assets/textures/img/spark1.png');
     // var texture = loader.load('assets/textures/img/snowflake4.png');

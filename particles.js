@@ -88,6 +88,204 @@ function particles() {
 	// Create particle group and emitter
 	function initParticles() {
 	    var loader = new THREE.TextureLoader();
+
+	    // Impact Puffs
+		var velocityMagnitude = 0.5;
+		var velocitySpread = new THREE.Vector3( 0.6666666666666665, 0.3555555555555554, 0.5222222222222223 );
+		this.setNormal = function( x, y, z ) {
+			var v = velocityMagnitude;
+			// console.log(this);
+			// this is setting velocity for all emitters in the pool
+			this.particleGroup.emitters[0].velocity.set( x * v, y * v, z * v );
+			// this.emitter.velocity.set( x * v, y * v, z * v );
+		};
+
+		var texture = loader.load("assets/textures/img/fx_smoke.png");
+		// Create particle group
+
+		var particleGroup = new SPE.Group({
+			texture: {
+				value: texture
+			},
+			blending: THREE.NormalBlending
+		});
+
+		/*
+		this.particleGroup = new SPE.Group({
+
+			maxAge: 2, //3
+			hasPerspective: 1,
+			colorize: 1,
+			transparent: true,
+			alphaTest: 0.1,
+			depthWrite: false,
+			depthTest: true,
+
+		});
+		*/
+
+		var emitter = new SPE.Emitter({
+
+	        type: SPE.distributions.CUBE,
+	        // activeMultiplier: 4,
+	        // direction: -1,
+	        // duration: 0.02,
+	        maxAge: {
+	            value: 2
+	        },
+	        position: {
+	            // radius: 0.01, // attributes..emitters[0].position._radius
+	            value: new THREE.Vector3( 0, 0, 0 ),
+	            spread: new THREE.Vector3( 0.1, 0.1, 0.1 ),
+	            // distribution: SPE.distributions.BOX
+	            // spread: new THREE.Vector3( 0.8, 0.8, 0.8 ),
+	            // clamp: 0.2,
+	            // randomise: true
+	        },
+
+			size: {
+				value: [ 0.5, 0.8, 1.4 ],
+				// spread: [ 0, 0, 0 ]
+			},
+
+	        velocity: {
+	            value: new THREE.Vector3( 0, velocityMagnitude, 0 ),
+	            spread: velocitySpread,
+	            // distribution: SPE.distributions.DISC
+	            // distribution: SPE.distributions.BOX
+	            // distribution: SPE.distributions.SPHERE
+	        },
+
+	        acceleration: {
+	            value: new THREE.Vector3( 0, -0.1, 0 ),
+	            // distribution: SPE.distributions.SPHERE
+	            // distribution: SPE.distributions.BOX
+	        },
+
+	        drag: {
+	            value: 0.3
+	        },
+
+	        color: {
+	            value: [ new THREE.Color( 0xc8bb93 ), new THREE.Color( 0xffffff ) ],
+	            // spread: [ new THREE.Vector3( 0, 5, 0 ), new THREE.Vector3(0, 10, 0) ]
+	        },
+
+	        opacity: {
+	            value: [ 0.1, 0.05, 0.0 ],
+	            spread: [ 0.10556, 0.05, 0 ]
+	        },
+
+	        particleCount: 50
+
+	    });
+
+	/*
+	// original nach vorlage
+		var emitter = new SPE.Emitter({
+
+	        type: SPE.distributions.CUBE,
+	        // activeMultiplier: 4,
+	        // direction: -1,
+	        // duration: 0.02,
+	        maxAge: {
+	            value: 2
+	        },
+	        position: {
+	            // radius: 0.01, // attributes..emitters[0].position._radius
+	            value: new THREE.Vector3( 0, 0, 0 ),
+	            spread: new THREE.Vector3( 0.1, 0.1, 0.1 ),
+	            // distribution: SPE.distributions.BOX
+	            // spread: new THREE.Vector3( 0.8, 0.8, 0.8 ),
+	            // clamp: 0.2,
+	            // randomise: true
+	        },
+
+			size: {
+				value: [ 0.5, 0.8, 1.4 ],
+				// spread: [ 0, 0, 0 ]
+			},
+
+	        velocity: {
+	            value: new THREE.Vector3( 0, velocityMagnitude, 0 ),
+	            spread: velocitySpread,
+	            // distribution: SPE.distributions.DISC
+	            // distribution: SPE.distributions.BOX
+	            // distribution: SPE.distributions.SPHERE
+	        },
+
+	        acceleration: {
+	            value: new THREE.Vector3( 0, -0.1, 0 ),
+	            // distribution: SPE.distributions.SPHERE
+	            // distribution: SPE.distributions.BOX
+	        },
+
+	        // drag: {
+	        //     value: 0.3
+	        // },
+
+	        color: {
+	            value: [ new THREE.Color( 0xc8bb93 ), new THREE.Color( 0xc8bb93 ), new THREE.Color( 0xc8bb93 ) ],
+	            // spread: [ new THREE.Vector3( 0, 5, 0 ), new THREE.Vector3(0, 10, 0) ]
+	        },
+
+	        opacity: {
+	            value: [ 0.1, 0.05, 0.0 ],
+	            spread: [ 0.10556, 0.05, 0 ]
+	        },
+
+	        particleCount: 50
+
+	    });
+	*/
+
+		/*
+		var emitterSettings = {
+
+			// this.emitter = new SPE.Emitter( {
+			// type: 'cube',
+			// particleCount: 50,
+			// position: new THREE.Vector3( 0, 0, 0 ),
+			// positionSpread: new THREE.Vector3( 0.1, 0.1, 0.1 ),
+			// acceleration: new THREE.Vector3( 0, -0.1, 0 ),
+			// acceleration: new THREE.Vector3( 0, -0.5, 0 ),
+			// accelerationSpread: new THREE.Vector3( 0, 0, 0 ),
+			// velocity: new THREE.Vector3( 0, velocityMagnitude, 0 ),
+			// velocitySpread: velocitySpread,
+			// sizeStart: 0.5,
+			// sizeStart: 12,
+			// sizeStartSpread: 0,
+			// sizeMiddle: 0.8,
+			// sizeMiddleSpread: 0,
+			// sizeEnd: 1.4,
+			// sizeEndSpread: 0,
+			// angleStart: 0,
+			// angleStartSpread: 0,
+			// angleMiddle: 0,
+			// angleMiddleSpread: 0,
+			// angleEnd: 0,
+			// angleEndSpread: 0,
+			angleAlignVelocity: false,
+			// colorStart: new THREE.Color( 0xc8bb93 ),
+			// colorStartSpread: new THREE.Vector3( 0, 0, 0 ),
+			// colorMiddle: new THREE.Color( 0xc8bb93 ),
+			// colorMiddleSpread: new THREE.Vector3( 0, 0, 0 ),
+			// colorEnd: new THREE.Color( 0xc8bb93 ),
+			// colorEndSpread: new THREE.Vector3( 0, 0, 0 ),
+			// opacityStart: 0.1,
+			// opacityStartSpread: 0.10555555555555556,
+			// opacityMiddle: 0.05,
+			// opacityMiddleSpread: 0.05,
+			// opacityEnd: 0,
+			// opacityEndSpread: 0,
+			// duration: 0.02,
+			// alive: 1,
+			// isStatic: 0
+
+		};
+		*/
+
+	    /*
 	    // var texture = loader.load('assets/textures/img/smokeparticle.png');
 	    var texture = loader.load('assets/textures/img/spark1.png');
 	    // var texture = loader.load('assets/textures/img/snowflake4.png');
@@ -188,6 +386,10 @@ function particles() {
 	    });
 
 */
+
+
+		// muzzleflash
+		/*
 		var emitter = new SPE.Emitter({
 	        type: SPE.distributions.SPHERE,
 	        activeMultiplier: 2,
@@ -248,6 +450,8 @@ function particles() {
 
 	        particleCount: 200
 	    });
+	*/
+	   
 
 /*
 // SUPERCHARGE
