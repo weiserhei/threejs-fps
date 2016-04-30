@@ -1,6 +1,8 @@
 # threejs-fps
 This is my prototype for a First Person Game.
 
+![demoscene](/ogimage.jpg)
+
 ##Libraries used:
 - [Three.js](https://github.com/mrdoob/three.js/)
 - [Goblin Physics](https://github.com/chandlerprall/GoblinPhysics)
