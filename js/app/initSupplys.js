@@ -74,37 +74,6 @@ define([
 	});
 
 
-	function ghostBody( dimension, position, rotation ) {
-
-		var goblinDimension2 = dimension.clone();
-
-		var size = dimension.clone().multiplyScalar( 2 );
-		var mesh = new THREE.Mesh( new THREE.BoxGeometry( size.x, size.y, size.z ), new THREE.MeshLambertMaterial({ transparent:true, opacity: 0.1 } ) );
-		scene.add( mesh );
-		mesh.position.copy( position );
-		mesh.rotation.copy( rotation );
-
-		var rotation = rotation || new THREE.Vector3( 0, 0, 0 );
-		// box physics
-		var shape_ghost = new Goblin.BoxShape( goblinDimension2.x, goblinDimension2.y, goblinDimension2.z );
-		var position = new THREE.Vector3( position.x, position.y + goblinDimension2.y, position.z );
-
-		var ghost_body = new Goblin.GhostBody( shape_ghost );
-
-		ghost_body.position.copy( position );
-
-		// var rotation = mesh.quaternion;
-		// dynamic_body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, rotation.w );
-		ghost_body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, 1 );
-
-		physics.getWorld().addGhostBody( ghost_body );
-
-		// console.log( ghost_body );
-
-		return ghost_body;
-
-	}
-
 	function initSupplys( player ) {
 
 		// var clone = object.clone();
@@ -129,8 +98,15 @@ define([
 
 		// scene.add( object );
 
+		var size = boundingBoxSize.clone().multiplyScalar( 2 );
+		var mesh = new THREE.Mesh( new THREE.BoxGeometry( size.x, size.y, size.z ), new THREE.MeshLambertMaterial({ transparent:true, opacity: 0.1 } ) );
+		console.log( size, mesh );
+		scene.add( mesh );
+		mesh.position.copy( supplyMesh.position );
+		mesh.rotation.copy( supplyMesh.rotation );
+
 		physics.makeStaticBox( boundingBoxSize.clone(), supplyMesh.position, supplyMesh.rotation );
-		var ghost_body = ghostBody( boundingBoxSize.clone(), supplyMesh.position, supplyMesh.rotation );
+		var ghost_body = physics.ghostBody( boundingBoxSize.clone().multiplyScalar( 2 ), supplyMesh.position, supplyMesh.rotation );
 
 		// Set masks to only collide with player body
 		// https://github.com/chandlerprall/GoblinPhysics/wiki/Collision-Masking
@@ -139,54 +115,37 @@ define([
 
 		ghost_body.collision_mask = INCLUSIVE_MASK | GROUP_PLAYER;
 
-		// if ( this._onTrigger2 === false ) {
-
-		// 	// this.sounds.sound3.play();
-		// 	// this.player.getCurrentWeapon().magazines++;
-		// 	this.player.getCurrentWeapon().restock(1);
-		// 	this._onTrigger2 = true;
-			
-		// 	setTimeout( function() { this._onTrigger2 = false; }.bind( this ), 2000 );
-		// }
-
-
-		// maybe better:
-		// count elapsed time on "contactContinue"
-		// restock when elapsedTime += 2s, reset elapsed time
-
 		// ghost_body.addListener(
 		// 				'contactStart',
 		// 				function() {
 		// 					// console.log("contactStart");
 		// 				}
 		// 			);
-
-		// ghost_body._onTrigger2 = false;
+	
 		var lastUpdate = 0;
-		ghost_body.addListener(
-						'contactContinue',
-						function() {
-							// console.log("contactContinue");
+		function contactContinue() {
+			// console.log("contactContinue");
 
-							// var t = 5e-3 * (Date.now() % 6283);
-							var seconds = new Date() / 1000;
-							// console.log( t );
+			// var t = 5e-3 * (Date.now() % 6283);
+			var seconds = new Date() / 1000;
+			// console.log( t );
 
-							if ( seconds > lastUpdate + 2 ) {
-								lastUpdate = seconds;
-								player.inHands.restock( 1 );
-							}
+			if ( seconds > lastUpdate + 2 ) {
+				lastUpdate = seconds;
+				player.inHands.restock( 1 );
+			}
 
-							// if ( this._onTrigger2 === false ) {
+			// if ( this._onTrigger2 === false ) {
 
-							// 	player.inHands.restock( 1 );
-							// 	this._onTrigger2 = true;
-								
-							// 	setTimeout( function() { this._onTrigger2 = false; }.bind( this ), 2000 );
-							// }
+			// 	player.inHands.restock( 1 );
+			// 	this._onTrigger2 = true;
+				
+			// 	setTimeout( function() { this._onTrigger2 = false; }.bind( this ), 2000 );
+			// }
 
-						}
-					);				
+		}
+
+		ghost_body.addListener( 'contactContinue', contactContinue );				
 
 		// ghost_body.addListener(
 		// 				'contactEnd',

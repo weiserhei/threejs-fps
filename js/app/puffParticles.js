@@ -24,20 +24,23 @@ define([
         texture: {
             value: texture
         },
-        blending: THREE.NormalBlending
+        blending: THREE.NormalBlending,
+        maxParticleCount: 1000
     });
 
-    particleGroup.setNormal = function( x, y, z ) {
+    particleGroup.setNormal = function( normal ) {
+        // set the hit object normal as velocity
+        // for every emitter (ideally not the active one, but whatevs)
+
         var v = velocityMagnitude;
-        // console.log(this);
         // this is setting velocity for all emitters in the pool
         // this.emitters[0].velocity.set( x * v, y * v, z * v );
         // console.log( this.emitters[0] );
 
         for ( var i = 0; i < this.emitters.length; i ++ ) {
+            this.emitters[ i ].velocity.value = new THREE.Vector3( normal.x * v, normal.y * v, normal.z * v );
             // particleGroup.emitters[ i ].size.value = [ 0.3, 0.3, 0.1 ];
             // particleGroup.emitters[ i ].position.value = new THREE.Vector3( 0, 0.5, 0 );
-            this.emitters[ i ].velocity.value = new THREE.Vector3( x * v, y * v, z * v );
             // particleGroup.emitters[ i ].position.spread = new THREE.Vector3( 0.2, 0.2, 0.1 );
             // particleGroup.emitters[ i ].acceleration.value = new THREE.Vector3( 10, 10, 2 );
         }
@@ -102,7 +105,13 @@ define([
     });
 
 	// particleGroup.addEmitter( emitter );
-	particleGroup.addPool( 10, emitter, true);
+	particleGroup.addPool( 20, emitter, true);
+
+    // culling off = meh
+    // https://github.com/squarefeet/ShaderParticleEngine/issues/51
+    particleGroup.mesh.frustumCulled = false;
+    // var sphere = particleGroup.mesh.geometry.boundingSphere = new THREE.Sphere();
+    // sphere.radius = 8; //the joy of treakable parameter!
 
 	return particleGroup;
 

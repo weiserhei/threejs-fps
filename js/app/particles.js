@@ -17,7 +17,8 @@ define([ "three","ShaderParticleEngine", "debugGUI" ], function ( THREE, SPE, de
     	var particleGroup = new SPE.Group({
     		texture: {
                 value: texture
-            }
+            },
+            maxParticleCount: 750
     	});
 
         var emitter = new SPE.Emitter({
@@ -124,7 +125,7 @@ define([ "three","ShaderParticleEngine", "debugGUI" ], function ( THREE, SPE, de
         });
 */
         // particleGroup.addEmitter( emitter );
-        particleGroup.addPool( 10, emitter, true)
+        particleGroup.addPool( 3, emitter, true)
 
 
         function initDAT( group ) {

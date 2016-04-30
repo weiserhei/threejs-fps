@@ -20,7 +20,8 @@ define([
 	var particleGroup = new SPE.Group({
 		texture: {
 			value: texture
-		}
+		},
+        maxParticleCount: 2000
 	});
 
 	var emitter = new SPE.Emitter({

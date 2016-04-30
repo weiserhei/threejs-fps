@@ -35,7 +35,8 @@ define([
 		infoText.visible = false;
 
 		infoText.setText = function( text ) {
-			this.textContent = this.initial + " " + text;
+			this.innerHTML = this.initial + " " + text;
+			// this.textContent = this.initial + " " + text;
 		};
 		infoText.setHTML = function( text ) {
 			// console.log("setting html", text );

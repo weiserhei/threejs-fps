@@ -55,7 +55,8 @@ define([
 		// console.log( start, end );
 		var intersections = physics.getWorld().rayIntersect( startPoint, endPoint );
 		// todo
-		// dont intersect with player cylinder -.-
+		// dont intersect with Ghost Bodys!
+		// dont intersect with player cylinder 
 
 		return intersections;
 
@@ -145,6 +146,7 @@ define([
 
 	};
 
+	var impactPosition = new THREE.Vector3();
 	Weapon.prototype.fire = function() {
 
 		// fire emitter
@@ -160,12 +162,10 @@ define([
 			var target = intersections[ 0 ];
 
 			// console.log( target );
-			puffParticles.mesh.position.copy( target.point );
-			var x = target.normal.x;
-			var y = target.normal.y;
-			var z = target.normal.z;
-			puffParticles.setNormal( x, y, z );
-			puffParticles.triggerPoolEmitter( 1 );
+			puffParticles.setNormal( target.normal );
+			// puffParticles.triggerPoolEmitter( 1 );
+			// puffParticles.mesh.position.copy( target.point );
+			puffParticles.triggerPoolEmitter( 1, ( impactPosition.set( target.point.x, target.point.y, target.point.z ) ) );
 
 			if ( isFinite( target.object.mass ) ) {
 				// is not static object

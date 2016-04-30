@@ -30,6 +30,29 @@ define([
 		this.body_to_mesh_map[ rigidBody.id ] = mesh;
 	};
 
+	PhysicFactory.prototype.ghostBody = function( dimension, position, rotation ) {
+
+		var goblinDimension = dimension.clone().divideScalar( 2 );
+		var rotation = rotation || new THREE.Vector3( 0, 0, 0 );
+
+		// box physics
+		var shape_ghost = new Goblin.BoxShape( goblinDimension.x, goblinDimension.y, goblinDimension.z );
+		var position = new THREE.Vector3( position.x, position.y + goblinDimension.y, position.z );
+
+		var ghost_body = new Goblin.GhostBody( shape_ghost );
+		ghost_body.position.copy( position );
+
+		// var rotation = mesh.quaternion;
+		// dynamic_body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, rotation.w );
+		ghost_body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, 1 );
+
+		this.getWorld().addGhostBody( ghost_body );
+
+		// console.log( ghost_body );
+
+		return ghost_body;
+
+	};
 
 	PhysicFactory.prototype.makeStaticBox = function( dimension, position, rotation, mergeGeometry, materialIndex, shape, transform ) {
 		
