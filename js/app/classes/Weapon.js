@@ -191,7 +191,7 @@ define([
 			// emitterHelper.position.copy( this.mesh.emitterVector );
 
 		}
-
+		//todo: only make material invisible, not object
 		this.mesh.traverse( function ( object ) { object.visible = true; } );
 
 		this.onChanged();

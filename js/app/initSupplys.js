@@ -133,6 +133,7 @@ define([
 		var ghost_body = ghostBody( boundingBoxSize.clone(), supplyMesh.position, supplyMesh.rotation );
 
 		// Set masks to only collide with player body
+		// https://github.com/chandlerprall/GoblinPhysics/wiki/Collision-Masking
 		var INCLUSIVE_MASK = 1,
 		    GROUP_PLAYER = 2;
 

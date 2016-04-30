@@ -252,6 +252,7 @@ define([
 		// }
 
 		// if ( this.inHands !== undefined ) {
+			//todo: only make material invisible, not object
 			this.inHands.mesh.traverseVisible ( function ( object ) { object.visible = false; } );
 		// }
 
