@@ -134,6 +134,9 @@ define([
 				mass
 			);
 
+		var GROUP_PLAYER = 2;
+		body.collision_groups = GROUP_PLAYER;
+
 		var position = this.mesh.getWorldPosition();
 		body.position.copy( position );
 

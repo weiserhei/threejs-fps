@@ -1,0 +1,102 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 30.07.2014 12:05:03
+
+newmtl Material__29
+	Ns 59.2940
+	Ni 1.0000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.7500 0.7500 0.7500
+	Kd 0.4000 0.4000 0.4000
+	Ks 0.7000 0.7000 0.7000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Texture/Crate06.jpg
+	map_Kd Texture/Crate06.jpg
+
+newmtl Material__26
+	Ns 59.2940
+	Ni 1.0000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.7500 0.7500 0.7500
+	Kd 0.4000 0.4000 0.4000
+	Ks 0.7000 0.7000 0.7000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Texture/Crate03.jpg
+	map_Kd Texture/Crate03.jpg
+
+#tschechenkiste
+newmtl Material__27
+	Ns 59.2940
+	Ni 1.0000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.7500 0.7500 0.7500
+	Kd 0.4000 0.4000 0.4000
+	Ks 0.7000 0.7000 0.7000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Texture/Crate04.jpg
+	map_Kd Texture/Crate04.jpg
+
+newmtl Material__28
+	Ns 59.2940
+	Ni 1.0000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.7500 0.7500 0.7500
+	Kd 0.4000 0.4000 0.4000
+	Ks 0.7000 0.7000 0.7000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Texture/Crate05.jpg
+	map_Kd Texture/Crate05.jpg
+
+newmtl Material__25
+	Ns 59.2940
+	Ni 1.0000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.7500 0.7500 0.7500
+	Kd 0.4000 0.4000 0.4000
+	Ks 0.7000 0.7000 0.7000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Texture/Crate02.jpg
+	map_Kd Texture/Crate02.jpg
+
+newmtl default02
+	Ns 59.2940
+	Ni 1.0000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.7500 0.7500 0.7500
+	Kd 0.4000 0.4000 0.4000
+	Ks 0.7000 0.7000 0.7000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Texture/Crate01.jpg
+	map_Kd Texture/Crate01.jpg
+
+newmtl Material__7
+	Ns 25.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0641 0.1582 0.1817
+	#Kd 0.1922 0.4745 0.5451
+	Kd 0.222 0.2245 0.2251
+	Ks 0.0450 0.0450 0.0450
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Texture/wood.jpg
+	map_Kd Texture/wood.jpg

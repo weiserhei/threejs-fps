@@ -434,6 +434,10 @@ define([
 
 	Weapon.prototype.restock = function( number ) {
 
+		this.magazines += number;
+		sounds.cling.play();
+		this.onChanged();
+
 	};
 
 	Weapon.prototype.fireEffect = function( ammoPoint, ammoNormal, body ) {

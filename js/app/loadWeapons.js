@@ -59,14 +59,6 @@ define([
 	// loader.load( 'assets/models/shotgun_m1014/shotgun_m1014.obj', function ( object ) {
 	loader.load( 'assets/models/ithaca/m37 tris.obj', function ( object ) {
 
-		/*		
-		object.traverse( function ( child ) {
-			if ( child instanceof THREE.Mesh ) {
-				child.material.map = T_shotgun;
-			}
-		} );
-		*/
-
 		// object = object.children[0];
 		// console.log( object );
 		var s = 0.003;
@@ -74,7 +66,7 @@ define([
 		// object.rotation.y = 180 * Math.PI / 180;
 		for ( var i = 0; i < object.children.length; i ++ ) {
 			var obj = object.children[ i ];
-			console.log( obj );
+			// console.log( obj );
 			obj.geometry.scale( s, s, s );
 			// obj.geometry.center();
 			obj.geometry.applyMatrix( new THREE.Matrix4().makeRotationY( 180 * Math.PI / 180 ) );
@@ -208,66 +200,6 @@ define([
 		group.sniper = object;
 
 	} );
-	
-	/*
-	var t_sniper = textureLoader.load( 'assets/models/g36c/mat/g36c_d_fin.jpg' );
-	var t_sniper_n = textureLoader.load( 'assets/models/g36c/mat/g36c_n_fin.jpg' );
-	var t_sniper_s = textureLoader.load( 'assets/models/g36c/mat/g36c_spec.jpg' );	
-	var t_sniper_ao = textureLoader.load( 'assets/models/g36c/mat/basic/g36c_bake_ao.png' );	
-	var t_sniper_l = textureLoader.load( 'assets/models/g36c/mat/basic/g36c_bake_general_light_fine.png' );	
-	var sniperMesh;
-	loader.load( 'assets/models/g36c/g36c_arby26.obj', function ( object ) {
-
-		var parent = object;
-		// var object = object.children[3]; 
-		// 0 = eotech
-		// 1 = main body
-		// 2 = mag + muzzle + upper guard
-		// 3 = glass
-		// object.traverseVisible ( function ( object ) { object.visible = false; } );
-
-		object.scale.set( 0.05, 0.05, 0.05 );
-		object.position.set( 0, 0.2, 0 );
-		console.log( object );
-		// object.receiveShadow = true;
-
-		// object.material.color.setHSL( 0, 0, 1 );
-		var material = object.children[ 0 ].material;
-		material.map = t_sniper;
-		material.normalMap = t_sniper_n;
-		material.normalScale.set( -1, -1 );
-		material.specularMap = t_sniper_s;
-		material.aoMap = t_sniper_ao;
-		console.log( material );
-		// material.lightMap = t_sniper_l;
-
-		// material.specular.setHex( 0x444444 );
-		// material.shininess = 30;
-		// material.map.anisotropy = 8; //front barrel of the weapon gets blurry
-
-		var somevalue = { scale: 1 };
-		function xasd() { material.normalScale.set( somevalue.scale, somevalue.scale ); }
-
-		debugGUI.add( somevalue, "scale" ).min( -2 ).max( 2 ).onChange( xasd );
-
-		var position = screenPosition( 53, 35, -0.4 );
-		object.position.copy( position );
-
-		var pyramidPercentX = 53;
-		var pyramidPercentY = 41;
-		var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-		var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-			
-		object.emitterVector = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.4 );
-		
-		var test = object.clone();
-		scene.add( test );
-		test.position.set( 0, 1.2, 0 );
-		// scene.add( object );
-		sniperMesh = object;
-
-	} );
-	*/
 
 	var t_rifle = textureLoader.load( 'assets/models/g36c/mat/g36c_d_fin.jpg' );
 	var t_rifle_n = textureLoader.load( 'assets/models/g36c/mat/g36c_n_fin.jpg' );

@@ -4,7 +4,7 @@
 */
 
 /*
-	TODO weapon always on top?
+	TODO render weapon always on top?
 */
 
 define([
@@ -12,7 +12,6 @@ define([
 	"debugGUI",
 	"physics",
 	"sounds",
-	"camera",
 	"classes/Weapon",
 	"loadWeapons"
 ], function ( THREE, debugGUI, physics, sounds, Weapon, loadWeapons ) {
@@ -38,7 +37,6 @@ define([
 	// 	weapons[key].restockSound = this.sounds.sound3;
 	// }
 
-
 	function init( hud ) {
 
 		var weapons = new THREE.Group();
@@ -52,7 +50,6 @@ define([
 		shotgun.shootSound = sounds.railgun;
 		shotgun.reloadSound = sounds.shellload;
 		shotgun.reloadTime = 0.3;
-		// shotgun.mesh = shotgunMesh;
 		shotgun.power = 20;
 		// shotgun.emitterPool = "shotgun";
 		// shotgun.ironSightPosition = new THREE.Vector3( 0.000, -0.14, shotgunMesh.position.z );
@@ -70,7 +67,6 @@ define([
 		sniper.shootSound = sounds.sniperrifle;
 		sniper.reloadSound = sounds.sniperreload;
 		sniper.emptySound = sounds.cling;
-		// sniper.mesh = sniperMesh;
 		// emitterPool: this.muzzleFlash,
 		weapons.add( sniper.mesh );
 
@@ -87,15 +83,12 @@ define([
 		rifle.power = 50;
 		rifle.shootSound = sounds.rifleshot;
 		rifle.reloadSound = sounds.g36reload;
-		// rifle.mesh = rifleMesh;
 		rifle.ironSightPosition = new THREE.Vector3( 0.000, -0.27, rifle.mesh.position.z );
 
 		// debugGUI.add( rifle.mesh.position, "y", -2.0, 2.0 ).step( 0.01 ).listen();
 		// console.log( rifle.mesh );
 
 		weapons.add( rifle.mesh );
-
-		// playerMesh.add( weapons );
 
 		return {
 			shotgun: shotgun,

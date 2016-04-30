@@ -14,8 +14,9 @@ define([
 	"sounds",
 	"initSafe",
 	"initSicherungskasten",
-	"initFlashlight"
-], function ( THREE, scene, debugGUI, physics, Item, Itemslot, Player, sounds, initSafe, initSicherungskasten, initFlashlight ) {
+	"initFlashlight",
+	"initSupplys"
+], function ( THREE, scene, debugGUI, physics, Item, Itemslot, Player, sounds, initSafe, initSicherungskasten, initFlashlight, initSupplys ) {
 
 	'use strict';
 
@@ -47,6 +48,8 @@ define([
 	function initItems( preloaded, raycastArray, player, hudElement ) {
 		// console.log("preloaded", preloaded );
 		var raycastMeshes = [];
+
+		var supplys = initSupplys( player );
 
 		var flashlight = initFlashlight( player );
 		raycastMeshes.push( flashlight.getRaycastMesh() );

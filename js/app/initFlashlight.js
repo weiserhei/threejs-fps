@@ -9,8 +9,9 @@ define([
 	"debugGUI",
 	"sounds",
 	"loadingManager",
-	"classes/Item"
-], function ( THREE, scene, debugGUI, sounds, loadingManager, Item ) {
+	"classes/Item",
+	"physics"
+], function ( THREE, scene, debugGUI, sounds, loadingManager, Item, physics ) {
 
 	'use strict';
 
@@ -23,6 +24,7 @@ define([
 
 	}
 
+
 	// flashlight model
 	var flashlightMesh;
 	var directoryPath = "assets/models/";
@@ -30,7 +32,6 @@ define([
 
 	var mtlLoader = new THREE.MTLLoader( loadingManager );
 	var url = directoryPath + name + "/";
-	mtlLoader.setBaseUrl( url );
 	mtlLoader.setPath( url );
 
 	mtlLoader.load( name + ".mtl", function( materials ) {
