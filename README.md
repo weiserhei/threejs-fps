@@ -8,6 +8,7 @@ This is my prototype for a First Person Game.
 - [Goblin Physics](https://github.com/chandlerprall/GoblinPhysics)
 - [ShaderParticleEngine](https://github.com/squarefeet/ShaderParticleEngine)
 - [JS FSM](https://github.com/jakesgordon/javascript-state-machine)
+- [RequireJS](https://github.com/requirejs/requirejs)
 
 ##Game Features:
 - First+Third Person Character Controller
@@ -35,3 +36,6 @@ The demo is also the current development branch, so what you will see may not be
 - Add Octree Raycasting (performance improvement)
 - Add Gamestate (Menu, Pausemenu)
 - Release Pointer in Fullscreen and control Objects
+
+##Resources
+https://makc3d.wordpress.com/2014/07/20/threejs-first-person-shoote/r 
