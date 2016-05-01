@@ -7,7 +7,7 @@
 * oh god that flashlight - ECS Systen
 *
 */
-var spotLightHelper;
+
 define([
 	"three",
 	"classes/Item",
@@ -18,12 +18,8 @@ define([
 	"classes/Inventar",
 	"classes/Weapon",
 	"physics",
-	"sounds",
-	"container",
-	"initWeapons",
-	"renderer",
 	"camera"
-], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, Weapon, physics, sounds, container, initWeapons, renderer, camera ) {
+], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, Weapon, physics, camera ) {
 
 	'use strict';
 
@@ -36,20 +32,15 @@ define([
 	var intersections = [];
 	var interactionDistance = 1.8;
 	var raycaster = new THREE.Raycaster();
-	// var vector = new THREE.Vector2(); // used for raycaster.setFromCamera
-	var origin = new THREE.Vector3();
-	var direction = new THREE.Vector3();
 
 	Player.prototype.getPawn = function() {
 		return this._playerMesh;
 	};
 
-	function Player( hud, clock ) {
+	function Player( hud ) {
 
 		this.tools = {};
 		this.tools.flashlight = {};
-
-		this.clock = clock;
 
 		var playerMesh = controls.getControls().getObject();
 		this._playerMesh = playerMesh;
@@ -61,149 +52,8 @@ define([
 
 		this.inHands;
 
-		// hud.weaponStatusText.style = "padding:4px; background:rgba( 0, 0, 0, 0.25 ); width: unset; text-align:right; right: 100px;";
-
-		var weapons = initWeapons( hud );
 		this.weapons = [];
-
-		this.inHands = weapons.shotgun;
-
-		hud.weaponText = hud.box();
-		hud.weaponText.show( true, this.inHands );
-		hud.weaponText.setHTML = "";
-		hud.weaponText.style = "padding:4px; background:rgba( 0, 0, 0, 0.25 ); width: unset; text-align:right; right: 100px;";
-
-		function update() {
-			hud.weaponText.show( true, this.inHands );
-		}
-
-	    // register update hud on ammo change and reload
-		for ( var key in weapons ) {
-
-			// set HUD callback
-			weapons[key].setCallback( this, update );
-
-			// fill players inventar
-			this.weapons.push( weapons[key] );
-
-			// add weapon models to the scene
-			playerMesh.add( weapons[ key ].mesh );
-
-			// hide all weapon models
-			weapons[key].mesh.traverseVisible ( function ( object ) { object.visible = true; } );
-
-		}
-
-		// this.inHands.mesh.traverseVisible ( function ( object ) { object.visible = true; } );
-		renderer.render( scene, camera );
-		for ( var key in weapons ) {
-			weapons[key].mesh.traverseVisible ( function ( object ) { object.visible = false; } );
-		}
-		// this.inHands.mesh.traverseVisible ( function ( object ) { object.visible = false; } );
-		this.switchWeapon( 1 );
-
-		var toggle = false; // toggle key down
-		var toggle2 = false; // toggle key down
-
-		document.addEventListener('keydown', onDocumentKeyDown.bind( this ), false);
-		document.addEventListener('keyup', onDocumentKeyUp, false);
-
-
-		function onDocumentKeyDown( event ){
-
-			event = event || window.event;
-			var keycode = event.keyCode;
-			// console.log( keycode );
-			// var character = String.fromCharCode( event.keyCode );
-
-			switch( keycode ) {
-				case 69: //E
-					// execute only once on keydown, until reset
-					if( toggle ) { return; }
-					toggle = !toggle;
-
-					this.interact();
-
-					break;
-
-				case 70: //F
-					
-					this.use();
-
-					break;
-
-				case 82: //R
-
-					if( toggle2 ) { return; }
-					toggle2 = !toggle2;
-
-					if ( this.inHands instanceof Weapon ) {
-						this.inHands.fsm.reload();
-					}
-
-					break;
-
-			}
-
-		}
-
-		function onDocumentKeyUp(event){
-
-			event = event || window.event;
-			var keycode = event.keyCode;
-
-			switch( keycode ) {
-				case 69 : //E
-					// execute only once on keydown, until reset
-					toggle = false;
-					break;
-				
-				case 82 : //R
-					// execute only once on keydown, until reset
-					toggle2 = false;
-					break;
-			}
-
-		}
-
-		// if (document.mozFullScreen && document.webkitFullScreen) {
-		// 	console.log("fullscreen");
-		// }
-		// container.addEventListener( "mousedown", handleMouseDown );
-		document.body.addEventListener( "mousedown", handleMouseDown.bind( this ) );
-		function handleMouseDown( event ) {
-
-			// cheap way of blocking shooting while entering fullscreen
-			if ( !controls.getControls().enabled ) {
-				return;
-			}
-
-			if ( event.button === 0 ) {
-
-				this.LMB();
-
-			} else {
-
-				this.RMB();
-			}
-		}
-
-		document.addEventListener("mousewheel", MouseWheelHandler.bind( this ), false);
-		// Firefox
-		document.addEventListener("DOMMouseScroll", MouseWheelHandler.bind( this ), false);
-		function MouseWheelHandler(e) {
-
-			// cross-browser wheel delta
-			var e = window.event || e; // old IE support
-			var delta = Math.max( -1, Math.min( 1, ( e.wheelDelta || -e.detail ) ) );
-			
-			// env.player.selectWeapon( delta );
-			this.selectWeapon( delta );
-
-			return false;
-		}
-
-
+		// hud.weaponStatusText.style = "padding:4px; background:rgba( 0, 0, 0, 0.25 ); width: unset; text-align:right; right: 100px;";
 
 	}
 
@@ -272,85 +122,13 @@ define([
 		this.inHands = this.weapons[ newWeapon ];
 
 		this.inHands.activate();
-
-		// this.currentWeapon.mesh.position.z = initposz;
-		// weapons.children[currentWeapon].position.z = initposz;
-		
-		// if( typeof this.flashlight !== "undefined" ) {
-		// 	this.flashlight.intensity = 0;
-		// }
-		// if( this.currentWeapon.modelname === "flashlight" ) {
-		// 	this.flashlight.intensity = 2.5;
-		// }
-		
-		/*
-		if ( this.currentWeapon.modelname === "shotgun" ) {
-			initposz = -0.5;
-			
-			if (typeof initParticles === 'function') {
-
-				var pyramidPercentX = 58;
-				var pyramidPercentY = 35;
-				var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-				var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-				tempVec = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.35 );
-
-			}
-			
-		} 
-		else if ( this.currentWeapon.modelname === "sniper" ) {
-			initposz = -0.5;
-			
-			// soundShotgunPump.play();
-			env.sounds.ShotgunPump.play();
-			
-			if (typeof initParticles === 'function') { 
-
-				var pyramidPercentX = 55;
-				var pyramidPercentY = 38;
-				var pyramidPositionX = (pyramidPercentX / 100) * 2 - 1;
-				var pyramidPositionY = (pyramidPercentY / 100) * 2 - 1;
-				tempVec = new THREE.Vector3( pyramidPositionX * camera.aspect, pyramidPositionY, -1.6 );
-				
-			}
-			
-		} 	
-		// else if ( currentWeapon === 2 ) {
-			// initposz = -0.4;
-		// } 
-		else if ( newWeapon === 2 ) {
-			initposz = -0.3;
-		}
-		*/
-
-		
-		// if ( typeof this.currentWeapon.emitterPool !== 'undefined' ) { 
-
-			// this.currentWeapon.emitterPool.particleGroup.mesh.position.copy( this.currentWeapon.mesh.emitterVector );
-			// muzzleFlash.particleGroup.mesh.position.copy( this.currentWeapon.mesh.emitterVector );
-
-			// emitterHelper.position.copy ( this.currentWeapon.mesh.emitterVector );
-		// }
-
-		// update hud to display the new weapon
-		// env.hud.update();
-
-		// var element = msDiv;
-		// element.classList.remove("animate");
-
-		// // https://css-tricks.com/restart-css-animation/
-		// // -> triggering reflow /* The actual magic */
-		// // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
-		// element.offsetWidth = element.offsetWidth;
-		// // -> and re-adding the class
-		// element.classList.add("animate");
 		
 	};
 
 	Player.prototype.LMB = function() {
 
 		if ( this.inHands instanceof Weapon ) {
-			this.inHands.shoot( this.clock );
+			this.inHands.shoot();
 		}
 
 	};

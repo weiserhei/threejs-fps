@@ -118,18 +118,25 @@ define([
 
 	};
 
-	Weapon.prototype.shoot = function( clock ) {
+	var lastShotFired = 0;
+	Weapon.prototype.shoot = function() {
 
 		// if fsm.reloading dont count delay?
 
-		var delay = clock.getElapsedTime() - this.lastShotFired;
+		var seconds = new Date() / 1000;
+
+		if ( seconds < lastShotFired + this.shootDelay ) {
+			return false;
+		}
+
+		// var delay = clock.getElapsedTime() - this.lastShotFired;
 		// exit when fireing to fast
-		if ( delay < this.shootDelay ) { return false; }
-		this.lastShotFired = clock.getElapsedTime();
+		// if ( delay < this.shootDelay ) { return false; }
+		// this.lastShotFired = clock.getElapsedTime();
+		lastShotFired = seconds;
 		
 		// performance: set matrixAutoUpdate = false;
 		//this.muzzleparticle.mesh.updateMatrix();
-
 		this.fsm.fire();
 
 	};

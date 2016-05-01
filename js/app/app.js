@@ -47,7 +47,8 @@ define([
 	"classes/Player",
 	"particles",
 	"muzzleparticle",
-	"puffParticles"
+	"puffParticles",
+	"player"
 ], function ( 
 	THREE, 
 	TWEEN,
@@ -65,7 +66,8 @@ define([
 	Player,
 	particles,
 	muzzleparticle,
-	puffParticles
+	puffParticles,
+	player
 ) {
 
 	'use strict';
@@ -90,7 +92,9 @@ define([
 		// abstract item initialization
 		// and constraints to other game elemnts
 
-		player = new Player( hud, clock );
+		// player = new Player( hud, clock );
+
+		player = player( hud );
 		
 		// scene.add( preloaded.house.house );
 		// scene.add( preloaded.house.interior_a );

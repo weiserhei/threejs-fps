@@ -112,7 +112,7 @@ define([
 		// spotLight.shadowDarkness = 0.5;
 
 		// light helper
-		spotLightHelper = new THREE.SpotLightHelper( spotLight );
+		var spotLightHelper = new THREE.SpotLightHelper( spotLight );
 		scene.add( spotLightHelper );
 		spotLightHelper.updateMatrixWorld();
 		spotLightHelper.visible = false;
