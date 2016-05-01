@@ -39,7 +39,7 @@ define([
 
 	function init( hud ) {
 
-		var weapons = new THREE.Group();
+		// var weapons = new THREE.Group();
 
 		var shotgun = new Weapon( loadWeapons.shotgun );
 		shotgun.name = "Shotgun";
@@ -51,15 +51,14 @@ define([
 		shotgun.reloadSound = sounds.shellload;
 		shotgun.reloadTime = 0.3;
 		shotgun.power = 20;
-		// shotgun.emitterPool = "shotgun";
 		// shotgun.ironSightPosition = new THREE.Vector3( 0.000, -0.14, shotgunMesh.position.z );
 		shotgun.ironSightPosition = new THREE.Vector3( 0.014, -0.03, shotgun.mesh.position.z + 0.15 );
-		weapons.add( shotgun.mesh );
+		// weapons.add( shotgun.mesh );
 
 		var sniper = new Weapon( loadWeapons.sniper );
 		sniper.name = "MK 14"
 		sniper.maxCapacity = 6;
-		sniper.currentCapacity = 1;
+		sniper.currentCapacity = 6;
 		sniper.magazines = 2; 
 		sniper.reloadTime = 4; 
 		sniper.shootDelay = 0.8;
@@ -67,16 +66,14 @@ define([
 		sniper.shootSound = sounds.sniperrifle;
 		sniper.reloadSound = sounds.sniperreload;
 		sniper.emptySound = sounds.cling;
-		// emitterPool: this.muzzleFlash,
-		weapons.add( sniper.mesh );
-
 		sniper.ironSightPosition = new THREE.Vector3( 0.006, -0.125, sniper.mesh.position.z );
 		sniper.ironSightRotation = new THREE.Vector3( 0, 0.0 * Math.PI / 180, 0 );
+		// weapons.add( sniper.mesh );
 
 		var rifle = new Weapon( loadWeapons.rifle );
 		rifle.name = "G36C"
 		rifle.maxCapacity = 30;
-		rifle.currentCapacity = 2;
+		rifle.currentCapacity = 30;
 		rifle.magazines = 2; 
 		rifle.reloadTime = 3.1; 
 		rifle.shootDelay = 0.1;
@@ -84,11 +81,9 @@ define([
 		rifle.shootSound = sounds.rifleshot;
 		rifle.reloadSound = sounds.g36reload;
 		rifle.ironSightPosition = new THREE.Vector3( 0.000, -0.27, rifle.mesh.position.z );
+		// weapons.add( rifle.mesh );
 
 		// debugGUI.add( rifle.mesh.position, "y", -2.0, 2.0 ).step( 0.01 ).listen();
-		// console.log( rifle.mesh );
-
-		weapons.add( rifle.mesh );
 
 		return {
 			shotgun: shotgun,

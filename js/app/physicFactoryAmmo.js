@@ -1,7 +1,6 @@
 ﻿/**
- * Clock timer
- *
- * Todo: multiple instances when needed. They can cause issues with eachother
+ * Physic Factory
+ * wrapper for Goblin Physics
  *
  */
 define([

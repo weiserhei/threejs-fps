@@ -30,6 +30,52 @@ define([
 		this.body_to_mesh_map[ rigidBody.id ] = mesh;
 	};
 
+
+	// var startPoint = new Goblin.Vector3();
+	// var startPoint = new THREE.Vector3();
+	var endPoint = new Goblin.Vector3();
+	PhysicFactory.prototype.raycast = function( startPoint, direction ) {
+		// todo
+		// dont intersect with Ghost Bodys!
+		// dont intersect with player cylinder 
+
+		var distance = 40;
+		endPoint.addVectors( startPoint, direction.multiplyScalar( distance ) );
+		// console.log( startPoint, endPoint );
+
+		var intersections = this.getWorld().rayIntersect( startPoint, endPoint );
+
+		return intersections;
+
+	};
+
+	var invertNormalGoblin = new Goblin.Vector3();
+	PhysicFactory.prototype.applyDirectionalImpulse = function( target, fromVector, force ) {
+
+		// console.log( target );
+
+		// var normal = target.normal;
+		var body = target.object;
+		var point = target.point;
+
+		// var invertPos = new THREE.Vector3();
+		// var vec = new THREE.Vector3( point.x, point.y, point.z );
+		// var vec = new Goblin.Vector3( pP.x, pP.y, pP.z );
+		// var invertNormal = vec.clone().sub( pP ).normalize();
+
+		// danger
+		// math operation using THREE.Vector3
+		// no obvious errors
+		invertNormalGoblin.subtractVectors( point, fromVector );
+		invertNormalGoblin.normalize();
+		invertNormalGoblin.scale( force );
+		
+		// body.applyImpulse( invertNormalGoblin );
+		// body.applyForceAtLocalPoint( invertNormalGoblin, point );
+		body.applyForceAtWorldPoint ( invertNormalGoblin, point );
+
+	};
+
 	PhysicFactory.prototype.ghostBody = function( dimension, position, rotation ) {
 
 		var goblinDimension = dimension.clone().divideScalar( 2 );

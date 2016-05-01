@@ -25,10 +25,6 @@
 * Schublade öffnen mit tastendruck
 * Leere Schubladen einstreuen
 *
-* Weapon Class
-* + models
-* + goblin raycast
-*
 * Menue
 * GameState
 * 

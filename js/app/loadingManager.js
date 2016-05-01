@@ -4,6 +4,8 @@
 
 define([ "three", "loadingScreen" ], function ( THREE, loadingScreen ) {
 
+	'use-strict';
+
 	var loadingManager = new THREE.LoadingManager ();
 
 	loadingManager.onProgress = function ( item, loaded, total ) {

@@ -33,18 +33,18 @@ define([
 			],
 			callbacks: {
 
-				onenterstate: function( event, from, to ) {
-					// console.log( "current state: ", this.current);
-					// console.log( event, from, to );
-				},
+				// onenterstate: function( event, from, to ) {
+				// 	console.log( "current state: ", this.current);
+				// 	console.log( event, from, to );
+				// },
 
-				onbeforefire: function() {
+				// onbeforefire: function() {
 					
-				},
+				// },
 
-				onfire: function( event, from, to ) {
+				// onfire: function( event, from, to ) {
 
-				},
+				// },
 
 				onfireing: function() {
 

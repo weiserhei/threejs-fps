@@ -7,7 +7,8 @@ define([
 	"loadingManager" 
 ], function ( THREE, loadingManager ) {
 
-
+	'use-strict';
+	
 	function onProgress( xhr ) {
 		// console.log("on progress", xhr );
 	}

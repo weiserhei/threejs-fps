@@ -14,7 +14,6 @@ define([
 
 	'use strict';
 
-
 	function onError( xhr ) {
 		console.error( "error", xhr );
 	}

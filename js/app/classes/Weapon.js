@@ -34,63 +34,6 @@ define([
 	    }, delay);
 	}
 
-	var endPoint = new Goblin.Vector3();
-	// var startPoint = new Goblin.Vector3();
-	// var startPoint = new THREE.Vector3();
-
-	function raycast() {
-
-		// var startPoint = camera.getWorldPosition();
-		var startPoint = controls.getControls().getObject().getWorldPosition();
-		var direction = camera.getWorldDirection();
-		var distance = 40;
-
-		endPoint.addVectors( startPoint, direction.multiplyScalar( distance ) );
-
-		// scene.remove( arrowHelper );
-		// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
-		// var arrowHelper = new THREE.ArrowHelper( direction, pP, 5, 0xFF0000 );
-		// scene.add( arrowHelper );
-
-		// console.log( start, end );
-		var intersections = physics.getWorld().rayIntersect( startPoint, endPoint );
-		// todo
-		// dont intersect with Ghost Bodys!
-		// dont intersect with player cylinder 
-
-		return intersections;
-
-	}
-
-	var invertNormalGoblin = new Goblin.Vector3();
-	function applyImpulse( target, force ) {
-
-		// console.log( target );
-		sounds.positional.bow.bow.play();
-
-		// var normal = target.normal;
-		var body = target.object;
-		var point = target.point;
-
-		var pP = camera.getWorldPosition();
-		// var invertPos = new THREE.Vector3();
-		// var vec = new THREE.Vector3( point.x, point.y, point.z );
-		// var vec = new Goblin.Vector3( pP.x, pP.y, pP.z );
-		// var invertNormal = vec.clone().sub( pP ).normalize();
-
-		// danger
-		// math operation using THREE.Vector3
-		// no obvious errors
-		invertNormalGoblin.subtractVectors( point, pP );
-		invertNormalGoblin.normalize();
-		invertNormalGoblin.scale( force );
-		
-		// body.applyImpulse( invertNormalGoblin );
-		// body.applyForceAtLocalPoint( invertNormalGoblin, point );
-		body.applyForceAtWorldPoint ( invertNormalGoblin, point );
-
-	}
-
 	// var emitterHelper = new THREE.Mesh( new THREE.BoxGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshNormalMaterial({ wireframe: true }));
 	// scene.add( emitterHelper );
 	// folder.add( emitterHelper.material, "visible" );
@@ -146,38 +89,6 @@ define([
 
 	};
 
-	var impactPosition = new THREE.Vector3();
-	Weapon.prototype.fire = function() {
-
-		// fire emitter
-		this.shootSound.isPlaying = false;
-		// sounds.shootSound.stop();
-		this.shootSound.play();
-		this.muzzleparticle.triggerPoolEmitter( 1 );
-
-		var intersections = raycast();
-
-		if ( intersections.length > 0 ) {
-
-			var target = intersections[ 0 ];
-
-			// console.log( target );
-			puffParticles.setNormal( target.normal );
-			// puffParticles.triggerPoolEmitter( 1 );
-			// puffParticles.mesh.position.copy( target.point );
-			puffParticles.triggerPoolEmitter( 1, ( impactPosition.set( target.point.x, target.point.y, target.point.z ) ) );
-
-			if ( isFinite( target.object.mass ) ) {
-				// is not static object
-				// -> launch into space
-				applyImpulse( target, this.power );
-
-			}
-
-		}
-
-	};
-
 	Weapon.prototype.activate = function() {
 		
 		// reposition muzzle particle
@@ -220,6 +131,54 @@ define([
 		//this.muzzleparticle.mesh.updateMatrix();
 
 		this.fsm.fire();
+
+	};
+
+	var impactPosition = new THREE.Vector3();
+	Weapon.prototype.fire = function() {
+
+		// play sound
+		this.shootSound.isPlaying = false;
+		// sounds.shootSound.stop();
+		this.shootSound.play();
+		
+		// fire emitter
+		this.muzzleparticle.triggerPoolEmitter( 1 );
+
+		// var startPoint = camera.getWorldPosition();
+		var startPoint = controls.getControls().getObject().getWorldPosition();
+		var direction = camera.getWorldDirection();
+
+		// scene.remove( arrowHelper );
+		// var arrowHelper = new THREE.ArrowHelper( camera.getWorldDirection(), camera.getWorldPosition(), 5, 0xFF0000 );
+		// var arrowHelper = new THREE.ArrowHelper( direction, pP, 5, 0xFF0000 );
+		// scene.add( arrowHelper );
+
+		var intersections = physics.raycast( startPoint, direction );
+
+		if ( intersections.length > 0 ) {
+
+			var target = intersections[ 0 ];
+
+			// console.log( target );
+			// on Hit something trigger hit effect emitter
+			puffParticles.setNormal( target.normal );
+			// puffParticles.triggerPoolEmitter( 1 );
+			// puffParticles.mesh.position.copy( target.point );
+			puffParticles.triggerPoolEmitter( 1, ( impactPosition.set( target.point.x, target.point.y, target.point.z ) ) );
+
+			if ( isFinite( target.object.mass ) ) {
+				// is not static object
+				// -> launch into space
+
+				sounds.positional.bow.bow.play();
+
+				var from = camera.getWorldPosition();
+				physics.applyDirectionalImpulse( target, from, this.power );
+
+			}
+
+		}
 
 	};
 
@@ -473,8 +432,6 @@ define([
 
 	};
 	
-
-
 	return Weapon;
 
 });

@@ -1,5 +1,6 @@
 /**
- * Muzzleflash Particles
+ * Smoke Particles
+ * used on weapon Hit 
  */
 
 define([ 
@@ -8,6 +9,8 @@ define([
 	"debugGUI",
     "loadingManager"
 ], function ( THREE, SPE, debugGUI, loadingManager ) {
+
+    'use-strict';
 
 	// Create particle group and emitter
     var loader = new THREE.TextureLoader( loadingManager );

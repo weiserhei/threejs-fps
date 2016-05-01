@@ -3,7 +3,7 @@
  */
 define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 
-    // 'use strict';
+    'use strict';
     /*
 	var skyCube = (function SkyCube() {
 
@@ -76,7 +76,7 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 
 	var sceneCube = new THREE.Scene();
 	var fov = camera.fov;
-	cameraCube = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 1000 );
+	var cameraCube = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 1000 );
 	sceneCube.add( cameraCube );
 
 	var shader = THREE.ShaderLib[ "cube" ];

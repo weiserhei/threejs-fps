@@ -9,6 +9,8 @@ define([
     "loadingManager"
 ], function ( THREE, SPE, debugGUI, loadingManager ) {
 
+    'use-strict';
+    
 	// Create particle group and emitter
     var loader = new THREE.TextureLoader( loadingManager );
     // var texture = loader.load('assets/textures/img/smokeparticle.png');

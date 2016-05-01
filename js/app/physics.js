@@ -1,12 +1,13 @@
 /**
- * Clock timer
+ * Physics
  *
- * Todo: multiple instances when needed. They can cause issues with eachother
  *
  */
 define([
        "classes/PhysicFactory"
        ], function ( PhysicFactory ){
+
+	'use-strict';
 
 	var physics = new PhysicFactory();
 

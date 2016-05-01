@@ -15,13 +15,12 @@ define([
 
 	'use strict';
 
-
 	function onError( xhr ) {
-		console.log( "error", xhr );
+		console.error( "error", xhr );
 	}
 
-	function onProgress() {
-
+	function onProgress( xhr ) {
+		// console.log( "onProgress", xhr );
 	}
 
 
@@ -83,7 +82,7 @@ define([
 
 		}, onProgress, onError );
 
-	});
+	}, onProgress, onError );
 
 	function createFlashlight( player ) {
 
