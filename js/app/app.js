@@ -44,11 +44,11 @@ define([
 	"physics",
 	"classes/HUD",
 	"initItems",
-	"classes/Player",
 	"particles",
 	"muzzleparticle",
 	"puffParticles",
 	"player"
+	// ,"minimap"
 ], function ( 
 	THREE, 
 	TWEEN,
@@ -63,11 +63,11 @@ define([
 	physics,
 	HUD,
 	initItems,
-	Player,
 	particles,
 	muzzleparticle,
 	puffParticles,
-	player
+	initPlayer
+	// ,minimap
 ) {
 
 	'use strict';
@@ -94,7 +94,7 @@ define([
 
 		// player = new Player( hud, clock );
 
-		player = player( hud );
+		player = initPlayer( hud );
 		
 		// scene.add( preloaded.house.house );
 		// scene.add( preloaded.house.interior_a );
@@ -138,6 +138,7 @@ define([
 		TWEEN.update();
 		stats.update();
 
+		// minimap.update( camera, renderer );
 		skycube.update( camera, renderer );
 		renderer.render( scene, camera );
 

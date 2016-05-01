@@ -1,7 +1,7 @@
 /**
  * Skycube
  */
-define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
+define(["three", "camera", "renderer", "loadingManager"], function ( THREE, camera, renderer, loadingManager ){
 
     'use strict';
     /*
@@ -36,7 +36,7 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 	})();
 	*/
 
-	var cubeTextureLoader = new THREE.CubeTextureLoader();
+	var cubeTextureLoader = new THREE.CubeTextureLoader( loadingManager );
 
 	// cubeTextureLoader.setPath( "assets/textures/cube/SwedishRoyalCastle/" );
 	// var sunnySkyCube = cubeTextureLoader.load( [
@@ -52,7 +52,7 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 		"pz.jpg", "nz.jpg"
 	] );
 
-	var textureLoader = new THREE.TextureLoader();
+	// var textureLoader = new THREE.TextureLoader();
 
 	var envpath = "assets/textures/";
 
@@ -69,8 +69,9 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 	// var textureName = '120317-old-boys-school-360-081.jpg';
 	// var textureName = "metal.jpg";
 
-	var singleMap = textureLoader.load( envpath + textureName );
-	singleMap.mapping = THREE.EquirectangularReflectionMapping; // make single image use as cubemap
+	// var singleMap = textureLoader.load( envpath + textureName );
+	// singleMap.mapping = THREE.EquirectangularReflectionMapping; // make single image use as cubemap
+
 	// singleMap.mapping = THREE.SphericalReflectionMapping;
 	// singleMap.repeat.set( 0.5, 1 );
 
@@ -121,6 +122,7 @@ define(["three", "camera", "renderer"], function ( THREE, camera, renderer ){
 
 			cameraCube.quaternion.copy( camera.getWorldQuaternion() );
 			renderer.render( sceneCube, cameraCube );
+			
 		}
 	};
 
