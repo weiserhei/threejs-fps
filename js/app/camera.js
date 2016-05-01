@@ -16,7 +16,7 @@ define(["three","renderer"], function (THREE,renderer) {
     // var view_angle  = 25;
     var view_angle  = 60;
     var near = 0.1;
-    var far = 2200;
+    var far = 100;
     
     camera  = new THREE.PerspectiveCamera( view_angle, aspect, near, far );
     // CAMERA INITIAL POSITION

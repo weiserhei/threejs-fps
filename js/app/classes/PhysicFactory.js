@@ -177,12 +177,13 @@ define([
 			
 		} else {
 			
-			dimension.multiplyScalar( 2 );
+			// dimension.multiplyScalar( 2 );
 			// console.log(dimension);
 			var box = new THREE.Mesh(
 				new THREE.BoxGeometry( dimension.x, dimension.y, dimension.z )
 			);
-			box.position.set( position.x, position.y + dimension.y / 2, position.z );
+			// box.position.set( position.x, position.y + dimension.y / 2, position.z );
+			box.position.set( position.x, position.y, position.z );
 			box.rotation.copy( rotation );
 			box.updateMatrix();
 			for ( var i = 0; i < box.geometry.faces.length; i++ ) {

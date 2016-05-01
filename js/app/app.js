@@ -92,9 +92,9 @@ define([
 
 		player = new Player( hud, clock );
 		
-		scene.add( preloaded.house.house );
-		scene.add( preloaded.house.interior_a );
-		scene.add( preloaded.house.interior_b );
+		// scene.add( preloaded.house.house );
+		// scene.add( preloaded.house.interior_a );
+		// scene.add( preloaded.house.interior_b );
 
 		// adding item meshes to raycaster objects-array
 		var items = initItems( preloaded.items, objects, player, hud.interactionText, particles );

@@ -20,8 +20,10 @@ define([
 	"physics",
 	"sounds",
 	"container",
-	"initWeapons"
-], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, Weapon, physics, sounds, container, initWeapons ) {
+	"initWeapons",
+	"renderer",
+	"camera"
+], function ( THREE, Item, Itemslot, debugGUI, controls, scene, Inventar, Weapon, physics, sounds, container, initWeapons, renderer, camera ) {
 
 	'use strict';
 
@@ -88,10 +90,16 @@ define([
 			playerMesh.add( weapons[ key ].mesh );
 
 			// hide all weapon models
-			weapons[key].mesh.traverseVisible ( function ( object ) { object.visible = false; } );
+			weapons[key].mesh.traverseVisible ( function ( object ) { object.visible = true; } );
 
 		}
 
+		// this.inHands.mesh.traverseVisible ( function ( object ) { object.visible = true; } );
+		renderer.render( scene, camera );
+		for ( var key in weapons ) {
+			weapons[key].mesh.traverseVisible ( function ( object ) { object.visible = false; } );
+		}
+		// this.inHands.mesh.traverseVisible ( function ( object ) { object.visible = false; } );
 		this.switchWeapon( 1 );
 
 		var toggle = false; // toggle key down
@@ -254,6 +262,8 @@ define([
 		// if ( this.inHands !== undefined ) {
 			//todo: only make material invisible, not object
 			this.inHands.mesh.traverseVisible ( function ( object ) { object.visible = false; } );
+			// this.inHands.mesh.material.visible = false;
+
 		// }
 
 		// this.weapons.traverseVisible ( function ( object ) { object.visible = false; } );
@@ -423,10 +433,10 @@ define([
 	Player.prototype.raycast = function( objects ) {
 
 		// pitchObject (parent of camera in First person mode)
-		origin.copy( controls.getControls().getObject().getWorldPosition() );
+		// origin.copy( controls.getControls().getObject().getWorldPosition() );
 		// direction.set( 0, 0, - 1 ).normalize(); // direction vector must have unit length
-		direction.copy( camera.getWorldDirection() );
-		raycaster.set( origin, direction );
+		// direction.copy( camera.getWorldDirection() );
+		raycaster.set( controls.getControls().getObject().getWorldPosition(), camera.getWorldDirection() );
 		intersections = raycaster.intersectObjects( objects, false );
 		// raycaster.setFromCamera( vector, camera );
 		// intersections = raycaster.intersectObjects( objects );
@@ -437,7 +447,7 @@ define([
 		// scene.add( arrowHelper );
 
 		// console.log("fire", intersections);
-
+		
 		if ( intersections.length > 0 ) {
 			var target = intersections[ 0 ];
 			// console.log( target );
@@ -453,6 +463,7 @@ define([
 		} else {
 			this.resetActive();
 		}
+
 
 	};
 
@@ -480,10 +491,14 @@ define([
 					var text = action + object.userData.name;
 
 				}
+
 			} else if ( isAnyObject( object.userData.hud ) ) {
+
 				var action = object.userData.hud.action;
 				var text = action + " <span class='highlight-item'>" + object.userData.name + "</span>";
+
 			}
+
 			this.hud.interactionText.show( true, text );
 			object.userData.highlight( this.inventar, this.hud.interactionText );
 			this.target = object;
