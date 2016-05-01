@@ -31,6 +31,7 @@ The demo is also the current development branch, so what you will see may not be
 - Add moonphysics switch
 - HUD (Classes, Styles)
 - HUD Mode for Debugging
+- Add Radar/Minimap
 - Improve Character controller (Jumps, slopes)
 - Add some simple Enemy characters (AI, Pathfinding, Animations)
 - Add Octree Raycasting (performance improvement)
