@@ -24,11 +24,12 @@ The demo is also the current development branch, so what you will see may not be
 - Weapon damage handling (distance)
 - Weapon recoil and feedback
 - Automatic weapon fire
-- Weapon onHit particle effects
+- Weapon onHit particle effects based on surface
 - Add Doors
 - Add Jukebox
 - Add moonphysics switch
 - HUD (Classes, Styles)
+- HUD Mode for Debugging
 - Improve Character controller (Jumps, slopes)
 - Add some simple Enemy characters (AI, Pathfinding, Animations)
 - Add Octree Raycasting (performance improvement)
