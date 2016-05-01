@@ -24,6 +24,7 @@ The demo is also the current development branch, so what you will see may not be
 - Weapon recoil and feedback (http://csgoskills.com/academy/spray-patterns/)
 - Automatic weapon fire
 - Weapon onHit particle effects based on surface
+- Add footsteps sound (https://github.com/makc/fps-three.js/commit/e18fe6aee92650e03e8dc45bb35d882c525ea1dc)
 - Add Doors
 - Add Jukebox
 - Add moonphysics switch
