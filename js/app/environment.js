@@ -20,8 +20,8 @@ define([
 	texture.repeat.set( 16, 16 );
 
 	// floor
-	var plane = physics.createPlane ( 1, 10, 10, 0, new THREE.MeshPhongMaterial( { map: texture } ) )
-	scene.add( plane );
+	var plane = physics.createPlane ( 1, 100, 100, 0, new THREE.MeshPhongMaterial( { map: texture } ) );
+	// scene.add( plane );
 
 	// var roomGeometry = new THREE.BoxGeometry( 30, 10, 30 );
 	// var roomMaterial = new THREE.MeshNormalMaterial( { side: THREE.BackSide, transparent: true, opacity: 0.5 } );

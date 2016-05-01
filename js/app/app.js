@@ -86,15 +86,20 @@ define([
 	// Start program
 	var initialize = function ( preloaded ) {
 
-		player = new Player( hud, clock );
 		// todo
 		// abstract item initialization
 		// and constraints to other game elemnts
 
+		player = new Player( hud, clock );
+		
+		scene.add( preloaded.house.house );
+		scene.add( preloaded.house.interior_a );
+		scene.add( preloaded.house.interior_b );
+
 		// adding item meshes to raycaster objects-array
 		var items = initItems( preloaded.items, objects, player, hud.interactionText, particles );
 
-		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
+		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );	
 
 		// // set Reset Values
 		// controls.target0 = controls.target.clone();
