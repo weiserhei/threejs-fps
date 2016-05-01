@@ -6,8 +6,9 @@ define([
 	"three",
 	"ShaderParticleEngine",
 	"debugGUI",
-    "loadingManager"
-], function ( THREE, SPE, debugGUI, loadingManager ) {
+    "loadingManager",
+    "scene"
+], function ( THREE, SPE, debugGUI, loadingManager, scene ) {
 
     'use-strict';
     
@@ -89,6 +90,7 @@ define([
 
 	// particleGroup.addEmitter( emitter );
 	particleGroup.addPool( 10, emitter, true);
+    scene.add( particleGroup.mesh );
 
 	return particleGroup;
 

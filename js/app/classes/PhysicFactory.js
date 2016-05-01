@@ -49,8 +49,45 @@ define([
 
 	};
 
+	// http://stackoverflow.com/questions/11409895/whats-the-most-elegant-way-to-cap-a-number-to-a-segment
+	/**
+	 * Returns a number whose value is limited to the given range.
+	 *
+	 * Example: limit the output of this computation to between 0 and 255
+	 * (x * 255).clamp(0, 255)
+	 *
+	 * @param {Number} min The lower boundary of the output range
+	 * @param {Number} max The upper boundary of the output range
+	 * @returns A number in the range [min, max]
+	 * @type Number
+	 */
+	Number.prototype.clamp = function(min, max) 
+	{
+	  return Math.min(Math.max(this, min), max);
+	};
+
+	function calculateHitForce( distance, power ) {
+
+		// fixed power (boring)
+		// invertNormalGoblin.scale( power );
+
+		// 1 / 10 = 0.1
+		// ( 100 power * 5 ) * 0.1 = 50
+		// ( 50 power * 5 ) * 0.1 = 25
+		// 10m distanz = 50 power
+		// 20m distanz = 25 power
+
+		var impactForce = ( power * 5 * ( 1 / distance ) ).clamp( 20, power );
+
+		// console.log( "distance", distance );
+		// console.log( impactForce );
+
+		return impactForce;
+
+	}
+
 	var invertNormalGoblin = new Goblin.Vector3();
-	PhysicFactory.prototype.applyDirectionalImpulse = function( target, fromVector, force ) {
+	PhysicFactory.prototype.applyDirectionalImpulse = function( target, fromVector, power ) {
 
 		// console.log( target );
 
@@ -67,9 +104,13 @@ define([
 		// math operation using THREE.Vector3
 		// no obvious errors
 		invertNormalGoblin.subtractVectors( point, fromVector );
+
+		var distance = invertNormalGoblin.length();
+		var impactForce = calculateHitForce( distance, power );
+
 		invertNormalGoblin.normalize();
-		invertNormalGoblin.scale( force );
-		
+		invertNormalGoblin.scale( impactForce );
+
 		// body.applyImpulse( invertNormalGoblin );
 		// body.applyForceAtLocalPoint( invertNormalGoblin, point );
 		body.applyForceAtWorldPoint ( invertNormalGoblin, point );

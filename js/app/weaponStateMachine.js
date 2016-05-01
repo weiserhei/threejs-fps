@@ -6,10 +6,8 @@
 define([
 	"debugGUI",
 	"sounds",
-	"../libs/state-machine.min",
-	"TWEEN",
-	"controls"
-], function ( debugGUI, sounds, StateMachine, TWEEN, controls ) {
+	"../libs/state-machine.min"
+], function ( debugGUI, sounds, StateMachine ) {
 
 	'use strict';
 
@@ -87,7 +85,9 @@ define([
 						// weapon.statusText.show( true, "press <span class='highlight-actionkey'>[ R ]</span> to reload " + weapon.name );
 						
 					} else if ( weapon.magazines > 0 && weapon.emptySound instanceof THREE.Audio ) {
+
 						weapon.emptySound.play();
+
 					}
 
 				},
@@ -99,7 +99,9 @@ define([
 					var noMagazinesLeft = weapon.magazines <= 0;
 
 					if ( noMagazinesLeft || fullMagazines ) {
+
 						return false;
+
 					}
 
 				},

@@ -40,13 +40,13 @@ define([
 	var dynamic_mesh = new THREE.Mesh( box_geometry, box_material );
 	dynamic_mesh.position.set( 2, 1, 0 );
 	scene.add( dynamic_mesh );
-	physics.meshToBody( dynamic_mesh, 5 );
+	physics.meshToBody( dynamic_mesh, 50 );
 
 	// GRID FOR ORIENTATION
 	var gridXZ = new THREE.GridHelper( 1, 0.1 );
 	gridXZ.setColors( new THREE.Color( 0xff0000 ), new THREE.Color( 0xffffff ) );
 	scene.add(gridXZ);
-	gridXZ.position.y = 0;
+	gridXZ.position.y = - 0.01;
 	gridXZ.visible = true;
 
 

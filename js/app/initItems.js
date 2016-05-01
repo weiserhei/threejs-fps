@@ -45,7 +45,7 @@ define([
 	physics.makeStaticBox( dimension, position );
 
 
-	function initItems( preloaded, raycastArray, player, hudElement ) {
+	function initItems( preloaded, raycastArray, player, hudElement, particleGroup ) {
 		// console.log("preloaded", preloaded );
 		var raycastMeshes = [];
 
@@ -215,6 +215,9 @@ define([
 		// for ( var i = 0; i < raycastMeshes.length; i ++ ) {
 		// 	raycastArray.push( raycastMeshes[ i ] );
 		// }
+
+		itemslot.effect = particleGroup;
+		sicherungsslot.effect = particleGroup;
 
 		return {
 			flashlight: flashlight,

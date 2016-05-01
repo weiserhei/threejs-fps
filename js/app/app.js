@@ -81,10 +81,6 @@ define([
 	var clock = new THREE.Clock();
 	var delta;
 	var player;
-	var particleGroup;
-	// camera.add( muzzleparticle.mesh );
-	scene.add( muzzleparticle.mesh );
-	scene.add( puffParticles.mesh );
 	// muzzleparticle.mesh.position.set( 0, 1, 1 );
 
 	// Start program
@@ -96,17 +92,7 @@ define([
 		// and constraints to other game elemnts
 
 		// adding item meshes to raycaster objects-array
-		var items = initItems( preloaded.items, objects, player, hud.interactionText );
-
-		particleGroup = particles();
-		scene.add( particleGroup.mesh );
-		// var pos = items.safeconstraint.mesh.position;
-		// particleGroup.mesh.position.copy( pos );
-		// console.log( particle );
-		// particleGroup.maxParticleCount = 500;
-
-		items.safeconstraint.effect = particleGroup;
-		items.sicherungsslot.effect = particleGroup;
+		var items = initItems( preloaded.items, objects, player, hud.interactionText, particles );
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );
 
@@ -133,7 +119,7 @@ define([
 		// todo
 		// performance opt: only tick when triggered
 		// using setIntervall instead of in main loop
-		particleGroup.tick( delta );
+		particles.tick( delta );
 		muzzleparticle.tick( delta );
 		puffParticles.tick( delta );
 		physics.update( delta );

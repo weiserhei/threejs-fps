@@ -7,8 +7,9 @@ define([
 	"three",
 	"ShaderParticleEngine",
 	"debugGUI",
-    "loadingManager"
-], function ( THREE, SPE, debugGUI, loadingManager ) {
+    "loadingManager",
+    "scene"
+], function ( THREE, SPE, debugGUI, loadingManager, scene ) {
 
     'use-strict';
 
@@ -115,6 +116,8 @@ define([
     particleGroup.mesh.frustumCulled = false;
     // var sphere = particleGroup.mesh.geometry.boundingSphere = new THREE.Sphere();
     // sphere.radius = 8; //the joy of treakable parameter!
+
+    scene.add( particleGroup.mesh );
 
 	return particleGroup;
 
