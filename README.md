@@ -38,4 +38,8 @@ The demo is also the current development branch, so what you will see may not be
 - Release Pointer in Fullscreen and control Objects
 
 ##Resources
-https://makc3d.wordpress.com/2014/07/20/threejs-first-person-shoote/r 
+- https://makc3d.wordpress.com/2014/07/20/threejs-first-person-shooter/
+- http://realitymeltdown.com/
+- http://gamebanana.com
+- http://freesound.org/
+- http://tf3dm.com/
