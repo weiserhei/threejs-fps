@@ -22,6 +22,7 @@ The demo is also the current development branch, so what you will see may not be
 ###[Run demo](https://weiserhei.github.io/threejs-fps/)
 
 ##ToDo
+- Test replacing goblin for cannon.js
 - Weapon recoil and feedback (http://csgoskills.com/academy/spray-patterns/)
 - Automatic weapon fire
 - Weapon onHit particle effects based on surface
