@@ -75,6 +75,7 @@ define([
 	var objects = []; // raycast meshes
 
 	var hud = new HUD( container );
+	// hud.inventarScreen();
 	hud.interactionText = hud.box("Press <span class='highlight-actionkey'>[ e ]</span> to ");
 	hud.infoText = hud.box("Press <span class='highlight-actionkey'>[ f ]</span> to ");
 	hud.infoText.style.bottom = "50px";
@@ -91,8 +92,6 @@ define([
 		// todo
 		// abstract item initialization
 		// and constraints to other game elemnts
-
-		// player = new Player( hud, clock );
 
 		player = initPlayer( hud );
 		

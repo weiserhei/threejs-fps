@@ -18,6 +18,17 @@ define([
 
     }
 
+    HUD.prototype.inventarScreen = function() {
+
+    	var screen = document.createElement("div");
+    	this.container.appendChild( screen );
+    	screen.id = "centerDiv";
+
+    	screen.innerHTML = "<h1>Overview</h1><hr><br>";
+		screen.innerHTML += "<div class='funnyImage'></div><div>Java and Javascript are similar like Car and Carpet are similar.</div><br><br>";
+
+    };
+
     HUD.prototype.box = function( message ) {
 
 		var infoText = document.createElement( 'div' );

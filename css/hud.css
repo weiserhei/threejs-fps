@@ -1,5 +1,37 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat:700);
 
+#centerDiv {
+
+    padding:3px 5px 3px 5px;
+    text-align:left;
+    background-color:rgba(0, 0, 0, 0.5);
+    border:1px solid rgba(0,0,0,0.2);
+    width:50%;
+    height:50%;
+    /*visibility:hidden;*/
+    top:25%;
+    /*left:25%;*/
+    margin:0 auto;
+    position:relative;
+
+    color:#AAAAAA;
+    font-family: "Montserrat", 
+    sans-serif;
+    font-size:18px;
+    font-weight:normal;
+    line-height:18px;
+
+}
+
+#centerDiv h1 {
+    margin-left:10px;
+    margin-top:1em;
+    color:#fff;
+}
+#centerDiv div {
+    margin-left:10px;
+}
+
 .container {
 
 	width:100%; 

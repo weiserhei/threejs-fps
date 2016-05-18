@@ -1,7 +1,12 @@
 /**
- * Clock timer
+ * Physic Factory
  *
- * Todo: multiple instances when needed. They can cause issues with eachother
+ * Questions:
+ * SAP vs Basic Broadphase
+ * Goblin in a webworker?
+ * Using threejs vectors for calculation?
+ * Character controller Jumps?
+ * Character controller slopes?
  *
  */
 define([
@@ -9,8 +14,8 @@ define([
        "../../libs/goblin"
        ], function ( THREE ){
 
-	var broadphase = new Goblin.BasicBroadphase();
-	// var broadphase = new Goblin.SAPBroadphase();
+	// var broadphase = new Goblin.BasicBroadphase();
+	var broadphase = new Goblin.SAPBroadphase();
 	Goblin.GjkEpa.margins = 0;
 
 	function PhysicFactory() {

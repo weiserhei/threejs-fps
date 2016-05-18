@@ -7,16 +7,16 @@
 
 define([
 		"three",
-     	"scene",
-    	"physics",
+		"scene",
+		"physics",
 		"classes/PointerLockControls"
-       ], function ( THREE, scene, physics, PointerLockControls ){
+		], function ( THREE, scene, physics, PointerLockControls ){
 
 	'use strict';
 
 	function FPSMover ( camera, domElement ) 
 	{
-	  
+	
 		var controls = new PointerLockControls( camera, domElement );
 		var radius = 0.4;
 		var height = 1.8;
@@ -119,7 +119,7 @@ define([
 
 		scene.add( this.mesh );
 
-	    // SET PLAYER POSITION & ROTATION
+		// SET PLAYER POSITION & ROTATION
 		// slightly off the ground
 		this.mesh.position.set( 0, height / 2 + 0.5, 2 );
 		// controls.setYRotation( 45 * Math.PI / 180 );
@@ -228,7 +228,7 @@ define([
 				*/
 				// } else {
 				// 	this.isGrounded = false;
-		  		// }
+				// }
 			}
 
 		} )();
@@ -245,11 +245,11 @@ define([
 
 			// rotate the body in view direction 
 			// (mainly doing this for correct audio listener orientation)
-	    	var yRotation = controls.getYRotation();
-	    	var euler = new THREE.Euler( 0, yRotation, 0, 'XYZ');
+			var yRotation = controls.getYRotation();
+			var euler = new THREE.Euler( 0, yRotation, 0, 'XYZ');
 			var quat = new THREE.Quaternion().setFromEuler( euler );
 
-	    	this.body.rotation = new Goblin.Quaternion( quat.x, quat.y, quat.z, quat.w );
+			this.body.rotation = new Goblin.Quaternion( quat.x, quat.y, quat.z, quat.w );
 
 			if ( this.isGrounded ) {
 
