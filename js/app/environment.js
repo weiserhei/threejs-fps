@@ -7,8 +7,9 @@ define([
 	"three",
 	"debugGUI",
 	"scene",
-	"physics"
-], function ( THREE, debugGUI, scene, physics ) {
+	"physics",
+	"classes/Room"
+], function ( THREE, debugGUI, scene, physics, Room ) {
 
 	'use strict';
 
@@ -21,7 +22,7 @@ define([
 
 	// floor
 	var plane = physics.createPlane ( 1, 50, 50, 0, new THREE.MeshPhongMaterial( { map: texture } ) );
-	// plane.visible = false;
+	plane.visible = false;
 	scene.add( plane );
 
 	// var roomGeometry = new THREE.BoxGeometry( 30, 10, 30 );
@@ -30,8 +31,8 @@ define([
 	// room.position.set( 0, roomGeometry.parameters.height / 3, 0 );
 	// scene.add( room );
 
-	// var room1 = new Room( 10, 10, 3.2, false );
-	// scene.add( room1 );
+	var room1 = new Room( 10, 10, 3.2, false );
+	scene.add( room1 );
 
 	var box_geometry = new THREE.BoxBufferGeometry( 1, 1, 1 ), // note that the `BoxGeometry` arguments are the box's full width, height, and depth, while the parameters for `Goblin.BoxShape` are expressed as half sizes
 	// var box_geometry = new THREE.SphereBufferGeometry( 1, 32, 32 ), // note that the `BoxGeometry` arguments are the box's full width, height, and depth, while the parameters for `Goblin.BoxShape` are expressed as half sizes

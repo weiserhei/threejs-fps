@@ -392,7 +392,7 @@ define([ "three", "physics" ], function ( THREE, physics ) {
 
         var ceiling = this.createCeiling( width, wallThickness, length, height );
         ceiling.material = new THREE.MeshNormalMaterial();
-        // this.addStairs( room );
+        this.addStairs( room );
 
         // ceiling.material = this.materialsArray.grainyWhiteMaterial[1];
         doorWallMesh.material = wallMaterial;
@@ -604,7 +604,7 @@ define([ "three", "physics" ], function ( THREE, physics ) {
 
         var mtlLoader = new THREE.MTLLoader();
         var url = directoryPath + name + "/";
-        mtlLoader.setBaseUrl( url );
+        // mtlLoader.setBaseUrl( url );
         mtlLoader.setPath( url );
 
         mtlLoader.load( name + ".mtl", function( materials ) {
@@ -616,9 +616,9 @@ define([ "three", "physics" ], function ( THREE, physics ) {
             objLoader.setPath( url );
             objLoader.load( name + ".obj", function ( object ) {
                 
-                // console.log( object );
+                console.log( object );
 
-                var object = object.children[ 1 ];
+                var object = object.children[ 0 ];
                 var material = object.material;
                 material.map.anisotropy = 16;
                 // material.wireframe = true;

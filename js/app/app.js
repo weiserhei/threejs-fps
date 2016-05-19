@@ -43,10 +43,10 @@ define([
 	"skycube",
 	"physics",
 	"classes/HUD",
-	"initItems",
-	"particles",
-	"muzzleparticle",
-	"puffParticles",
+	// "initItems",
+	// "particles",
+	// "muzzleparticle",
+	// "puffParticles",
 	"player"
 	// ,"minimap"
 ], function ( 
@@ -62,10 +62,10 @@ define([
 	skycube,
 	physics,
 	HUD,
-	initItems,
-	particles,
-	muzzleparticle,
-	puffParticles,
+	// initItems,
+	// particles,
+	// muzzleparticle,
+	// puffParticles,
 	initPlayer
 	// ,minimap
 ) {
@@ -100,7 +100,7 @@ define([
 		// scene.add( preloaded.house.interior_b );
 
 		// adding item meshes to raycaster objects-array
-		var items = initItems( preloaded.items, objects, player, hud.interactionText, particles );
+		// var items = initItems( preloaded.items, objects, player, hud.interactionText, particles );
 
 		// controls.target.copy( new THREE.Vector3( 0, 0.1, 0 ) );	
 
@@ -127,9 +127,9 @@ define([
 		// todo
 		// performance opt: only tick when triggered
 		// using setIntervall instead of in main loop
-		particles.tick( delta );
-		muzzleparticle.tick( delta );
-		puffParticles.tick( delta );
+		// particles.tick( delta );
+		// muzzleparticle.tick( delta );
+		// puffParticles.tick( delta );
 		physics.update( delta );
 		player.update( objects );
 		controls.update();
