@@ -307,10 +307,12 @@ define([
 							
 						}
 
+						this.body.linear_factor.set(1, 1, 1)
 						this.body.linear_velocity = velV;
 
 					} else {
 						// console.log("nix");
+						this.body.linear_factor.set(0, 1, 0)
 						this.body.linear_velocity = goblinZeroVector;
 
 					}
