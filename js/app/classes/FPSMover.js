@@ -9,10 +9,13 @@ define([
 		"three",
 		"scene",
 		"physics",
-		"classes/PointerLockControls"
-		], function ( THREE, scene, physics, PointerLockControls ){
+		"classes/PointerLockControls",
+		"debugGUI"
+		], function ( THREE, scene, physics, PointerLockControls, debugGUI ){
 
 	'use strict';
+
+	var folder = debugGUI.getFolder("Character");
 
 	function FPSMover ( camera, domElement ) 
 	{
@@ -44,6 +47,9 @@ define([
 		var physicWorld = physicFactory.getWorld();
 
 		this.isGrounded = false;
+
+		folder.open();
+		folder.add( this, "isGrounded" ).listen();
 		
 		var currentGroundHeight = 0;
 		var meshForward = new THREE.Vector3();
@@ -161,6 +167,12 @@ define([
 		// keeps physics from going to sleep (from bullet documentation)
 		// var DISABLE_DEACTIVATION = 4; 
 		// this.body.setActivationState(DISABLE_DEACTIVATION);
+
+		var o = {
+			factor: 0.3
+		};
+
+		folder.add( o, "factor", 0, 1 );
 		
 		// ---------------------------------------------------------------------------
 		// check if the player mesh is touching the ground
@@ -169,7 +181,7 @@ define([
 			// this part will be exectued once
 			var fromPoint = new Goblin.Vector3();
 			var toPoint = new Goblin.Vector3();
-			var rayPadding = height * 0.05 + 0; //extra padding because of clamping
+			var rayPadding = height * 0.05 + o.factor; //extra padding because of clamping
 			
 			var BasicBroadphase = physicFactory.getEngine();
 
@@ -296,6 +308,7 @@ define([
 						
 					// Only apply movement if we have a significant distance to cover
 					// length2 == lengthSquared ?
+
 					if ( velV.lengthSquared() > 0.001 ) {
 
 						velV.normalize();
