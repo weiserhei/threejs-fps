@@ -1,0 +1,20 @@
+/*
+ *
+ http://patorjk.com/software/taag/#p=testall&f=Graffiti&t=Todo
+
+___________        .___      
+\__    ___/___   __| _/____  
+  |    | /  _ \ / __ |/  _ \ 
+  |    |(  <_> ) /_/ (  <_> )
+  |____| \____/\____ |\____/ 
+                    \/     
+ *
+ */
+
+ - Build HUD to display Inventar Items and sheet with collected/missing camera parts
+ - create special spinning and particle animation for camera parts ("they are so special items")
+ - load up missing assets and rebuild riddles 
+ 	- (press keyboard number keys to open the safe, insert book in shelf, collect wheel and press lever in the cellar)
+ - Add camera model and features (handle like camera was a weapon, animate on rightclick, left click photo)
+ - Add Post processing effects for camera
+ - Add cutscene manager and simple cutscenes

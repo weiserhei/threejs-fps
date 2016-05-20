@@ -22,7 +22,7 @@ define([
 
 	// table
 	var dimension = new THREE.Vector3( 2, 1, 1 );
-	var position = new THREE.Vector3( -3, 0, 0 );
+	var position = new THREE.Vector3( -2.5, 0, 0 );
 	var table = new THREE.Mesh( new THREE.BoxGeometry( dimension.x, dimension.y, dimension.z ), new THREE.MeshPhongMaterial() );
 	table.position.set( position.x, position.y + dimension.y / 2, position.z );
 	table.receiveShadow = true;

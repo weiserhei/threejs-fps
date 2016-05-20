@@ -150,6 +150,7 @@ define([
 		body.rotation = new Goblin.Quaternion( rotation.x, rotation.y, rotation.z, rotation.w );
 
 		body.friction = 1;
+		body.restitution = 0;
 		// http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=8100
 		body.linear_damping = 0.5;
 		// body.angular_damping = 1; // no effect when angular factor is zero?
@@ -169,10 +170,11 @@ define([
 		// this.body.setActivationState(DISABLE_DEACTIVATION);
 
 		var o = {
-			factor: 0.3
+			factor: 0.28
 		};
 
 		folder.add( o, "factor", 0, 1 );
+		folder.add( this.body.position, "y" ).listen();
 		
 		// ---------------------------------------------------------------------------
 		// check if the player mesh is touching the ground
@@ -255,6 +257,14 @@ define([
 
 			updateGrounding.call( this );
 
+			// if ( this.body.position.y < - 2 || isNaN( this.body.position.y ) ) {
+			// reset pos if glitch
+			var outOfBounds = this.body.position.y < - 2 || this.body.position.y > 10;
+			if ( outOfBounds ) {
+				console.warn( "reset", this.body.position );
+				this.reset();
+			}
+
 			// rotate the body in view direction 
 			// (mainly doing this for correct audio listener orientation)
 			var yRotation = controls.getYRotation();
@@ -320,12 +330,15 @@ define([
 							
 						}
 
-						this.body.linear_factor.set(1, 1, 1)
+						// chandlerp advice
+						// idk but i can walk stairs now
+						this.body.linear_factor.set( 1, 1, 1 )
 						this.body.linear_velocity = velV;
 
 					} else {
 						// console.log("nix");
-						this.body.linear_factor.set(0, 1, 0)
+						// chandlerp advice
+						this.body.linear_factor.set( 0, 1, 0 )
 						this.body.linear_velocity = goblinZeroVector;
 
 					}

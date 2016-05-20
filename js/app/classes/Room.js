@@ -20,6 +20,7 @@ define([ "three", "physics" ], function ( THREE, physics ) {
         var mass = 0;
         
         var dynamic_body = new Goblin.RigidBody( shape, mass );
+        dynamic_body.restitution = 0;
 
         var position = mesh.getWorldPosition();
         dynamic_body.position.copy( position );
@@ -672,7 +673,7 @@ define([ "three", "physics" ], function ( THREE, physics ) {
                 var plateauGeometry = new THREE.BoxBufferGeometry(size.x, size.y, size.z);
                 var plateau = new THREE.Mesh( plateauGeometry );
             
-                plateau.position.set( -4.2, 3.25, -4.1 );
+                plateau.position.set( room.position.x -4.2, 3.25, -4.1 );
 
                 room.add( plateau );
                         

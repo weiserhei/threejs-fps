@@ -51,7 +51,7 @@ define([
     var textureLoader = new THREE.TextureLoader( loadingManager );
 
     function start () {
-        /*
+        
         function loadHouse2 ( jsonLoader ) {
 
             function collisionMeshes() {
@@ -75,15 +75,18 @@ define([
                 scene.add( mesh );
 
                 // STAIRS   
-                var size = new THREE.Vector3( 3, 0.5, 3.5 );
+                var size = new THREE.Vector3( 4, 0.5, 3.5 );
                 var bufferStairGeometry = new THREE.BoxBufferGeometry(size.x, size.y, size.z);
 
                 var rotateX = Math.PI / 6.5;
-                bufferStairGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( rotateX ) );
+                // bufferStairGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( rotateX ) );
 
                 var stairs = new THREE.Mesh( bufferStairGeometry, stairsMaterial );
                 stairs.position.set( -3.3, 0.4, -15.5 );
-                stairs.rotation.set( 0, 90 * Math.PI/180, 0 );
+                // stairs.rotation.set( 0, 90 * Math.PI/180, 0 );
+                // stairs.rotation.set( 0, 0, - Math.PI / 6.5 );
+                stairs.rotation.set( 0, 0, -Math.PI / 9.2 );
+                // stairs.quaternion.set( -Math.PI / 1.05, 0, 0, 1 );
                 stairs.matrixAutoUpdate = false;
                 stairs.updateMatrix();
                 // stairs.rotation.set( Math.PI/5.5, 0, 0);
@@ -99,7 +102,7 @@ define([
                 var bufferStairGeometry = new THREE.BoxBufferGeometry(size.x, size.y, size.z);
 
                 // var rotateX = Math.PI / 5.6;
-                bufferStairGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( rotateX ) );
+                // bufferStairGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( rotateX ) );
 
                 var stairs = new THREE.Mesh( bufferStairGeometry, stairsMaterial );
                 stairs.position.set( -6.4, 2.1,-18.5 );
@@ -248,8 +251,9 @@ define([
                 return mfm;
 
             }
+                collisionMeshes();
 
-            
+            /*
             jsonLoader.load( 'assets/models/house/house.js', function ( geometry, materials ) {  
 
                 // flat shading has been removed from mesh lambert material
@@ -331,6 +335,8 @@ define([
 
             } );
 
+            */
+
         }
 
         var o = {
@@ -340,8 +346,9 @@ define([
         };
 
         var folder = debugGUI.getFolder("House");
+        folder.open();
         folder.add( o, "loadHouse" );
-        */
+        
 
         var url = "assets/models/buch/buch.js";
         jsonLoader.load( url, function callback(geometry, materials) {
