@@ -16,6 +16,7 @@ define([
 
 	// var broadphase = new Goblin.BasicBroadphase();
 	var broadphase = new Goblin.SAPBroadphase();
+	Goblin.GjkEpa.margins = 0.05;
 
 	function PhysicFactory() {
 		this.world = new Goblin.World( broadphase, new Goblin.NarrowPhase(), new Goblin.IterativeSolver() );
